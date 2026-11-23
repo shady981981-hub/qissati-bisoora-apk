@@ -1326,7 +1326,7 @@ function stopVoice(){
 
 // A trusted backend endpoint must be configured by the app distributor.
 // Never embed provider API keys or send a child's voice recording to an unknown service.
-const FUSHA_CONVERSION_ENDPOINT = '';
+const FUSHA_CONVERSION_ENDPOINT = 'https://fusha-api-production.up.railway.app/convert';
 async function convertRecordedTextToFusha(){
   const original = $('voiceText').value.trim();
   if(original.length < 5){ $('voiceStatus').textContent = '⚠️ سَجِّلْ نَصًّا أَوَّلًا.'; return; }
