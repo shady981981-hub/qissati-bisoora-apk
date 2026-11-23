@@ -425,7 +425,7 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
       </div>
 
       <textarea id="voiceText" rows="5" class="field-input" placeholder="تَحَدَّثْ أَوِ اكْتُبْ هُنَا..."></textarea>
-      <div style="margin-top:8px;font-size:12px;color:var(--muted)">يُرْسَلُ النَّصُّ إِلَى خِدْمَةِ التَّحْوِيلِ عِنْدَ الضَّغْطِ عَلَى الزِّرِّ فَقَطْ. رَاجِعِ النَّتِيجَةَ قَبْلَ حِفْظِ الْقِصَّةِ.</div>
+      <div style="margin-top:8px;font-size:12px;color:var(--muted)">تَحْسِينٌ مَحَلِّيٌّ مَجَّانِيٌّ مَحْدُودٌ، لَا يَرْفَعُ النَّصَّ إِلَى خَادِمٍ. رَاجِعِ الْفُصْحَى وَالتَّشْكِيلَ قَبْلَ الْحِفْظِ.</div>
       <div id="fushaReview" class="hidden" style="margin-top:10px;padding:12px;border:1px solid var(--border);border-radius:14px">
         <strong>مُرَاجَعَةُ النَّصِّ الْفَصِيحِ الْمُشَكَّلِ</strong>
         <textarea id="fushaProposed" rows="5" class="field-input" style="margin-top:8px" aria-label="النص المقترح بالفصحى"></textarea>
@@ -1326,36 +1326,47 @@ function stopVoice(){
 
 // A trusted backend endpoint must be configured by the app distributor.
 // Never embed provider API keys or send a child's voice recording to an unknown service.
-const FUSHA_CONVERSION_ENDPOINT = 'https://fusha-api-production.up.railway.app/convert';
-async function convertRecordedTextToFusha(){
-  const original = $('voiceText').value.trim();
-  if(original.length < 5){ $('voiceStatus').textContent = '⚠️ سَجِّلْ نَصًّا أَوَّلًا.'; return; }
-  if(!FUSHA_CONVERSION_ENDPOINT){
-    $('voiceStatus').textContent = '⚠️ خِدْمَةُ التَّحْوِيلِ الذَّكِيِّ غَيْرُ مُفَعَّلَةٍ بَعْدُ. لَا يُمْكِنُ اعْتِبَارُ التَّفْرِيغِ الصَّوْتِيِّ نَصًّا فَصِيحًا.';
+// Free on-device assistance. No subscription, remote request or uploaded child transcript.
+// This dictionary is deliberately limited: users must review grammar and diacritics.
+const OFFLINE_FUSHA_PHRASES = [
+  ['أنا رحت عالحديقة','ذَهَبْتُ إِلَى الْحَدِيقَةِ'],
+  ['أنا رحت على الحديقة','ذَهَبْتُ إِلَى الْحَدِيقَةِ'],
+  ['وشفت عصفور صغير','وَرَأَيْتُ عُصْفُورًا صَغِيرًا'],
+  ['وكان كتير حلو','وَكَانَ جَمِيلًا جِدًّا'],
+  ['بعدين','ثُمَّ'],['عشان','لِكَيْ'],['كتير','كَثِيرًا'],
+  ['شوية','قَلِيلًا'],['هسا','الْآنَ'],['هلأ','الْآنَ'],
+  ['شو','مَاذَا'],['ليش','لِمَاذَا'],['وين','أَيْنَ'],
+  ['بدي','أُرِيدُ'],['بدنا','نُرِيدُ'],['احنا','نَحْنُ'],
+  ['أنا','أَنَا'],['رحت','ذَهَبْتُ'],['شفنا','رَأَيْنَا'],
+  ['شفت','رَأَيْتُ'],['شاف','رَأَى'],['حكيت','قُلْتُ'],
+  ['حكى','قَالَ'],['حلو','جَمِيلٌ'],['منيح','جَيِّدٌ'],
+  ['الولد','الْوَلَدُ'],['البنت','الْبِنْتُ'],['الحديقة','الْحَدِيقَةُ'],
+  ['عصفور','عُصْفُورٌ'],['صغير','صَغِيرٌ'],['كبير','كَبِيرٌ']
+];
+function offlineFushaSuggestion(original){
+  let output=original.replace(/\s+/g,' ').trim();
+  let matches=0;
+  for(const [source,target] of OFFLINE_FUSHA_PHRASES){
+    const escaped=source.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const rx=new RegExp('(^|[\\s،,.؟!])('+escaped+')(?=$|[\\s،,.؟!])','gu');
+    output=output.replace(rx,(whole,prefix)=>{matches++;return prefix+target;});
+  }
+  output=output.replace(/,/g,'،').replace(/\\?/g,'؟');
+  if(output && !/[.!؟]$/.test(output)) output+='.';
+  return {text:output,matches};
+}
+function convertRecordedTextToFusha(){
+  const original=$('voiceText').value.trim();
+  if(original.length<5){$('voiceStatus').textContent='⚠️ سَجِّلْ نَصًّا أَوَّلًا.';return;}
+  const result=offlineFushaSuggestion(original);
+  if(!result.matches){
+    $('fushaReview').classList.add('hidden');
+    $('voiceStatus').textContent='⚠️ لَا تَتَوَفَّرُ قَوَاعِدُ تَحْوِيلٍ مَحَلِّيَّةٌ كَافِيَةٌ لِهَذَا النَّصِّ. يُرْجَى تَحْرِيرُهُ يَدَوِيًّا؛ لَمْ نُغَيِّرْ كَلَامَكَ.';
     return;
   }
-  const button = $('fushaConvertBtn');
-  button.disabled = true;
-  $('voiceStatus').textContent = '⏳ يَجْرِي تَحْوِيلُ النَّصِّ وَتَشْكِيلُهُ...';
-  const controller = new AbortController();
-  const timeout = setTimeout(()=>controller.abort(),20000);
-  try{
-    const response = await fetch(FUSHA_CONVERSION_ENDPOINT,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({text:original}),signal:controller.signal
-    });
-    if(!response.ok) throw Error('HTTP '+response.status);
-    const data = await response.json();
-    const proposed = typeof data.fusha_text === 'string' ? data.fusha_text.trim() : '';
-    const audit = arabicReadingAudit(proposed);
-    if(!proposed || audit.total < 2 || audit.ratio < 0.8) throw Error('incomplete vocalization');
-    if($('voiceText').value.trim() !== original) throw Error('transcript changed while converting');
-    $('fushaProposed').value = proposed;
-    $('fushaReview').classList.remove('hidden');
-    $('voiceStatus').textContent = '✓ ظَهَرَ النَّصُّ الْمُقْتَرَحُ. رَاجِعِ الْمَعْنَى وَالْحَرَكَاتِ قَبْلَ الِاعْتِمَادِ.';
-  }catch(error){
-    $('voiceStatus').textContent = '⚠️ لَمْ يَكْتَمِلِ التَّحْوِيلُ بِشَكْلٍ مَوْثُوقٍ. احْتَفَظْنَا بِالنَّصِّ الْأَصْلِيِّ.';
-  }finally{ clearTimeout(timeout);button.disabled = false; }
+  $('fushaProposed').value=result.text;
+  $('fushaReview').classList.remove('hidden');
+  $('voiceStatus').textContent='⚠️ اقْتِرَاحٌ مَجَّانِيٌّ مَحَلِّيٌّ جُزْئِيٌّ، لَيْسَ تَحْوِيلًا ذَكِيًّا كَامِلًا. صَحِّحِ الْقَوَاعِدَ وَالتَّشْكِيلَ قَبْلَ الِاعْتِمَادِ.';
 }
 function acceptFushaProposal(){
   const text = $('fushaProposed').value.trim();
