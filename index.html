@@ -411,12 +411,12 @@ main.wrap{padding-bottom:100px}
 <main class="wrap">
   <nav class="nav-tabs" aria-label="التنقل الرئيسي">
     <button class="nav-tab" data-nav="library" onclick="go('library')"><svg class="nav-icon"><use href="#i-trophy"/></svg>إِنْجَازَاتِي</button>
-    <button class="nav-tab" onclick="go('catalog')"><svg class="nav-icon"><use href="#i-star"/></svg>تَحَدِّيَاتٌ</button>
+    <button class="nav-tab" onclick="openChallenge()"><svg class="nav-icon"><use href="#i-star"/></svg>تَحَدِّيَاتٌ</button>
     <button class="nav-tab" onclick="go('library')"><svg class="nav-icon"><use href="#i-level"/></svg>مُسْتَوَايَ</button>
     <button class="nav-tab active" data-nav="home" onclick="go('home')"><svg class="nav-icon"><use href="#i-home"/></svg>الرَّئِيسِيَّةُ</button>
     <button class="nav-tab" onclick="go('catalog')"><svg class="nav-icon"><use href="#i-book"/></svg>قِصَصِي</button>
-    <button class="nav-tab" data-nav="voice" onclick="go('voice')"><svg class="nav-icon"><use href="#i-friends"/></svg>أَصْدِقَائِي</button>
-    <button class="nav-tab" data-nav="wizard" onclick="startWizard('creative')"><svg class="nav-icon"><use href="#i-gift"/></svg>مُفَاجَآتٌ</button>
+    <button class="nav-tab" data-nav="voice" onclick="go('voice')"><svg class="nav-icon"><use href="#i-mic"/></svg>قِصَّتِي بِصَوْتِي</button>
+    <button class="nav-tab" onclick="openSurprise()"><svg class="nav-icon"><use href="#i-gift"/></svg>مُفَاجَأَةُ الْيَوْمِ</button>
   </nav>
 
   <!-- HOME -->
@@ -632,12 +632,12 @@ main.wrap{padding-bottom:100px}
 
 <div class="mobile-dock" aria-label="التنقل الرئيسي">
   <button class="dock-btn" data-nav="library" onclick="go('library')"><svg class="dock-icon"><use href="#i-trophy"/></svg>إِنْجَازَاتِي</button>
-  <button class="dock-btn" onclick="go('catalog')"><svg class="dock-icon"><use href="#i-star"/></svg>التَّحَدِّيَاتُ</button>
+  <button class="dock-btn" onclick="openChallenge()"><svg class="dock-icon"><use href="#i-star"/></svg>التَّحَدِّيَاتُ</button>
   <button class="dock-btn" onclick="go('library')"><svg class="dock-icon"><use href="#i-level"/></svg>مُسْتَوَايَ</button>
   <button class="dock-btn active" data-nav="home" onclick="go('home')"><svg class="dock-icon"><use href="#i-home"/></svg>الرَّئِيسِيَّةُ</button>
   <button class="dock-btn" onclick="go('catalog')"><svg class="dock-icon"><use href="#i-book"/></svg>قِصَصِي</button>
-  <button class="dock-btn" data-nav="voice" onclick="go('voice')"><svg class="dock-icon"><use href="#i-friends"/></svg>أَصْدِقَائِي</button>
-  <button class="dock-btn" data-nav="wizard" onclick="startWizard('creative')"><svg class="dock-icon"><use href="#i-gift"/></svg>مُفَاجَآتٌ</button>
+  <button class="dock-btn" data-nav="voice" onclick="go('voice')"><svg class="dock-icon"><use href="#i-mic"/></svg>قِصَّتِي بِصَوْتِي</button>
+  <button class="dock-btn" onclick="openSurprise()"><svg class="dock-icon"><use href="#i-gift"/></svg>مُفَاجَأَةُ الْيَوْمِ</button>
 </div>
 
 <div id="lightboxModal" class="lightbox hidden" onclick="closeLightbox(event)">
@@ -943,6 +943,26 @@ function go(tab){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
+function openChallenge(){
+  const options = PRESET_STORIES.filter(story => Array.isArray(story.quiz) && story.quiz.length);
+  if(!options.length){
+    go('catalog');
+    return;
+  }
+  const story = options[Math.floor(Math.random() * options.length)];
+  openStory(story, 'catalog');
+}
+
+function openSurprise(){
+  const options = PRESET_STORIES.filter(story => Array.isArray(story.pages) && story.pages.length);
+  if(!options.length){
+    go('catalog');
+    return;
+  }
+  const story = options[Math.floor(Math.random() * options.length)];
+  openStory(story, 'home');
+}
+
 function renderHome(){
   $('featuredGrid').innerHTML = '';
   getFilteredStories().slice(0, 3).forEach(s => $('featuredGrid').appendChild(buildStoryCard(s, false)));
@@ -1010,6 +1030,8 @@ function openStory(story, fromTab){
   ['home','wizard','voice','catalog','library','reader'].forEach(id=>{
     $(id).classList.toggle('hidden', id !== 'reader');
   });
+  const activeNav = fromTab === 'catalog' ? 'catalog' : 'home';
+  document.querySelectorAll('[data-nav]').forEach(btn=>btn.classList.toggle('active', btn.dataset.nav === activeNav));
   $('readTitle').textContent = story.title;
   $('readMeta').textContent = `${story.category || 'حِكَايَةٌ تَرْبَوِيَّةٌ'} • ${story.pages.length} صَفَحَاتٍ مُصَوَّرَةٍ بِالْعَرَبِيَّةِ الْفُصْحَى`;
   renderReaderPage();
@@ -1227,11 +1249,10 @@ function readAloud(){
   const rate = parseFloat($('speechRateSelect').value || '0.88');
   const words = p.text.split(/\s+/).filter(Boolean);
   const audit = arabicReadingAudit(cleanText);
-  if(audit.total && audit.ratio < 0.8){
-    $('ttsStatus').textContent = '⚠️ يَحْتَاجُ النَّصُّ إِلَى مُرَاجَعَةِ التَّشْكِيلِ قَبْلَ النُّطْقِ.';
-    return;
-  }
-  $('ttsStatus').textContent = '🔊 يَجْرِي تَجْهِيزُ الْقِرَاءَةِ الْعَرَبِيَّةِ...';
+  const needsVowels = audit.total && audit.ratio < 0.8;
+  $('ttsStatus').textContent = needsVowels
+    ? '⚠️ التَّشْكِيلُ قَلِيلٌ؛ سَيُحَاوِلُ الْجِهَازُ قِرَاءَةَ النَّصِّ، وَقَدْ يَخْتَلِفُ النُّطْقُ.'
+    : '🔊 يَجْرِي تَجْهِيزُ الْقِرَاءَةِ الْعَرَبِيَّةِ...';
 
   if(window.QissatiAndroid && typeof window.QissatiAndroid.speakArabic === 'function'){
     window.QissatiAndroid.speakArabic(cleanText);
@@ -1409,6 +1430,7 @@ function startVoice(){
   }catch(e){
     $('voiceStartBtn').disabled = false;
     $('voiceWave').classList.remove('active');
+    $('voiceStatus').textContent = '⚠️ لَمْ يَبْدَأِ التَّسْجِيلُ. سَجِّلِ الْمِيكْرُوفُونَ فِي الْمُتَصَفِّحِ، أَوِ اكْتُبِ الْقِصَّةَ فِي الْمُرَبَّعِ.';
   }
 }
 
@@ -1459,7 +1481,10 @@ function insertSampleVoice(){
 
 function previewVoiceRead(){
   const txt = cleanArabicForTTS($('voiceText').value);
-  if(!txt) return;
+  if(!txt){
+    $('voiceStatus').textContent = 'اُكْتُبْ أَوْ سَجِّلْ نَصًّا أَوَّلًا، ثُمَّ اطْلُبِ الِاسْتِمَاعَ.';
+    return;
+  }
   if(window.QissatiAndroid && typeof window.QissatiAndroid.speakArabic === 'function'){
     window.QissatiAndroid.speakArabic(txt);
     return;
@@ -1472,6 +1497,8 @@ function previewVoiceRead(){
     if(v) u.voice = v;
     u.rate = 0.88;
     window.speechSynthesis.speak(u);
+  }else{
+    $('voiceStatus').textContent = '⚠️ الْقِرَاءَةُ الصَّوْتِيَّةُ غَيْرُ مُتَاحَةٍ فِي هَذَا الْمُتَصَفِّحِ.';
   }
 }
 
@@ -1724,8 +1751,7 @@ function checkStoryBeforeSaving(story){
     else if(audit.ratio < 0.8) issues.push('الصَّفْحَةُ '+(index+1)+': التَّشْكِيلُ غَيْرُ كَافٍ ('+Math.round(audit.ratio*100)+'٪).');
   });
   if(issues.length){
-    alert('تَعَذَّرَ حِفْظُ الْقِصَّةِ لِلْقِرَاءَةِ الصَّوْتِيَّةِ قَبْلَ مُرَاجَعَةِ التَّشْكِيلِ:\n'+issues.join('\n')+'\nيَبْقَى النَّصُّ فِي الْمُحَرِّرِ لِتَصْحِيحِهِ.');
-    return false;
+    return window.confirm('التَّشْكِيلُ فِي بَعْضِ الصَّفَحَاتِ قَلِيلٌ، وَقَدْ يَتَأَثَّرُ النُّطْقُ. يُمْكِنُكَ حِفْظُ الْقِصَّةِ الآنَ وَمُرَاجَعَةُ النَّصِّ لَاحِقًا. هَلْ تُرِيدُ الْحِفْظَ؟\n\n'+issues.join('\n'));
   }
   return true;
 }
