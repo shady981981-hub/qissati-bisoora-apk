@@ -1233,7 +1233,7 @@ function voiceNativeStatus(t){
 function voiceNativeResult(t){
   const cur = $('voiceText').value.trim();
   $('voiceText').value = [cur, String(t || '').trim()].filter(Boolean).join(' ');
-  $('voiceStatus').textContent = '✓ أُضِيفَ كَلَامُكَ بِالْفُصْحَى! وَاصِلِ الْحَدِيثَ أَوِ اضْغَطْ إِيقَافًا.';
+  $('voiceStatus').textContent = '✓ حُوِّلَ التَّسْجِيلُ إِلَى نَصٍّ أَوَّلِيٍّ. رَاجِعْهُ قَبْلَ إِنْشَاءِ الْقِصَّةِ.';
 }
 
 function voiceNativeError(t){
@@ -1338,7 +1338,7 @@ function polishFushaText(){
   txt = txt.replace(/\s+/g, ' ').trim();
   if(!/[.!؟]$/.test(txt)) txt += '.';
   $('voiceText').value = txt;
-  $('voiceStatus').textContent = '✨ تَمَّ تَنْسِيقُ النَّصِّ بِالْعَرَبِيَّةِ الْفُصْحَى وَعَلَامَاتِ التَّرْقِيمِ!';
+  $('voiceStatus').textContent = '⚠️ أُجْرِيَ تَنْسِيقٌ أَوَّلِيٌّ فَقَطْ؛ لَمْ يَتِمَّ تَحْوِيلُ النَّصِّ آليًّا إِلَى فُصْحَى مَضْبُوطَةٍ بِالتَّشْكِيلِ. رَاجِعِ النَّصَّ قَبْلَ الْحِفْظِ.';
   playTone(587.33, 0.1);
 }
 
@@ -1368,7 +1368,6 @@ function previewVoiceRead(){
 
 function makeVoiceStory(){
   stopVoice();
-  polishFushaText();
   const raw = $('voiceText').value.trim();
   if(raw.length < 15){
     $('voiceStatus').textContent = '⚠️ احْكِ أَوِ اكْتُبْ جُمْلَتَيْنِ عَلَى الْأَقَلِّ لِإِنْشَاءِ قِصَّةٍ مُصَوَّرَةٍ.';
