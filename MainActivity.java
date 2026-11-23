@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,15 +63,31 @@ public class MainActivity extends AppCompatActivity {
                 evalJs("nativeSpeechStatus('⚠️ تَعَذَّرَ تَشْغِيلُ مُحَرِّكِ النُّطْقِ الْعَرَبِيِّ.');");
                 return;
             }
-            Locale fusha = new Locale("ar", "SA");
+            Locale fusha = new Locale("ar", "JO");
             int result = tts.setLanguage(fusha);
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                fusha = new Locale("ar", "SA");
+                result = tts.setLanguage(fusha);
+            }
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 arabicTtsReady = false;
                 evalJs("nativeSpeechStatus('⚠️ بَيَانَاتُ الصَّوْتِ الْعَرَبِيِّ غَيْرُ مُتَوَفِّرَةٍ عَلَى الْجِهَازِ.');");
                 return;
             }
+            if (tts.getVoices() != null) {
+                tts.getVoices().stream()
+                    .filter(v -> "ar".equalsIgnoreCase(v.getLocale().getLanguage()))
+                    .max(Comparator.comparingInt(v -> {
+                        String country = v.getLocale().getCountry();
+                        int regional = "JO".equalsIgnoreCase(country) || "LB".equalsIgnoreCase(country) ? 20
+                            : "SA".equalsIgnoreCase(country) || "AE".equalsIgnoreCase(country) ? 10 : 0;
+                        int offline = v.isNetworkConnectionRequired() ? 0 : 5;
+                        return v.getQuality() + regional + offline;
+                    }))
+                    .ifPresent(tts::setVoice);
+            }
             arabicTtsReady = true;
-            tts.setSpeechRate(0.88f);
+            tts.setSpeechRate(0.80f);
             tts.setPitch(1.0f);
             tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                 @Override public void onStart(String utteranceId) {
