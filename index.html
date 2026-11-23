@@ -347,6 +347,15 @@ main.wrap{padding-bottom:100px}
 @media(max-width:840px){.app-header{padding:9px 10px 18px}.top-bar{padding:8px}.brand-sub{display:none}.hero{grid-template-columns:1fr;text-align:center}.hero-frame{order:-1;aspect-ratio:16/10}.hero-actions{margin:0 auto}.hero h1{font-size:26px}.hud-pill{font-size:10px;padding:6px 8px}.app-icon-img{width:52px;height:52px}.nav-tabs{display:none}#featuredGrid .story-card{min-width:68vw;max-width:68vw}}
 @media(max-width:390px){.brand-title{font-size:21px}.hud-pills{gap:4px}.hero-actions{gap:8px}.btn-kid{font-size:12px;min-height:64px;padding:7px}.kid-icon{width:27px;height:27px}.dock-btn{font-size:8px}.dock-icon{width:24px;height:24px}}
 @media(min-width:721px){.mobile-dock{display:none}}
+
+.ai-chat-log{display:flex;flex-direction:column;gap:10px;max-height:48vh;min-height:180px;overflow:auto;padding:12px;border:1px solid var(--border);border-radius:18px;background:#f8f6ff}
+.ai-chat-bubble{max-width:min(92%,680px);padding:11px 14px;border-radius:16px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9;font-size:16px}
+.ai-chat-bubble.user{align-self:flex-start;background:#e9e1ff;color:#251747;border-bottom-right-radius:5px}
+.ai-chat-bubble.assistant{align-self:flex-end;background:#fff;color:var(--ink);border:1px solid var(--border);border-bottom-left-radius:5px}
+.ai-chat-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ai-chat-controls .btn-primary,.ai-chat-controls .btn-secondary{min-height:44px}
+.ai-chat-note{padding:11px 13px;border-radius:14px;background:#fff8e8;border:1px solid #f0dda7;color:#69511c;font-size:13px;line-height:1.8}
+@media(max-width:520px){.ai-chat-log{max-height:42vh;min-height:160px}.ai-chat-controls>*{flex:1}}
 </style>
 </head>
 <body>
@@ -395,6 +404,7 @@ main.wrap{padding-bottom:100px}
       <p id="heroDesc">اِخْتَرْ بَابَكَ وَانْطَلِقْ إِلَى عَالَمِ الْحِكَايَاتِ!</p>
       <div class="hero-actions">
         <button class="btn-kid orange" onclick="go('voice')"><svg class="kid-icon"><use href="#i-mic"/></svg><span>أَحْكِي قِصَّتِي<br>بِصَوْتِي</span></button>
+        <button class="btn-kid purple" onclick="openAiStoryChat()"><svg class="kid-icon"><use href="#i-book"/></svg><span>أَتَحَدَّثُ مَعَ<br>صَدِيقِي الذَّكِيِّ</span></button>
         <button class="btn-kid purple" onclick="go('catalog')"><svg class="kid-icon"><use href="#i-book"/></svg><span>أَقْرَأُ قِصَّةً<br>جَمِيلَةً</span></button>
         <button class="btn-kid green" onclick="startWizard('creative')"><svg class="kid-icon"><use href="#i-movie"/></svg><span>قِصَّةٌ<br>مُتَحَرِّكَةٌ</span></button>
         <button class="btn-kid blue" onclick="startWizard('creative')"><svg class="kid-icon"><use href="#i-palette"/></svg><span>أَصْنَعُ قِصَّتِي<br>بِالصُّوَرِ</span></button>
@@ -541,6 +551,25 @@ main.wrap{padding-bottom:100px}
         <button class="btn-secondary" onclick="previewVoiceRead()">🔊 اسْتَمِعْ إِلَى النَّصِّ قَبْلَ الْحِفْظِ</button>
       </div>
     </div>
+    <div class="panel" id="aiStoryChatPanel" style="margin-top:18px">
+      <div class="section-head" style="margin-top:0">
+        <h2 class="section-title" style="font-size:20px">💬 صَدِيقُ الْقِصَّةِ الذَّكِيُّ</h2>
+        <button class="btn-secondary" style="padding:7px 12px" onclick="clearAiChat()">مَحْوُ الْمُحَادَثَةِ</button>
+      </div>
+      <p style="margin:0 0 12px;color:var(--muted);line-height:1.8">اكتب سؤالك أو اضغط زر الميكروفون وتحدّث. سيردّ عليك صديقك بالفصحى المشكولة، ويمكنك الاستماع إلى رده.</p>
+      <div class="ai-chat-note">تُرسل الرسالة وآخر الرسائل اللازمة للرد إلى خادم الذكاء الاصطناعي؛ لا تُحفظ المحادثة في مكتبة التطبيق. لا تكتب اسمك الحقيقي أو عنوانك أو مدرستك. الإملاء الصوتي قد يعالج الصوت وفق إعدادات خدمة التعرّف المثبّتة على الجهاز.</div>
+      <label style="display:flex;gap:9px;align-items:flex-start;margin:12px 0;font-size:13.5px;line-height:1.8"><input id="chatGuardianConsent" type="checkbox" style="margin-top:5px;accent-color:var(--primary)"><span>أؤكد بصفتي وليّ الأمر أنني راجعت طريقة استخدام المحادثة ووافقت عليها.</span></label>
+      <div id="aiChatLog" class="ai-chat-log" role="log" aria-live="polite" aria-label="محادثة صديق القصة">
+        <div class="ai-chat-bubble assistant">مَرْحَبًا! أَنَا صَدِيقُ قِصَّتِكَ. مَا الْمَغَامَرَةُ الَّتِي تُحِبُّ أَنْ نَتَحَدَّثَ عَنْهَا؟</div>
+      </div>
+      <div id="aiChatStatus" role="status" aria-live="polite" style="margin-top:8px;color:var(--primary-dark);font-weight:800;font-size:13.5px">اكتب رسالة قصيرة لِنَبْدَأَ.</div>
+      <textarea id="aiChatInput" class="field-input" rows="2" maxlength="700" placeholder="اكتب سؤالك هنا..." aria-label="رسالتك إلى صديق القصة"></textarea>
+      <div class="ai-chat-controls">
+        <button class="btn-primary" id="aiChatSendBtn" onclick="sendAiChatMessage()">إِرْسَالُ الرِّسَالَةِ</button>
+        <button class="btn-secondary" id="aiChatMicBtn" onclick="startAiChatVoice()">🎤 تَحَدَّثْ</button>
+        <button class="btn-secondary" id="aiChatSpeakBtn" onclick="speakLatestAiReply()">🔊 اسْتَمِعْ</button>
+      </div>
+    </div>
   </section>
 
   <!-- CATALOG -->
@@ -661,6 +690,7 @@ main.wrap{padding-bottom:100px}
 
 <script>
 const FUSHA_CONVERSION_ENDPOINT = 'https://fusha-api-production.up.railway.app/convert';
+const AI_CHAT_ENDPOINT = 'https://fusha-api-production.up.railway.app/chat';
 const IMAGES = {"ICON": "qissati_icon.jpg", "HERO": "scene_world.jpg", "GARDEN": "garden.jpg", "MAGIC": "magic.jpg", "SEA": "sea.jpg", "FOREST": "forest.jpg", "SPACE": "space.jpg", "CITY": "city.jpg", "BIRD": "scene_bird.jpg", "FRIENDS": "scene_friends.jpg", "OCEAN_STORY": "scene_ocean.jpg", "RAINBOW": "scene_rainbow.jpg", "MAGIC_STORY": "scene_reading.jpg"};
 const IMAGE_META = {"ICON": {"file": "qissati_icon.jpg", "width": 1536, "height": 1536, "format": "JPEG", "bytes": 244816}, "HERO": {"file": "scene_world.jpg", "width": 1536, "height": 857, "format": "JPEG", "bytes": 155513}, "GARDEN": {"file": "input_file_4.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 788273}, "MAGIC": {"file": "input_file_6.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 770510}, "SEA": {"file": "input_file_7.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 854276}, "FOREST": {"file": "input_file_8.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 796242}, "SPACE": {"file": "input_file_9.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 765739}, "CITY": {"file": "input_file_11.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 944961}, "BIRD": {"file": "scene_bird.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 188393}, "FRIENDS": {"file": "scene_friends.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 186720}, "OCEAN_STORY": {"file": "scene_ocean.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 204674}, "RAINBOW": {"file": "scene_rainbow.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 249759}, "MAGIC_STORY": {"file": "scene_reading.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 165607}};
 
@@ -1369,6 +1399,127 @@ function voiceNativeStatus(t){
   const active = t.includes('🎤');
   $('voiceStartBtn').disabled = active;
   $('voiceWave').classList.toggle('active', active);
+}
+
+
+let aiChatMessages = [];
+let aiChatBusy = false;
+let latestAiReply = '';
+let aiChatRecognizer = null;
+
+function addAiChatBubble(role, text){
+  const bubble=document.createElement('div');
+  bubble.className='ai-chat-bubble '+(role==='user'?'user':'assistant');
+  bubble.textContent=String(text||'');
+  $('aiChatLog').appendChild(bubble);
+  $('aiChatLog').scrollTop=$('aiChatLog').scrollHeight;
+}
+function checkAiChatConsent(){
+  if(!$('chatGuardianConsent').checked){
+    $('aiChatStatus').textContent='يُرْجَى مُوَافَقَةُ وَلِيِّ الْأَمْرِ قَبْلَ بَدْءِ الْمُحَادَثَةِ.';
+    return false;
+  }
+  return true;
+}
+async function sendAiChatMessage(value){
+  if(aiChatBusy)return;
+  if(!checkAiChatConsent())return;
+  const input=$('aiChatInput');
+  const message=String(value===undefined?input.value:value).trim();
+  if(!message){$('aiChatStatus').textContent='اكتب رسالة قصيرة أو استخدم الميكروفون.';return;}
+  if(message.length>700){$('aiChatStatus').textContent='اجعل رسالتك أقصر من 700 حرف.';return;}
+  addAiChatBubble('user',message);
+  input.value='';
+  const pending=aiChatMessages.concat([{role:'user',content:message}]).slice(-8);
+  aiChatBusy=true;
+  $('aiChatSendBtn').disabled=true;
+  $('aiChatMicBtn').disabled=true;
+  $('aiChatStatus').textContent='يُفَكِّرُ صَدِيقُكَ فِي إِجَابَةٍ...';
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),30000);
+  try{
+    const response=await fetch(AI_CHAT_ENDPOINT,{
+      method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+      cache:'no-store',signal:controller.signal,body:JSON.stringify({messages:pending})
+    });
+    const payload=await response.json().catch(()=>({}));
+    if(!response.ok){
+      if(response.status===429)throw new Error('أَرْسَلْتَ رَسَائِلَ كَثِيرَةً. اِنْتَظِرْ قَلِيلًا ثُمَّ حَاوِلْ.');
+      if(response.status===503)throw new Error('خِدْمَةُ الذَّكَاءِ الِاصْطِنَاعِيِّ غَيْرُ مُهَيَّأَةٍ حَالِيًّا.');
+      throw new Error('تَعَذَّرَ الْوُصُولُ إِلَى صَدِيقِكَ. تَأَكَّدْ مِنَ الْإِنْتِرْنِتِ وَحَاوِلْ مُجَدَّدًا.');
+    }
+    const reply=String(payload.reply||'').trim();
+    if(!reply)throw new Error('لَمْ تَصِلْ إِجَابَةٌ؛ حَاوِلْ مُجَدَّدًا.');
+    aiChatMessages=pending.concat([{role:'assistant',content:reply}]).slice(-8);
+    latestAiReply=reply;
+    addAiChatBubble('assistant',reply);
+    $('aiChatStatus').textContent='تَسْتَطِيعُ إِرْسَالَ سُؤَالٍ آخَرَ أَوِ الِاسْتِمَاعَ إِلَى الْإِجَابَةِ.';
+    speakLatestAiReply();
+  }catch(error){
+    const msg=error.name==='AbortError'?'تَأَخَّرَ الرَّدُّ. حَاوِلْ بَعْدَ لَحَظَاتٍ.':(error.message||'حَدَثَ خَطَأٌ فِي الْمُحَادَثَةِ.');
+    $('aiChatStatus').textContent=msg;
+    addAiChatBubble('assistant',msg);
+  }finally{
+    clearTimeout(timeout);
+    aiChatBusy=false;
+    $('aiChatSendBtn').disabled=false;
+    $('aiChatMicBtn').disabled=false;
+  }
+}
+function speakLatestAiReply(){
+  if(!latestAiReply){$('aiChatStatus').textContent='لَا تُوجَدُ إِجَابَةٌ لِاسْتِمَاعِهَا بَعْدُ.';return;}
+  if(window.QissatiAndroid && typeof window.QissatiAndroid.speakArabic==='function'){
+    window.QissatiAndroid.speakArabic(latestAiReply);
+    return;
+  }
+  if(window.speechSynthesis){
+    window.speechSynthesis.cancel();
+    const utterance=new SpeechSynthesisUtterance(latestAiReply);
+    utterance.lang='ar-SA';utterance.rate=0.82;
+    window.speechSynthesis.speak(utterance);
+  }else{
+    $('aiChatStatus').textContent='الصَّوْتُ غَيْرُ مُتَاحٍ فِي هَذَا الْمُتَصَفِّحِ.';
+  }
+}
+function startAiChatVoice(){
+  if(!checkAiChatConsent())return;
+  if(aiChatBusy)return;
+  stopSpeech();
+  $('aiChatStatus').textContent='🎤 تَحَدَّثْ بِعَرَبِيَّةٍ وَاضِحَةٍ.';
+  if(window.QissatiAndroid && typeof window.QissatiAndroid.startChatVoice==='function'){
+    window.QissatiAndroid.startChatVoice();
+    return;
+  }
+  const SpeechAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechAPI){$('aiChatStatus').textContent='التَّحَدُّثُ الصَّوْتِيُّ غَيْرُ مُتَاحٍ؛ اُكْتُبْ رِسَالَتَكَ.';return;}
+  try{
+    aiChatRecognizer=new SpeechAPI();
+    aiChatRecognizer.lang='ar-SA';aiChatRecognizer.continuous=false;aiChatRecognizer.interimResults=false;
+    aiChatRecognizer.onresult=event=>{
+      const text=event.results?.[0]?.[0]?.transcript||'';
+      if(text)sendAiChatMessage(text);
+    };
+    aiChatRecognizer.onerror=()=>{$('aiChatStatus').textContent='لَمْ أَفْهَمِ الْكَلَامَ؛ حَاوِلْ أَوِ اكْتُبْ رِسَالَتَكَ.';};
+    aiChatRecognizer.start();
+  }catch{$('aiChatStatus').textContent='تَعَذَّرَ بَدْءُ التَّعَرُّفِ عَلَى الصَّوْتِ؛ اُكْتُبْ رِسَالَتَكَ.';}
+}
+function chatNativeStatus(text){$('aiChatStatus').textContent=String(text||'');}
+function chatNativeResult(text){
+  $('aiChatInput').value=String(text||'');
+  sendAiChatMessage(text);
+}
+function chatNativeError(text){$('aiChatStatus').textContent=String(text||'تعذر التعرّف على الصوت.');}
+function clearAiChat(){
+  if(aiChatBusy){$('aiChatStatus').textContent='اِنْتَظِرْ حَتَّى يَكْتَمِلَ الرَّدُّ ثُمَّ امْحُ الْمُحَادَثَةَ.';return;}
+  aiChatMessages=[];latestAiReply='';
+  $('aiChatLog').innerHTML='';
+  addAiChatBubble('assistant','مَرْحَبًا! أَنَا صَدِيقُ قِصَّتِكَ. مَا الْمَغَامَرَةُ الَّتِي تُحِبُّ أَنْ نَتَحَدَّثَ عَنْهَا؟');
+  $('aiChatStatus').textContent='مُحِيَتِ الْمُحَادَثَةُ مِنْ هَذِهِ الْجَلْسَةِ.';
+  $('aiChatInput').value='';
+}
+function openAiStoryChat(){
+  go('voice');
+  setTimeout(()=>$('aiStoryChatPanel').scrollIntoView({behavior:'smooth',block:'start'}),120);
 }
 
 function voiceNativeResult(t){
