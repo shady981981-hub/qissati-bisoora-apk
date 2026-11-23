@@ -1,0 +1,226 @@
+package ps.khanyounis.qissati;
+
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Locale;
+
+public class MainActivity extends AppCompatActivity {
+    private static final int REQ_RECORD_AUDIO = 101;
+    private WebView webView;
+    private TextToSpeech tts;
+    private SpeechRecognizer speechRecognizer;
+    private boolean keepListening = false;
+
+    @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        webView = new WebView(this);
+        setContentView(webView);
+
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setAllowFileAccess(true);
+        settings.setMediaPlaybackRequiresUserGesture(false);
+
+        webView.setWebViewClient(new WebViewClient());
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.addJavascriptInterface(new QissatiBridge(), "QissatiAndroid");
+
+        tts = new TextToSpeech(this, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                Locale fusha = new Locale("ar", "SA");
+                int res = tts.setLanguage(fusha);
+                if (res == TextToSpeech.LANG_MISSING_DATA || res == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    tts.setLanguage(new Locale("ar"));
+                }
+                tts.setSpeechRate(0.88f);
+                tts.setPitch(1.04f);
+            }
+        });
+
+        webView.loadUrl("file:///android_asset/index.html");
+    }
+
+    private void evalJs(String script) {
+        runOnUiThread(() -> {
+            if (webView != null) {
+                webView.evaluateJavascript(script, null);
+            }
+        });
+    }
+
+    private String escapeJs(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\")
+                .replace("'", "\\'")
+                .replace("\n", " ")
+                .replace("\r", " ");
+    }
+
+    private void initAndStartRecognizer() {
+        runOnUiThread(() -> {
+            if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+                evalJs("voiceNativeError('خدمة التعرف على الصوت غير متوفرة على هذا الجهاز.');");
+                return;
+            }
+            if (speechRecognizer != null) {
+                speechRecognizer.destroy();
+            }
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+            speechRecognizer.setRecognitionListener(new RecognitionListener() {
+                @Override public void onReadyForSpeech(Bundle params) {
+                    evalJs("voiceNativeStatus('🎤 تَحَدَّثْ الْآنَ بِالْعَرَبِيَّةِ الْفُصْحَى...');");
+                }
+                @Override public void onBeginningOfSpeech() {}
+                @Override public void onRmsChanged(float rmsdB) {}
+                @Override public void onBufferReceived(byte[] buffer) {}
+                @Override public void onEndOfSpeech() {}
+                @Override public void onError(int error) {
+                    if (keepListening && (error == SpeechRecognizer.ERROR_NO_MATCH || error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT)) {
+                        restartListeningLoop();
+                    } else {
+                        keepListening = false;
+                        evalJs("voiceNativeError('تَعَذَّرَ الْتِقَاطُ الصَّوْتِ، حَاوِلْ مَرَّةً أُخْرَى.');");
+                    }
+                }
+                @Override public void onResults(Bundle results) {
+                    ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                    if (matches != null && !matches.isEmpty()) {
+                        evalJs("voiceNativeResult('" + escapeJs(matches.get(0)) + "');");
+                    }
+                    if (keepListening) {
+                        restartListeningLoop();
+                    }
+                }
+                @Override public void onPartialResults(Bundle partialResults) {}
+                @Override public void onEvent(int eventType, Bundle params) {}
+            });
+            restartListeningLoop();
+        });
+    }
+
+    private void restartListeningLoop() {
+        if (!keepListening || speechRecognizer == null) return;
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ar-SA");
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "ar-SA");
+        intent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, "ar-SA");
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        speechRecognizer.startListening(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQ_RECORD_AUDIO && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            keepListening = true;
+            initAndStartRecognizer();
+        } else {
+            evalJs("voiceNativeError('يُرْجَى السَّمَاحُ بِإِذْنِ الْمِيكْرُوفُونِ لِلتَّسْجِيلِ الصَّوْتِيِّ.');");
+        }
+    }
+
+    public class QissatiBridge {
+        @JavascriptInterface
+        public void speakArabic(String text) {
+            if (tts != null && text != null) {
+                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "qissati-reader");
+            }
+        }
+
+        @JavascriptInterface
+        public void stopSpeaking() {
+            if (tts != null) {
+                tts.stop();
+            }
+        }
+
+        @JavascriptInterface
+        public void startVoiceStory() {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, REQ_RECORD_AUDIO);
+                return;
+            }
+            keepListening = true;
+            initAndStartRecognizer();
+        }
+
+        @JavascriptInterface
+        public void stopVoiceStory() {
+            keepListening = false;
+            runOnUiThread(() -> {
+                if (speechRecognizer != null) {
+                    speechRecognizer.stopListening();
+                }
+                evalJs("voiceNativeStatus('✓ تَمَّ إِيقَافُ التَّسْجِيلِ.');");
+            });
+        }
+
+        @JavascriptInterface
+        public void fetchStoryCatalog(String urlStr) {
+            new Thread(() -> {
+                try {
+                    URL url = new URL(urlStr);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(8000);
+                    conn.setReadTimeout(8000);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) sb.append(line);
+                    br.close();
+                    evalJs("remoteCatalogResult('" + escapeJs(sb.toString()) + "');");
+                } catch (Exception e) {
+                    evalJs("remoteCatalogError('تَعَذَّرَ جَلْبُ الْمَكْتَبَةِ السَّحَابِيَّةِ.');");
+                }
+            }).start();
+        }
+
+        @JavascriptInterface
+        public void printStory() {
+            runOnUiThread(() -> {
+                PrintManager pm = (PrintManager) getSystemService(PRINT_SERVICE);
+                if (pm != null && webView != null) {
+                    PrintDocumentAdapter adapter = webView.createPrintDocumentAdapter("Qissati-Story");
+                    pm.print("Qissati-Story", adapter, new PrintAttributes.Builder().build());
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        keepListening = false;
+        if (speechRecognizer != null) speechRecognizer.destroy();
+        if (tts != null) { tts.stop(); tts.shutdown(); }
+        super.onDestroy();
+    }
+}
