@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private TextToSpeech tts;
     private volatile boolean arabicTtsReady = false;
+    private volatile String currentUtteranceId = null;
+    private int utteranceSequence = 0;
     private SpeechRecognizer speechRecognizer;
     private boolean keepListening = false;
 
@@ -72,12 +74,17 @@ public class MainActivity extends AppCompatActivity {
             tts.setPitch(1.0f);
             tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                 @Override public void onStart(String utteranceId) {
+                    if (!utteranceId.equals(currentUtteranceId)) return;
                     evalJs("nativeSpeechStatus('🔊 تَجْرِي الْقِرَاءَةُ الْآنَ.');");
                 }
                 @Override public void onDone(String utteranceId) {
+                    if (!utteranceId.equals(currentUtteranceId)) return;
+                    currentUtteranceId = null;
                     evalJs("nativeSpeechFinished();");
                 }
                 @Override public void onError(String utteranceId) {
+                    if (!utteranceId.equals(currentUtteranceId)) return;
+                    currentUtteranceId = null;
                     evalJs("nativeSpeechStatus('⚠️ حَدَثَ خَطَأٌ أَثْنَاءَ النُّطْقِ.');");
                 }
             });
@@ -169,23 +176,28 @@ public class MainActivity extends AppCompatActivity {
     public class QissatiBridge {
         @JavascriptInterface
         public void speakArabic(String text) {
-            if (!arabicTtsReady || tts == null) {
-                evalJs("nativeSpeechStatus('⚠️ لَا يَتَوَفَّرُ مُحَرِّكُ نُطْقٍ عَرَبِيٍّ جَاهِزٌ.');");
-                return;
-            }
-            if (text != null && !text.trim().isEmpty()) {
-                int result = tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "qissati-reader");
+            runOnUiThread(() -> {
+                if (!arabicTtsReady || tts == null) {
+                    evalJs("nativeSpeechStatus('⚠️ لَا يَتَوَفَّرُ مُحَرِّكُ نُطْقٍ عَرَبِيٍّ جَاهِزٌ.');");
+                    return;
+                }
+                if (text == null || text.trim().isEmpty()) return;
+                String id = "qissati-reader-" + (++utteranceSequence);
+                currentUtteranceId = id;
+                int result = tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, id);
                 if (result == TextToSpeech.ERROR) {
+                    currentUtteranceId = null;
                     evalJs("nativeSpeechStatus('⚠️ تَعَذَّرَ بَدْءُ النُّطْقِ الْعَرَبِيِّ.');");
                 }
-            }
+            });
         }
 
         @JavascriptInterface
         public void stopSpeaking() {
-            if (tts != null) {
-                tts.stop();
-            }
+            runOnUiThread(() -> {
+                currentUtteranceId = null;
+                if (tts != null) tts.stop();
+            });
         }
 
         @JavascriptInterface
