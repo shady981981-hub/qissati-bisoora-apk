@@ -1444,9 +1444,21 @@ async function sendAiChatMessage(value){
     });
     const payload=await response.json().catch(()=>({}));
     if(!response.ok){
-      if(response.status===429)throw new Error('أَرْسَلْتَ رَسَائِلَ كَثِيرَةً. اِنْتَظِرْ قَلِيلًا ثُمَّ حَاوِلْ.');
-      if(response.status===503)throw new Error('خِدْمَةُ الذَّكَاءِ الِاصْطِنَاعِيِّ غَيْرُ مُهَيَّأَةٍ حَالِيًّا.');
-      throw new Error('تَعَذَّرَ الْوُصُولُ إِلَى صَدِيقِكَ. تَأَكَّدْ مِنَ الْإِنْتِرْنِتِ وَحَاوِلْ مُجَدَّدًا.');
+      const messages={
+        service_not_configured:'خِدْمَةُ الذَّكَاءِ الِاصْطِنَاعِيِّ غَيْرُ مُهَيَّأَةٍ حَالِيًّا.',
+        api_key_invalid:'مِفْتَاحُ خِدْمَةِ الذَّكَاءِ الِاصْطِنَاعِيِّ غَيْرُ صَالِحٍ. يَحْتَاجُ الْمَسْؤُولُ إِلَى تَحْدِيثِهِ فِي إِعْدَادَاتِ الْخَادِمِ.',
+        api_usage_limit:'وَصَلَتْ خِدْمَةُ الذَّكَاءِ الِاصْطِنَاعِيِّ إِلَى حَدِّ الِاسْتِخْدَامِ أَوِ الرَّصِيدِ الْمُتَاحِ.',
+        api_rate_limited:'الخِدْمَةُ تَتَلَقَّى طَلَبَاتٍ كَثِيرَةً. اِنْتَظِرْ قَلِيلًا ثُمَّ حَاوِلْ.',
+        api_permission:'لَا يَمْلِكُ الْمِفْتَاحُ صَلَاحِيَّةَ اسْتِخْدَامِ هَذِهِ الْخِدْمَةِ.',
+        api_model_unavailable:'نَمُوذَجُ الذَّكَاءِ الِاصْطِنَاعِيِّ غَيْرُ مُتَاحٍ لِهَذَا الْحِسَابِ.',
+        upstream_timeout:'تَأَخَّرَ رَدُّ الْخِدْمَةِ. حَاوِلْ بَعْدَ لَحَظَاتٍ.',
+        upstream_unreachable:'تَعَذَّرَ اتِّصَالُ الْخَادِمِ بِخِدْمَةِ الذَّكَاءِ الِاصْطِنَاعِيِّ.',
+        upstream_failure:'تَعَذَّرَ إِكْمَالُ الطَّلَبِ. رَقْمُ الْمُرَاجَعَةِ: '+String(payload.request_id||'غَيْرُ مُتَاحٍ').slice(0,16),
+        empty_result:'لَمْ تَصِلْ إِجَابَةٌ؛ حَاوِلْ مُجَدَّدًا.'
+      };
+      if(response.status===429)throw new Error('أَرْسَلْتَ رَسَائِلَ كَثِيرَةً إِلَى الْخَادِمِ. اِنْتَظِرْ قَلِيلًا ثُمَّ حَاوِلْ.');
+      if(payload.code==='access_denied')throw new Error('يَحْتَاجُ الْخَادِمُ إِلَى ضَبْطِ صَلَاحِيَّةِ الْوُصُولِ.');
+      throw new Error(messages[payload.code]||('تَعَذَّرَ إِكْمَالُ الطَّلَبِ'+(payload.request_id?'؛ رَقْمُ الْمُرَاجَعَةِ: '+String(payload.request_id).slice(0,16):'.')));
     }
     const reply=String(payload.reply||'').trim();
     if(!reply)throw new Error('لَمْ تَصِلْ إِجَابَةٌ؛ حَاوِلْ مُجَدَّدًا.');
@@ -1458,6 +1470,7 @@ async function sendAiChatMessage(value){
   }catch(error){
     const msg=error.name==='AbortError'?'تَأَخَّرَ الرَّدُّ. حَاوِلْ بَعْدَ لَحَظَاتٍ.':(error.message||'حَدَثَ خَطَأٌ فِي الْمُحَادَثَةِ.');
     $('aiChatStatus').textContent=msg;
+    if(!input.value)input.value=message;
     addAiChatBubble('assistant',msg);
   }finally{
     clearTimeout(timeout);

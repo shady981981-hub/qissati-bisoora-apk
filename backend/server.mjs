@@ -8,7 +8,7 @@ http.createServer(async (req,res)=>{
   if(req.method==='OPTIONS'){res.writeHead(204,{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'Content-Type, X-Qissati-Access','Access-Control-Allow-Methods':'POST, OPTIONS'});return res.end();}
   if(pathname==='/health')return send(res,200,{ok:true,configured:!!process.env.OPENAI_API_KEY});
   if(!['/convert','/chat'].includes(pathname)||req.method!=='POST')return send(res,404,{error:'not found'});
-  if(!process.env.OPENAI_API_KEY)return send(res,503,{error:'AI service not configured'});
+  if(!process.env.OPENAI_API_KEY)return send(res,503,{code:'service_not_configured'});
   if(process.env.QISSATI_ACCESS_TOKEN && req.headers['x-qissati-access']!==process.env.QISSATI_ACCESS_TOKEN)return send(res,401,{error:'unauthorized'});
   const ip=(req.headers['x-forwarded-for']||req.socket.remoteAddress||'').toString().split(',')[0];
   const now=Date.now();const hit=limit.get(ip)||{count:0,until:now+60000};
@@ -39,10 +39,27 @@ http.createServer(async (req,res)=>{
     }
     const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),25000);
     let upstream;
-    try{upstream=await fetch('https://api.openai.com/v1/responses',{method:'POST',signal:ctrl.signal,headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({model:process.env.OPENAI_MODEL||'gpt-4.1-mini',store:false,instructions,input,max_output_tokens:isChat?450:2500})});}finally{clearTimeout(timer);}
-    if(!upstream.ok)return send(res,502,{error:'AI service unavailable',request_id:randomUUID()});
+    try{
+      upstream=await fetch('https://api.openai.com/v1/responses',{method:'POST',signal:ctrl.signal,headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({model:process.env.OPENAI_MODEL||'gpt-4.1-mini',store:false,instructions,input,max_output_tokens:isChat?450:2500})});
+    }catch(error){
+      clearTimeout(timer);
+      return send(res,error?.name==='AbortError'?504:502,{code:error?.name==='AbortError'?'upstream_timeout':'upstream_unreachable'});
+    }finally{clearTimeout(timer);}
+    if(!upstream.ok){
+      const providerBody=await upstream.json().catch(()=>({}));
+      const rawCode=String(providerBody?.error?.code||providerBody?.error?.type||'');
+      const allowedCodes=new Set(['insufficient_quota','rate_limit_exceeded','model_not_found','invalid_api_key','billing_hard_limit_reached','project_not_found','permission_denied']);
+      const providerCode=allowedCodes.has(rawCode)?rawCode:'unknown';
+      const requestId=String(upstream.headers.get('x-request-id')||randomUUID()).slice(0,100);
+      console.error(JSON.stringify({event:'openai_request_failed',status:upstream.status,code:providerCode,request_id:requestId}));
+      if(upstream.status===401)return send(res,503,{code:'api_key_invalid',request_id:requestId});
+      if(upstream.status===429)return send(res,503,{code:providerCode==='insufficient_quota'||providerCode==='billing_hard_limit_reached'?'api_usage_limit':'api_rate_limited',request_id:requestId});
+      if(upstream.status===403)return send(res,503,{code:'api_permission',request_id:requestId});
+      if(providerCode==='model_not_found')return send(res,503,{code:'api_model_unavailable',request_id:requestId});
+      return send(res,502,{code:'upstream_failure',request_id:requestId});
+    }
     const result=await upstream.json();const output=(result.output||[]).flatMap(x=>x.content||[]).filter(x=>x.type==='output_text').map(x=>x.text).join('').trim();
-    if(!output)return send(res,502,{error:'empty result'});
+    if(!output)return send(res,502,{code:'empty_result'});
     return send(res,200,isChat?{reply:output}:{fusha_text:output});
-  }catch{return send(res,400,{error:'invalid request or timeout'});}
+  }catch{return send(res,400,{code:'invalid_request'});}
 }).listen(port,'0.0.0.0');
