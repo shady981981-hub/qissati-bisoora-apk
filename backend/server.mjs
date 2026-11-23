@@ -23,11 +23,11 @@ http.createServer(async (req,res)=>{
     let instructions;
     if(isChat){
       const messages=Array.isArray(data.messages)?data.messages.slice(-8).map(item=>({
-        role:item?.role==='assistant'?'assistant':'user',
+        role:item?.role==='assistant'?'assistant':item?.role==='user'?'user':null,
         content:typeof item?.content==='string'?item.content.trim().slice(0,1000):''
-      })).filter(item=>item.content):[];
+      })).filter(item=>item.role&&item.content):[];
       const totalChars=messages.reduce((sum,item)=>sum+item.content.length,0);
-      if(!messages.length||messages.length>8||messages[messages.length-1].role!=='user'||totalChars>6000)
+      if(!messages.length||messages.length>8||messages[messages.length-1].role!=='user'||totalChars>4000)
         return send(res,400,{error:'invalid conversation'});
       input=messages;
       instructions='أنت صديق قصصي لطيف وآمن للأطفال من عمر 8 إلى 14 سنة. أجب بالعربية الفصحى السهلة، واضبط كل الكلمات بالتشكيل الكامل قدر الإمكان، مع جمل قصيرة واضحة. كن مشجعًا ومهذبًا، واسأل سؤالًا واحدًا ممتعًا يساعد الطفل على الخيال أو فهم القصة. لا تطلب الاسم الحقيقي أو العنوان أو المدرسة أو رقم الهاتف أو الصور أو أي معلومات شخصية. لا تقدّم محتوى مخيفًا أو جنسيًا أو عنيفًا، ولا تعليمات مؤذية أو نصائح طبية أو مالية. إذا ذكر الطفل خطرًا أو أذى أو سرًا يزعجه، فشجّعه على إخبار ولي أمره أو شخص بالغ موثوق فورًا. لا تدّعِ أنك إنسان أو أنك تحفظ المحادثة. أعد 2 إلى 4 جمل موجزة فقط.';
