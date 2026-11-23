@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - development/arabic-quality-reader
+      - development/release-hardening
+      - main
   pull_request:
     branches:
       - main
