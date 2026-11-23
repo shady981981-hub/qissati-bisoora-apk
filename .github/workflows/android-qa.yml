@@ -23,6 +23,8 @@ jobs:
           node-version: '22'
       - name: Validate inline JavaScript syntax
         run: node scripts/check-inline-js.cjs
+      - name: Validate backend JavaScript syntax
+        run: node --check backend/server.mjs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -53,6 +55,7 @@ jobs:
           unzip -p "$APK" assets/index.html > /tmp/qissati-packaged-index.html
           cmp index.html /tmp/qissati-packaged-index.html
           grep -q 'convertRecordedTextToFusha' /tmp/qissati-packaged-index.html
+          grep -q 'sendAiChatMessage' /tmp/qissati-packaged-index.html
       - name: Publish test APK
         uses: actions/upload-artifact@v4
         with:
