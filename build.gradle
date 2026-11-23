@@ -46,3 +46,10 @@ dependencies {
     }
     implementation 'androidx.appcompat:appcompat:1.7.0'
 }
+
+tasks.register('syncStoryWebAssets', Copy) {
+    from('index.html')
+    into(layout.buildDirectory.dir('generated/qissatiAssets'))
+}
+android.sourceSets.main.assets.srcDir(layout.buildDirectory.dir('generated/qissatiAssets'))
+tasks.named('preBuild').configure { dependsOn('syncStoryWebAssets') }

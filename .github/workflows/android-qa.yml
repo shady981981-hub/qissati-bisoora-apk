@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - development/arabic-quality-reader
+      - development/voice-fusha-conversion
   pull_request:
     branches:
       - main
@@ -37,14 +38,20 @@ jobs:
       - name: Stage web assets and launcher icon
         run: |
           mkdir -p src/main/assets src/main/res/drawable-nodpi
-          cp index.html src/main/assets/
-          for asset in icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg scene_world.jpg scene_bird.jpg scene_friends.jpg scene_ocean.jpg scene_rainbow.jpg scene_reading.jpg qissati_icon.jpg; do
+                    for asset in icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg scene_world.jpg scene_bird.jpg scene_friends.jpg scene_ocean.jpg scene_rainbow.jpg scene_reading.jpg qissati_icon.jpg; do
             test -s "$asset" || { echo "Missing required image: $asset"; exit 1; }
             cp "$asset" src/main/assets/
           done
           cp qissati_icon.jpg src/main/res/drawable-nodpi/qissati_launcher.jpg
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
+      - name: Verify packaged story interface
+        run: |
+          APK="$(find build/outputs/apk/debug -name '*.apk' -type f | head -1)"
+          test -n "$APK"
+          unzip -p "$APK" assets/index.html > /tmp/qissati-packaged-index.html
+          cmp index.html /tmp/qissati-packaged-index.html
+          grep -q 'convertRecordedTextToFusha' /tmp/qissati-packaged-index.html
       - name: Publish test APK
         uses: actions/upload-artifact@v4
         with:
