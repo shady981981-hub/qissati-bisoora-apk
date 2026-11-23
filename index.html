@@ -356,6 +356,35 @@ main.wrap{padding-bottom:100px}
 .ai-chat-controls .btn-primary,.ai-chat-controls .btn-secondary{min-height:44px}
 .ai-chat-note{padding:11px 13px;border-radius:14px;background:#fff8e8;border:1px solid #f0dda7;color:#69511c;font-size:13px;line-height:1.8}
 @media(max-width:520px){.ai-chat-log{max-height:42vh;min-height:160px}.ai-chat-controls>*{flex:1}}
+
+/* 3D Studio */
+.studio-banner{padding:26px 22px;margin-bottom:16px;border-radius:26px;color:#fff;background:radial-gradient(circle at 85% 10%,rgba(6,182,212,.35),transparent 35%),linear-gradient(135deg,#16072e,#31105c 65%,#19082f);border:2px solid #7040aa;box-shadow:0 14px 32px rgba(38,12,77,.2)}
+.studio-banner h2{margin:8px 0;font-size:clamp(21px,4vw,30px);color:#71e8f5}
+.studio-banner p{margin:0;line-height:1.8;color:#e3d4fa}
+.studio-kicker{color:#ffd85c;font-weight:900}
+.studio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.studio-panel{padding:20px;border-radius:24px;background:linear-gradient(150deg,#27104e,#16082e);border:2px solid #5b3487;color:#f5edff;box-shadow:0 10px 28px rgba(20,7,45,.18)}
+.studio-panel h3{color:#ffd85c;margin:0 0 10px;font-size:19px}
+.studio-panel p{color:#d9c8ed;line-height:1.75}
+.studio-panel label{display:block;margin-top:12px;font-weight:800;color:#d9b9ff}
+.studio-panel .field-input{background:#110821;color:#fff;border-color:#7349a2}
+.studio-upload{width:100%;margin:14px 0;padding:24px 14px;border:2px dashed #d3a52a;border-radius:18px;background:#170a31;color:#fff;font-weight:900;line-height:1.6}
+.studio-preview-wrap{text-align:center;margin:14px 0}
+.studio-preview-card{width:min(260px,80%);margin:0 auto;padding:8px;border-radius:22px;background:linear-gradient(135deg,#ffd04f,#a34bff,#32d3e5);box-shadow:0 16px 28px #08020f88;transform:perspective(650px) rotateY(-7deg) rotateX(4deg);transition:transform .3s}
+.studio-preview-card:hover{transform:perspective(650px) rotateY(0) rotateX(0) translateY(-4px)}
+.studio-preview-card img{width:100%;aspect-ratio:1;object-fit:cover;display:block;border-radius:16px;background:#170a31}
+.studio-preview-wrap p{font-size:13px;color:#ffe18a;margin:10px 0}
+.studio-status{min-height:24px;margin-top:10px;font-size:13px;color:#77e7c9;font-weight:800}
+.studio-note{font-size:12px!important;color:#bca9d4!important}
+.studio-assets-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+.studio-asset-card{min-width:0;padding:10px;border-radius:18px;background:#15092a;border:1px solid #61358f;text-align:center}
+.studio-asset-card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:13px;box-shadow:0 7px 16px #0006}
+.studio-asset-card strong{display:block;margin:8px 0;color:#f4deff;overflow-wrap:anywhere}
+.studio-asset-card .asset-actions{display:grid;gap:6px}
+.studio-asset-card button{padding:7px 8px;border-radius:10px;font-weight:800;font-size:12px}
+.studio-empty{padding:20px;border:1px dashed #6c4890;border-radius:16px;color:#c5b1dd;text-align:center;line-height:1.7}
+.network-on{background:rgba(0,128,95,.28);border-color:#68dfbd}
+.network-off{background:rgba(177,55,67,.25);border-color:#ff9aa4}
 </style>
 </head>
 <body>
@@ -390,6 +419,7 @@ main.wrap{padding-bottom:100px}
       <div class="hud-pill gold"><svg class="nav-icon"><use href="#i-star"/></svg><span id="hudStars">0</span> نَجْمَةٌ</div>
       <div class="hud-pill"><svg class="nav-icon"><use href="#i-level"/></svg><span id="hudLevel">مُسْتَكْشِفٌ صَغِيرٌ</span></div>
       <button class="hud-pill" id="sfxToggleBtn" onclick="toggleSfx()">🔔 الصَّوْتُ</button>
+      <button class="hud-pill network-on" id="networkModeBtn" onclick="toggleOnlineMode()" title="يُشَغِّلُ أَوْ يُوقِفُ اتِّصَالَ التَّطْبِيقِ بِخِدْمَاتِ الذَّكَاءِ الِاصْطِنَاعِيِّ">🌐 الاتِّصَالُ: مُفَعَّلٌ</button>
     </div>
   </div>
 
@@ -426,6 +456,7 @@ main.wrap{padding-bottom:100px}
     <button class="nav-tab active" data-nav="home" onclick="go('home')"><svg class="nav-icon"><use href="#i-home"/></svg>الرَّئِيسِيَّةُ</button>
     <button class="nav-tab" onclick="go('catalog')"><svg class="nav-icon"><use href="#i-book"/></svg>قِصَصِي</button>
     <button class="nav-tab" data-nav="voice" onclick="go('voice')"><svg class="nav-icon"><use href="#i-mic"/></svg>قِصَّتِي بِصَوْتِي</button>
+    <button class="nav-tab" data-nav="studio" onclick="go('studio')">🎨 اسْتُودْيُو 3D</button>
     <button class="nav-tab" onclick="openSurprise()"><svg class="nav-icon"><use href="#i-gift"/></svg>مُفَاجَأَةُ الْيَوْمِ</button>
   </nav>
 
@@ -588,6 +619,45 @@ main.wrap{padding-bottom:100px}
         <button class="btn-secondary" onclick="checkCatalog()">↻ تَحْدِيثٌ</button>
       </div>
       <div id="catalogStatus" style="margin-top:8px;font-size:13px;font-weight:700;color:var(--secondary)"></div>
+    </div>
+  </section>
+
+  <!-- 3D PIXAR STUDIO -->
+  <section id="studio" class="hidden">
+    <div class="studio-banner">
+      <span class="studio-kicker">🎨 اسْتُودْيُو الْإِبْدَاعِ</span>
+      <h2>اسْتُودْيُو الْأَيْقُونَاتِ وَالْعَنَاصِرِ ثُلَاثِيَّةِ الْأَبْعَادِ</h2>
+      <p>أَضِفْ صُوَرَكَ، جَرِّبْ مَظْهَرًا مُجَسَّمًا، وَاحْفَظْ عَنَاصِرَكَ عَلَى هَذَا الْجِهَازِ بِدُونِ رَفْعِهَا إِلَى الْخَادِمِ.</p>
+    </div>
+    <div class="studio-grid">
+      <div class="studio-panel">
+        <h3>📤 اسْتِيرَادُ صُورَةٍ أَوْ شِعَارٍ</h3>
+        <p>اخْتَرْ صُورَةً مِنْ جِهَازِكَ لِمُعَايَنَتِهَا وَحِفْظِهَا فِي مَكْتَبَةِ الِاسْتُودْيُو.</p>
+        <label for="studioAssetName">اسْمُ الْعُنْصُرِ</label>
+        <input id="studioAssetName" class="field-input" maxlength="48" placeholder="مِثَالٌ: رُوبُوتِي الصَّغِيرُ">
+        <label for="studioAssetStyle">النَّمَطُ الْفَنِّيُّ</label>
+        <select id="studioAssetStyle" class="field-input">
+          <option value="clay">طِينٌ لَامِعٌ (Clay &amp; Glow)</option>
+          <option value="pixar">حِكَايَةٌ سِينَمَائِيَّةٌ</option>
+          <option value="storybook">رَسْمٌ كِتَابِيٌّ نَاعِمٌ</option>
+        </select>
+        <input id="studioImageInput" type="file" accept="image/*" class="hidden" onchange="previewStudioImage(event)">
+        <button class="studio-upload" onclick="document.getElementById('studioImageInput').click()">🖼️ اضْغَطْ لِاخْتِيَارِ صُورَةٍ مِنْ جِهَازِكَ</button>
+        <div id="studioPreviewWrap" class="studio-preview-wrap hidden">
+          <div id="studioPreviewCard" class="studio-preview-card"><img id="studioPreviewImg" alt="مُعَايَنَةُ الْعُنْصُرِ"></div>
+          <p>مُعَايَنَةٌ بِتَأْثِيرٍ ثُلَاثِيِّ الْأَبْعَادِ</p>
+        </div>
+        <button class="btn-primary" id="studioSaveBtn" onclick="saveStudioAsset()" disabled>💾 حِفْظُ الْعُنْصُرِ فِي الِاسْتُودْيُو</button>
+        <div id="studioStatus" class="studio-status" role="status">اخْتَرْ صُورَةً لِتَبْدَأَ.</div>
+        <p class="studio-note">الْمُعَايَنَةُ تُضِيفُ تَأْثِيرًا بَصَرِيًّا فَقَطْ؛ تَوْلِيدُ صُوَرٍ جَدِيدَةٍ بِذَكَاءٍ اصْطِنَاعِيٍّ يَحْتَاجُ خِدْمَةَ صُوَرٍ مُنْفَصِلَةً.</p>
+      </div>
+      <div class="studio-panel studio-library-panel">
+        <div class="section-head" style="margin-top:0">
+          <h3 style="margin:0">🧊 عَنَاصِرِي الْمَحْفُوظَةُ</h3>
+          <button class="btn-secondary" onclick="renderStudioAssets()">↻ تَحْدِيثٌ</button>
+        </div>
+        <div id="studioAssetGrid" class="studio-assets-grid"></div>
+      </div>
     </div>
   </section>
 
