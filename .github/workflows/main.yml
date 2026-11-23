@@ -32,9 +32,21 @@ jobs:
         run: |
           mkdir -p src/main/assets
           cp index.html src/main/assets/
-          find . -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) -exec cp {} src/main/assets/ \;
+          for asset in icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg ic_launcher.png qissati_icon.png; do
+            test -s "$asset" || { echo "Missing required image: $asset"; exit 1; }
+            cp "$asset" src/main/assets/
+          done
+          ls -lh src/main/assets/
       - name: Build Debug APK
         run: gradle assembleDebug --no-daemon --stacktrace
+      - name: Verify bundled images in APK
+        run: |
+          APK=$(find build/outputs/apk/debug app/build/outputs/apk/debug -name '*.apk' -type f 2>/dev/null | head -n 1)
+          test -n "$APK" || { echo 'APK not found'; exit 1; }
+          unzip -Z1 "$APK" > /tmp/qissati-apk-files.txt
+          for asset in index.html icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg; do
+            grep -Fx "assets/$asset" /tmp/qissati-apk-files.txt || { echo "APK missing assets/$asset"; exit 1; }
+          done
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
