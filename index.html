@@ -260,6 +260,14 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
   .wrap{padding:0}
   .reader-stage{max-height:360px;border:1px solid #ccc}
 }
+#pictureBookOverlay{position:fixed;inset:0;z-index:99999;background:rgba(23,14,51,.94);display:none;align-items:center;justify-content:center;padding:12px;direction:rtl}
+.picture-book-shell{background:#fffaf1;border-radius:22px;width:min(680px,100%);max-height:95vh;overflow:auto;padding:14px;box-shadow:0 20px 80px #0008}
+.picture-book-toolbar,.picture-book-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px}
+.picture-book-cover,.picture-book-page{text-align:center;min-height:280px}
+.picture-book-cover img,.picture-book-page img{display:block;width:100%;max-height:46vh;object-fit:contain;border-radius:16px}
+.picture-book-cover h2{font-size:clamp(22px,5vw,36px);color:#4c238f}
+.picture-book-page p{font-size:clamp(20px,4.2vw,27px);line-height:2;color:#281e45;white-space:pre-wrap;padding:8px}
+.picture-book-nav button:disabled{opacity:.4}
 </style>
 </head>
 <body>
@@ -473,6 +481,7 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
           <div id="readMeta" style="font-size:13px;color:var(--muted);font-weight:700;margin-top:3px"></div>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-secondary" onclick="openPictureBook()">📘 كِتَابِي الْمُصَوَّرُ</button>
           <button class="btn-secondary" id="fontSizeBtn" onclick="toggleReadingSize()">🔠 تَكْبِيرُ الْخَطِّ</button>
           <button class="btn-secondary" onclick="printStory()">🖨 طِبَاعَةٌ</button>
           <button class="btn-secondary" onclick="leaveReader()">↩ الْعَوْدَةُ</button>
@@ -970,6 +979,56 @@ function toggleReadingSize(){
   $('fontSizeBtn').textContent = big ? '🔡 تَصْغِيرُ الْخَطِّ' : '🔠 تَكْبِيرُ الْخَطِّ';
 }
 
+/* Interactive illustrated book: retains existing story and its original artwork. */
+let bookPage = -1;
+function bookSafe(value){
+  return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function openPictureBook(){
+  if(!activeStory || !Array.isArray(activeStory.pages) || !activeStory.pages.length) return;
+  stopSpeech();
+  bookPage = -1;
+  let overlay = document.getElementById('pictureBookOverlay');
+  if(!overlay){
+    overlay = document.createElement('div');
+    overlay.id = 'pictureBookOverlay';
+    overlay.setAttribute('role','dialog');
+    overlay.setAttribute('aria-modal','true');
+    overlay.setAttribute('aria-label','كتابي المصور');
+    overlay.innerHTML = '<div class="picture-book-shell"><div class="picture-book-toolbar"><strong>📘 كِتَابِي الْمُصَوَّرُ</strong><button class="btn-secondary" onclick="closePictureBook()">✕ إغلاق</button></div><div id="pictureBookContent"></div><div class="picture-book-nav"><button class="btn-secondary" id="bookPrev" onclick="movePictureBook(-1)">السَّابِقَةُ</button><span id="bookCount"></span><button class="btn-primary" id="bookNext" onclick="movePictureBook(1)">التَّالِيَةُ</button></div></div>';
+    document.body.appendChild(overlay);
+  }
+  overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  renderPictureBook();
+}
+function closePictureBook(){
+  const overlay = document.getElementById('pictureBookOverlay');
+  if(overlay) overlay.style.display = 'none';
+  document.body.style.overflow = '';
+}
+function movePictureBook(delta){
+  if(!activeStory) return;
+  bookPage = Math.max(-1, Math.min(activeStory.pages.length - 1, bookPage + delta));
+  renderPictureBook();
+}
+function renderPictureBook(){
+  if(!activeStory) return;
+  const count = activeStory.pages.length;
+  const content = document.getElementById('pictureBookContent');
+  if(bookPage === -1){
+    const cover = activeStory.pages[0];
+    const coverKey = cover.img || activeStory.theme || 'GARDEN';
+    content.innerHTML = '<div class="picture-book-cover"><img alt="غلاف القصة" src="'+bookSafe(getSceneImage(coverKey))+'"><h2>'+bookSafe(activeStory.title)+'</h2><p>قِصَّةٌ مُصَوَّرَةٌ مِنْ إِبْدَاعِكَ ✨</p></div>';
+  }else{
+    const p = activeStory.pages[bookPage];
+    const key = p.img || detectSceneKey(p.text, activeStory.theme || 'GARDEN');
+    content.innerHTML = '<article class="picture-book-page"><img alt="رسم الصفحة" src="'+bookSafe(getSceneImage(key))+'"><p>'+bookSafe(p.text)+'</p></article>';
+  }
+  document.getElementById('bookCount').textContent = bookPage === -1 ? 'الغلاف' : 'صَفْحَةُ '+(bookPage+1)+' مِنْ '+count;
+  document.getElementById('bookPrev').disabled = bookPage === -1;
+  document.getElementById('bookNext').disabled = bookPage === count-1;
+}
 function printStory(){
   if(window.QissatiAndroid && typeof window.QissatiAndroid.printStory === 'function'){
     window.QissatiAndroid.printStory();
