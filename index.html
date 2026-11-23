@@ -878,7 +878,7 @@ const BADGES_DEF = [
   { id:'voice_star', icon:'🎙️', title:'حَكَوَاتِي الْفُصْحَى', desc:'حَوَّلْتَ صَوْتَكَ إِلَى قِصَّةٍ مُصَوَّرَةٍ' }
 ];
 
-let state = { stars:0, badges:[], sfx:true, ageBand:'all', guideHidden:false, onlineCatalog:[] };
+let state = { stars:0, badges:[], sfx:true, ageBand:'all', guideHidden:false, onlineCatalog:[], onlineMode:true };
 let draft = { mode:'creative', hero:'سَلِيمٌ', theme:'GARDEN', title:'' };
 let composerPages = [
   { text:'', img:'BIRD', vocab:'', think:'' },
@@ -902,6 +902,7 @@ function loadState(){
     if(typeof saved.sfx === 'boolean') state.sfx = saved.sfx;
     if(typeof saved.ageBand === 'string') state.ageBand = saved.ageBand;
     if(typeof saved.guideHidden === 'boolean') state.guideHidden = saved.guideHidden;
+    if(typeof saved.onlineMode === 'boolean') state.onlineMode = saved.onlineMode;
     const cachedCat = JSON.parse(localStorage.getItem('qissati-online-catalog') || '[]');
     if(Array.isArray(cachedCat)) state.onlineCatalog = cachedCat;
   }catch(e){}
@@ -969,6 +970,21 @@ function toggleSfx(){
   state.sfx = !state.sfx;
   saveState();
   if(state.sfx) playTone(523.25, 0.12);
+}
+
+function updateOnlineModeUI(){
+  const btn=$('networkModeBtn');
+  if(!btn)return;
+  btn.textContent=state.onlineMode?'🌐 الاتِّصَالُ: مُفَعَّلٌ':'📴 الاتِّصَالُ: مَوْقُوفٌ';
+  btn.classList.toggle('network-on',state.onlineMode);
+  btn.classList.toggle('network-off',!state.onlineMode);
+  btn.setAttribute('aria-pressed',String(state.onlineMode));
+}
+
+function toggleOnlineMode(){
+  state.onlineMode=!state.onlineMode;
+  saveState();
+  updateOnlineModeUI();
 }
 
 function playTone(freq, dur=0.14, type='sine'){
@@ -1041,7 +1057,7 @@ function go(tab){
   stopSpeech();
   cinemaMode = false;
   updateCinemaBtn();
-  ['home','wizard','voice','catalog','library','reader'].forEach(id=>{
+  ['home','wizard','voice','catalog','studio','library','reader'].forEach(id=>{
     $(id).classList.toggle('hidden', id !== tab);
   });
   document.querySelectorAll('[data-nav]').forEach(btn=>{
@@ -1049,6 +1065,7 @@ function go(tab){
   });
   if(tab === 'home') renderHome();
   if(tab === 'catalog') renderCatalog();
+  if(tab === 'studio') renderStudioAssets();
   if(tab === 'library') renderLibrary();
   if(tab === 'wizard') renderWizard();
   window.scrollTo({ top:0, behavior:'smooth' });
@@ -1493,6 +1510,7 @@ function checkAiChatConsent(){
 }
 async function sendAiChatMessage(value){
   if(aiChatBusy)return;
+  if(!state.onlineMode){$('aiChatStatus').textContent='الاتِّصَالُ مَوْقُوفٌ. فَعِّلْهُ لِتَسْتَخْدِمَ الْمُحَادَثَةَ الذَّكِيَّةَ.';return;}
   if(!checkAiChatConsent())return;
   const input=$('aiChatInput');
   const message=String(value===undefined?input.value:value).trim();
@@ -1694,6 +1712,7 @@ function stopVoice(){
 // Only the transcript text is sent; no provider secret is placed in the APK.
 async function convertRecordedTextToFusha(){
   const original=$('voiceText').value.trim();
+  if(!state.onlineMode){$('voiceStatus').textContent='الاتِّصَالُ مَوْقُوفٌ. فَعِّلْهُ لِتَحْوِيلِ النَّصِّ إِلَى الْفُصْحَى.';return;}
   if(original.length<5){$('voiceStatus').textContent='⚠️ سَجِّلْ نَصًّا أَوَّلًا.';return;}
   if(!$('guardianFushaConsent').checked){
     $('voiceStatus').textContent='⚠️ يَجِبُ أَنْ يُرَاجِعَ وَلِيُّ الْأَمْرِ إِشْعَارَ الْخُصُوصِيَّةِ وَيُوَافِقَ قَبْلَ إِرْسَالِ النَّصِّ.';
@@ -2139,6 +2158,7 @@ function saveCatalogEndpoint(){
   checkCatalog();
 }
 function checkCatalog(){
+  if(!state.onlineMode){$('catalogStatus').textContent='الاتِّصَالُ مَوْقُوفٌ؛ شَغِّلْهُ لِتَحْمِيلِ تَحْدِيثَاتِ الْمَكْتَبَةِ.';return;}
   const url = catalogUrl();
   if(!url){ $('catalogStatus').textContent = 'أَدْخِلْ رَابِطَ الْمَكْتَبَةِ أَوَّلًا.'; return; }
   $('catalogStatus').textContent = 'جَارٍ فَحْصُ التَّحْدِيثَاتِ...';
@@ -2170,11 +2190,114 @@ function remoteCatalogResult(payload){
 }
 function remoteCatalogError(msg){ $('catalogStatus').textContent = msg; }
 
+/* Offline-first 3D asset studio; uploaded images remain in this device's IndexedDB. */
+let studioDbPromise=null;
+let studioSelectedFile=null;
+let studioPreviewUrl=null;
+let studioAssetUrls=[];
+function openStudioDb(){
+  if(!('indexedDB' in window))return Promise.reject(new Error('IndexedDB unavailable'));
+  if(studioDbPromise)return studioDbPromise;
+  studioDbPromise=new Promise((resolve,reject)=>{
+    const req=indexedDB.open('qissati-3d-studio',1);
+    req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('assets'))req.result.createObjectStore('assets',{keyPath:'id'});};
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error||new Error('db open failed'));
+  });
+  return studioDbPromise;
+}
+function studioRequest(mode,action,value){
+  return openStudioDb().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction('assets',mode);const store=tx.objectStore('assets');
+    const req=action==='getAll'?store.getAll():action==='get'?store.get(value):action==='put'?store.put(value):store.delete(value);
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error||new Error('db request failed'));
+  }));
+}
+function previewStudioImage(ev){
+  const file=ev.target.files&&ev.target.files[0];
+  if(!file)return;
+  if(!file.type.startsWith('image/')){$('studioStatus').textContent='اخْتَرْ مَلَفَّ صُورَةٍ صَحِيحًا.';return;}
+  if(file.size>8*1024*1024){$('studioStatus').textContent='حَجْمُ الصُّورَةِ أَكْبَرُ مِنْ 8 مِيغَابَايْت؛ اخْتَرْ صُورَةً أَصْغَرَ.';return;}
+  studioSelectedFile=file;
+  if(studioPreviewUrl)URL.revokeObjectURL(studioPreviewUrl);
+  studioPreviewUrl=URL.createObjectURL(file);
+  $('studioPreviewImg').src=studioPreviewUrl;
+  $('studioPreviewWrap').classList.remove('hidden');
+  $('studioSaveBtn').disabled=false;
+  $('studioStatus').textContent='جَاهِزٌ لِلْمُعَايَنَةِ وَالْحِفْظِ عَلَى الْجِهَازِ.';
+  updateStudioPreviewStyle();
+}
+function updateStudioPreviewStyle(){
+  const style=$('studioAssetStyle')?.value||'clay';
+  const card=$('studioPreviewCard');
+  if(card)card.dataset.style=style;
+}
+async function saveStudioAsset(){
+  if(!studioSelectedFile){$('studioStatus').textContent='اخْتَرْ صُورَةً أَوَّلًا.';return;}
+  const btn=$('studioSaveBtn');btn.disabled=true;
+  try{
+    const asset={id:'asset-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name:$('studioAssetName').value.trim()||'عُنْصُرٌ جَدِيدٌ',style:$('studioAssetStyle').value,blob:studioSelectedFile,type:studioSelectedFile.type,createdAt:new Date().toISOString()};
+    await studioRequest('readwrite','put',asset);
+    $('studioStatus').textContent='حُفِظَ الْعُنْصُرُ عَلَى هَذَا الْجِهَازِ بِنَجَاحٍ.';
+    $('studioImageInput').value='';studioSelectedFile=null;btn.disabled=true;
+    renderStudioAssets();
+  }catch(error){
+    $('studioStatus').textContent='تَعَذَّرَ الْحِفْظُ. تَأَكَّدْ مِنْ مَسَاحَةِ التَّخْزِينِ وَحَاوِلْ مُجَدَّدًا.';
+    btn.disabled=false;
+  }
+}
+async function renderStudioAssets(){
+  const grid=$('studioAssetGrid');if(!grid)return;
+  studioAssetUrls.forEach(url=>URL.revokeObjectURL(url));studioAssetUrls=[];
+  grid.replaceChildren();
+  try{
+    const assets=await studioRequest('readonly','getAll');
+    if(!assets.length){grid.innerHTML='<div class="studio-empty">لَا تُوجَدُ عَنَاصِرُ مَحْفُوظَةٌ بَعْدُ.<br>اخْتَرْ صُورَةً وَاحْفَظْهَا لِتَظْهَرَ هُنَا.</div>';return;}
+    assets.sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));
+    assets.forEach(asset=>{
+      const url=URL.createObjectURL(asset.blob);studioAssetUrls.push(url);
+      const card=document.createElement('article');card.className='studio-asset-card';
+      const img=document.createElement('img');img.src=url;img.alt=asset.name;
+      const name=document.createElement('strong');name.textContent=asset.name;
+      const actions=document.createElement('div');actions.className='asset-actions';
+      const logo=document.createElement('button');logo.className='btn-secondary';logo.textContent='استخدام كشعار داخل التطبيق';logo.onclick=()=>setStudioLogo(asset.id);
+      const del=document.createElement('button');del.className='btn-danger';del.textContent='حذف';del.onclick=()=>deleteStudioAsset(asset.id);
+      actions.append(logo,del);card.append(img,name,actions);grid.appendChild(card);
+    });
+  }catch(error){grid.innerHTML='<div class="studio-empty">التَّخْزِينُ الْمَحَلِّيُّ غَيْرُ مُتَاحٍ فِي هَذَا الْمُتَصَفِّحِ.</div>';}
+}
+async function setStudioLogo(id){
+  try{
+    const asset=await studioRequest('readonly','get',id);if(!asset)return;
+    $('appLogoImg').src=URL.createObjectURL(asset.blob);
+    localStorage.setItem('qissati-studio-logo-id',id);
+    $('studioStatus').textContent='تَمَّ تَغْيِيرُ الشِّعَارِ الظَّاهِرِ دَاخِلَ التَّطْبِيقِ.';
+  }catch(error){$('studioStatus').textContent='تَعَذَّرَ تَعْيِينُ هَذِهِ الصُّورَةِ شِعَارًا.';}
+}
+async function applyStudioLogo(){
+  try{
+    const id=localStorage.getItem('qissati-studio-logo-id');if(!id)return;
+    const asset=await studioRequest('readonly','get',id);if(asset)$('appLogoImg').src=URL.createObjectURL(asset.blob);
+  }catch(error){}
+}
+async function deleteStudioAsset(id){
+  try{
+    await studioRequest('readwrite','delete',id);
+    if(localStorage.getItem('qissati-studio-logo-id')===id){localStorage.removeItem('qissati-studio-logo-id');$('appLogoImg').src=IMAGES.ICON;}
+    renderStudioAssets();
+  }catch(error){$('studioStatus').textContent='لَمْ يَتِمَّ حَذْفُ الْعُنْصُرِ.';}
+}
+
 /* Boot */
 $('appLogoImg').src = IMAGES.ICON;
+$('studioAssetStyle').addEventListener('change',updateStudioPreviewStyle);
 $('heroBannerImg').src = IMAGES.HERO;
 $('catalogEndpoint').value = catalogUrl();
 loadState();
+updateOnlineModeUI();
+void renderStudioAssets();
+void applyStudioLogo();
 /* Keep the quick guide available below the illustrated home shelves. */
 $('home').appendChild($('studentQuickGuide'));
 renderHome();
