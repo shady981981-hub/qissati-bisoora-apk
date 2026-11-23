@@ -19,8 +19,8 @@ android {
         applicationId "ps.khanyounis.qissati"
         minSdk 24
         targetSdk 34
-        versionCode 6
-        versionName "6.0-QuickGuide-HD-Fusha"
+        versionCode 7
+        versionName "7.0-Animated-Storybook"
     }
 
     buildTypes {
