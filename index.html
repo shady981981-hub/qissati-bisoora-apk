@@ -1351,7 +1351,7 @@ function offlineFushaSuggestion(original){
     const rx=new RegExp('(^|[\\s،,.؟!])('+escaped+')(?=$|[\\s،,.؟!])','gu');
     output=output.replace(rx,(whole,prefix)=>{matches++;return prefix+target;});
   }
-  output=output.replace(/,/g,'،').replace(/\\?/g,'؟');
+  output=output.replace(/,/g,'،').replace(/[?]/g,'؟');
   if(output && !/[.!؟]$/.test(output)) output+='.';
   return {text:output,matches};
 }
