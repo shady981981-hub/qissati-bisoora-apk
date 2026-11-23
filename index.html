@@ -892,6 +892,10 @@ function buildStoryCard(story, isCustom){
 function openStory(story, fromTab){
   activeStory = story;
   pageIndex = 0;
+  try{
+    const pos = JSON.parse(localStorage.getItem('qissati_reading_position') || 'null');
+    if(pos && pos.id === story.id && Number.isInteger(pos.page)) pageIndex = Math.max(0,Math.min(story.pages.length-1,pos.page));
+  }catch(e){}
   returnTab = fromTab || 'home';
   cinemaMode = false;
   updateCinemaBtn();
@@ -913,6 +917,7 @@ function leaveReader(){
 
 function renderReaderPage(){
   if(!activeStory) return;
+  saveReadingPosition();
   const p = activeStory.pages[pageIndex];
   const imgKey = p.img || detectSceneKey(p.text, activeStory.theme || 'GARDEN');
   p.img = imgKey;
@@ -1045,6 +1050,16 @@ function cleanArabicForTTS(raw){
     .trim();
 }
 
+/* Arabic quality gate: never silently substitute a non-Arabic voice. */
+function arabicReadingAudit(text){
+  const words = String(text || '').match(/[\u0621-\u064A]+[\u064B-\u065F\u0670\u0621-\u064A]*/g) || [];
+  const marked = words.filter(w => /[\u064B-\u0652]/.test(w)).length;
+  return {total:words.length, marked, ratio:words.length ? marked / words.length : 0};
+}
+function saveReadingPosition(){
+  if(!activeStory) return;
+  try{localStorage.setItem('qissati_reading_position',JSON.stringify({id:activeStory.id,page:pageIndex}));}catch(e){}
+}
 function getBestArabicVoice(){
   if(!('speechSynthesis' in window)) return null;
   const voices = window.speechSynthesis.getVoices() || [];
@@ -1089,7 +1104,12 @@ function readAloud(){
   const cleanText = cleanArabicForTTS(p.text);
   const rate = parseFloat($('speechRateSelect').value || '0.88');
   const words = p.text.split(/\s+/).filter(Boolean);
-  $('ttsStatus').textContent = '🔊 يَقْرَأُ الْآنَ بِالْعَرَبِيَّةِ الْفُصْحَى...';
+  const audit = arabicReadingAudit(cleanText);
+  if(audit.total && audit.ratio < 0.8){
+    $('ttsStatus').textContent = '⚠️ يَحْتَاجُ النَّصُّ إِلَى مُرَاجَعَةِ التَّشْكِيلِ قَبْلَ النُّطْقِ.';
+    return;
+  }
+  $('ttsStatus').textContent = '🔊 يَجْرِي تَجْهِيزُ الْقِرَاءَةِ الْعَرَبِيَّةِ...';
 
   if(window.QissatiAndroid && typeof window.QissatiAndroid.speakArabic === 'function'){
     window.QissatiAndroid.speakArabic(cleanText);
@@ -1114,10 +1134,14 @@ function readAloud(){
     return;
   }
 
-  const utter = new SpeechSynthesisUtterance(cleanText);
-  utter.lang = 'ar-SA';
   const arVoice = getBestArabicVoice();
-  if(arVoice) utter.voice = arVoice;
+  if(!arVoice){
+    $('ttsStatus').textContent = '⚠️ لَا يَتَوَفَّرُ صَوْتٌ عَرَبِيٌّ عَلَى هَذَا الْجِهَازِ. لَنْ نَسْتَخْدِمَ صَوْتًا أَجْنَبِيًّا.';
+    return;
+  }
+  const utter = new SpeechSynthesisUtterance(cleanText);
+  utter.lang = arVoice.lang;
+  utter.voice = arVoice;
   utter.rate = rate;
   utter.pitch = 1.04;
 
@@ -1137,6 +1161,12 @@ function readAloud(){
     setTimeout(()=>{ if(!usedBoundary) startSimulatedHighlight(words.length, rate); }, 350);
   };
 
+  utter.onerror = () => {
+    clearWordHighlights();
+    $('ttsStatus').textContent = '⚠️ تَعَذَّرَتِ الْقِرَاءَةُ الصَّوْتِيَّةُ. يُرْجَى التَّحَقُّقُ مِنْ مُحَرِّكِ النُّطْقِ الْعَرَبِيِّ.';
+    cinemaMode = false;
+    updateCinemaBtn();
+  };
   utter.onend = () => {
     clearWordHighlights();
     $('ttsStatus').textContent = '✓ تَمَّتْ قِرَاءَةُ الصَّفْحَةِ';
