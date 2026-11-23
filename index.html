@@ -925,7 +925,19 @@ function renderReaderPage(){
   $('pageIndicator').textContent = `${pageIndex + 1} / ${activeStory.pages.length}`;
 
   const words = p.text.split(/\s+/).filter(Boolean);
-  $('readText').innerHTML = words.map((w, idx)=>`<span class="word-tok" id="wtok_${idx}">${w}</span>`).join(' ');
+  $('readText').innerHTML = words.map((w, idx)=>`<span class="word-tok" id="wtok_${idx}">${bookSafe(w)}</span>`).join(' ');
+  const quality = arabicReadingAudit(p.text);
+  let qualityNote = document.getElementById('arabicQualityNote');
+  if(!qualityNote){
+    qualityNote = document.createElement('p');
+    qualityNote.id = 'arabicQualityNote';
+    qualityNote.setAttribute('role','status');
+    qualityNote.style.cssText = 'font-size:13px;line-height:1.8;padding:10px 14px;border-radius:12px;background:#f5f0ff;color:#3c1982;margin:8px 0;';
+    $('readText').insertAdjacentElement('afterend',qualityNote);
+  }
+  qualityNote.textContent = quality.total && quality.ratio < 0.8
+    ? '⚠️ تَنْبِيهٌ لُغَوِيٌّ: تَحْتَاجُ هَذِهِ الصَّفْحَةُ إِلَى مُرَاجَعَةِ التَّشْكِيلِ قَبْلَ الِاسْتِمَاعِ.'
+    : '✓ فُحِصَ وُجُودُ التَّشْكِيلِ آليًّا؛ وَلَا يُغْنِي ذَلِكَ عَنْ مُرَاجَعَةِ اللُّغَةِ وَالنُّطْقِ.';
 
   const vocabTxt = p.vocab || 'الْفُصْحَى: اللُّغَةُ الْعَرَبِيَّةُ السَّلِيمَةُ الْوَاضِحَةُ فِي الْقِرَاءَةِ وَالْكِتَابَةِ.';
   const thinkTxt = p.think || 'مَا الْفِكْرَةُ الرَّئِيسِيَّةُ الَّتِي خَرَجْتَ بِهَا مِنْ هَذِهِ الصَّفْحَةِ؟';
@@ -1052,7 +1064,8 @@ function cleanArabicForTTS(raw){
 
 /* Arabic quality gate: never silently substitute a non-Arabic voice. */
 function arabicReadingAudit(text){
-  const words = String(text || '').match(/[\u0621-\u064A]+[\u064B-\u065F\u0670\u0621-\u064A]*/g) || [];
+  // Coverage only: this cannot certify grammatical correctness or audio quality.
+  const words = String(text || '').match(/[\u0621-\u064A][\u064B-\u065F\u0670\u0621-\u064A]*/g) || [];
   const marked = words.filter(w => /[\u064B-\u0652]/.test(w)).length;
   return {total:words.length, marked, ratio:words.length ? marked / words.length : 0};
 }
