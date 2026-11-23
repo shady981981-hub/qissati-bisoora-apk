@@ -1,0 +1,44 @@
+name: Android QA - development
+
+on:
+  push:
+    branches:
+      - development/arabic-quality-reader
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  verify-and-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate inline JavaScript syntax
+        run: node scripts/check-inline-js.cjs
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install required Android SDK packages
+        run: |
+          SDKMANAGER="$(find "${ANDROID_HOME:-/usr/local/lib/android/sdk}/cmdline-tools" -path '*/bin/sdkmanager' -type f | sort -V | tail -1)"
+          test -n "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" 'platforms;android-35' 'build-tools;35.0.0'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Build debug APK
+        run: gradle --no-daemon assembleDebug
+      - name: Publish test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: qissati-arabic-qa-debug
+          path: build/outputs/apk/debug/*.apk
+          if-no-files-found: error

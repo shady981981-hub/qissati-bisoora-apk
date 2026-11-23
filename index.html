@@ -892,6 +892,10 @@ function buildStoryCard(story, isCustom){
 function openStory(story, fromTab){
   activeStory = story;
   pageIndex = 0;
+  try{
+    const pos = JSON.parse(localStorage.getItem('qissati_reading_position') || 'null');
+    if(pos && pos.id === story.id && Number.isInteger(pos.page)) pageIndex = Math.max(0,Math.min(story.pages.length-1,pos.page));
+  }catch(e){}
   returnTab = fromTab || 'home';
   cinemaMode = false;
   updateCinemaBtn();
@@ -913,6 +917,7 @@ function leaveReader(){
 
 function renderReaderPage(){
   if(!activeStory) return;
+  saveReadingPosition();
   const p = activeStory.pages[pageIndex];
   const imgKey = p.img || detectSceneKey(p.text, activeStory.theme || 'GARDEN');
   p.img = imgKey;
@@ -920,7 +925,19 @@ function renderReaderPage(){
   $('pageIndicator').textContent = `${pageIndex + 1} / ${activeStory.pages.length}`;
 
   const words = p.text.split(/\s+/).filter(Boolean);
-  $('readText').innerHTML = words.map((w, idx)=>`<span class="word-tok" id="wtok_${idx}">${w}</span>`).join(' ');
+  $('readText').innerHTML = words.map((w, idx)=>`<span class="word-tok" id="wtok_${idx}">${bookSafe(w)}</span>`).join(' ');
+  const quality = arabicReadingAudit(p.text);
+  let qualityNote = document.getElementById('arabicQualityNote');
+  if(!qualityNote){
+    qualityNote = document.createElement('p');
+    qualityNote.id = 'arabicQualityNote';
+    qualityNote.setAttribute('role','status');
+    qualityNote.style.cssText = 'font-size:13px;line-height:1.8;padding:10px 14px;border-radius:12px;background:#f5f0ff;color:#3c1982;margin:8px 0;';
+    $('readText').insertAdjacentElement('afterend',qualityNote);
+  }
+  qualityNote.textContent = quality.total && quality.ratio < 0.8
+    ? '⚠️ تَنْبِيهٌ لُغَوِيٌّ: تَحْتَاجُ هَذِهِ الصَّفْحَةُ إِلَى مُرَاجَعَةِ التَّشْكِيلِ قَبْلَ الِاسْتِمَاعِ.'
+    : '✓ فُحِصَ وُجُودُ التَّشْكِيلِ آليًّا؛ وَلَا يُغْنِي ذَلِكَ عَنْ مُرَاجَعَةِ اللُّغَةِ وَالنُّطْقِ.';
 
   const vocabTxt = p.vocab || 'الْفُصْحَى: اللُّغَةُ الْعَرَبِيَّةُ السَّلِيمَةُ الْوَاضِحَةُ فِي الْقِرَاءَةِ وَالْكِتَابَةِ.';
   const thinkTxt = p.think || 'مَا الْفِكْرَةُ الرَّئِيسِيَّةُ الَّتِي خَرَجْتَ بِهَا مِنْ هَذِهِ الصَّفْحَةِ؟';
@@ -1045,6 +1062,17 @@ function cleanArabicForTTS(raw){
     .trim();
 }
 
+/* Arabic quality gate: never silently substitute a non-Arabic voice. */
+function arabicReadingAudit(text){
+  // Coverage only: this cannot certify grammatical correctness or audio quality.
+  const words = String(text || '').match(/[\u0621-\u064A][\u064B-\u065F\u0670\u0621-\u064A]*/g) || [];
+  const marked = words.filter(w => /[\u064B-\u0652]/.test(w)).length;
+  return {total:words.length, marked, ratio:words.length ? marked / words.length : 0};
+}
+function saveReadingPosition(){
+  if(!activeStory) return;
+  try{localStorage.setItem('qissati_reading_position',JSON.stringify({id:activeStory.id,page:pageIndex}));}catch(e){}
+}
 function getBestArabicVoice(){
   if(!('speechSynthesis' in window)) return null;
   const voices = window.speechSynthesis.getVoices() || [];
@@ -1089,23 +1117,15 @@ function readAloud(){
   const cleanText = cleanArabicForTTS(p.text);
   const rate = parseFloat($('speechRateSelect').value || '0.88');
   const words = p.text.split(/\s+/).filter(Boolean);
-  $('ttsStatus').textContent = '🔊 يَقْرَأُ الْآنَ بِالْعَرَبِيَّةِ الْفُصْحَى...';
+  const audit = arabicReadingAudit(cleanText);
+  if(audit.total && audit.ratio < 0.8){
+    $('ttsStatus').textContent = '⚠️ يَحْتَاجُ النَّصُّ إِلَى مُرَاجَعَةِ التَّشْكِيلِ قَبْلَ النُّطْقِ.';
+    return;
+  }
+  $('ttsStatus').textContent = '🔊 يَجْرِي تَجْهِيزُ الْقِرَاءَةِ الْعَرَبِيَّةِ...';
 
   if(window.QissatiAndroid && typeof window.QissatiAndroid.speakArabic === 'function'){
     window.QissatiAndroid.speakArabic(cleanText);
-    startSimulatedHighlight(words.length, rate);
-    if(cinemaMode){
-      const estMs = Math.max(3000, words.length * Math.round(460 / rate) + 900);
-      wordTimer = setTimeout(()=>{
-        if(cinemaMode && pageIndex < activeStory.pages.length - 1){
-          turnPage(1);
-        } else {
-          cinemaMode = false;
-          updateCinemaBtn();
-          $('ttsStatus').textContent = '✓ انْتَهَتِ الْقِرَاءَةُ';
-        }
-      }, estMs);
-    }
     return;
   }
 
@@ -1114,10 +1134,14 @@ function readAloud(){
     return;
   }
 
-  const utter = new SpeechSynthesisUtterance(cleanText);
-  utter.lang = 'ar-SA';
   const arVoice = getBestArabicVoice();
-  if(arVoice) utter.voice = arVoice;
+  if(!arVoice){
+    $('ttsStatus').textContent = '⚠️ لَا يَتَوَفَّرُ صَوْتٌ عَرَبِيٌّ عَلَى هَذَا الْجِهَازِ. لَنْ نَسْتَخْدِمَ صَوْتًا أَجْنَبِيًّا.';
+    return;
+  }
+  const utter = new SpeechSynthesisUtterance(cleanText);
+  utter.lang = arVoice.lang;
+  utter.voice = arVoice;
   utter.rate = rate;
   utter.pitch = 1.04;
 
@@ -1137,6 +1161,12 @@ function readAloud(){
     setTimeout(()=>{ if(!usedBoundary) startSimulatedHighlight(words.length, rate); }, 350);
   };
 
+  utter.onerror = () => {
+    clearWordHighlights();
+    $('ttsStatus').textContent = '⚠️ تَعَذَّرَتِ الْقِرَاءَةُ الصَّوْتِيَّةُ. يُرْجَى التَّحَقُّقُ مِنْ مُحَرِّكِ النُّطْقِ الْعَرَبِيِّ.';
+    cinemaMode = false;
+    updateCinemaBtn();
+  };
   utter.onend = () => {
     clearWordHighlights();
     $('ttsStatus').textContent = '✓ تَمَّتْ قِرَاءَةُ الصَّفْحَةِ';
@@ -1149,6 +1179,24 @@ function readAloud(){
   };
 
   window.speechSynthesis.speak(utter);
+}
+
+function nativeSpeechStatus(message){
+  if($('ttsStatus')) $('ttsStatus').textContent = message;
+  if(String(message).includes('⚠️')){
+    cinemaMode = false;
+    updateCinemaBtn();
+  }
+}
+function nativeSpeechFinished(){
+  clearWordHighlights();
+  if($('ttsStatus')) $('ttsStatus').textContent = '✓ اكْتَمَلَتِ الْقِرَاءَةُ الصَّوْتِيَّةُ.';
+  if(cinemaMode && activeStory && pageIndex < activeStory.pages.length - 1){
+    setTimeout(()=>{ if(cinemaMode) turnPage(1); },650);
+  }else if(cinemaMode){
+    cinemaMode = false;
+    updateCinemaBtn();
+  }
 }
 
 function stopSpeech(){
@@ -1346,6 +1394,7 @@ function makeVoiceStory(){
     ageBand: state.ageBand, theme: pages[0].img, summary: pages[0].text, pages
   };
 
+  if(!checkStoryBeforeSaving(newStory)) return;
   saveCustomStory(newStory);
   addStars(10, 'voice_star');
   openStory(newStory, 'library');
@@ -1529,6 +1578,7 @@ function saveComposedStory(){
     id: 'comp-' + Date.now(), title, category: 'تَأْلِيفٌ حُرٌّ', ageBand: state.ageBand,
     theme: pages[0].img, summary: pages[0].text, pages
   };
+  if(!checkStoryBeforeSaving(story)) return;
   saveCustomStory(story);
   addStars(10, 'story_maker');
   openStory(story, 'library');
@@ -1546,6 +1596,22 @@ function getSavedStories(){
     const arr = JSON.parse(localStorage.getItem('qissati-stories') || '[]');
     return Array.isArray(arr) ? arr : [];
   }catch(e){ return []; }
+}
+
+function checkStoryBeforeSaving(story){
+  if(!story || !Array.isArray(story.pages) || !story.pages.length) return false;
+  const issues = [];
+  story.pages.forEach((page,index)=>{
+    const text = String(page.text || '').trim();
+    const audit = arabicReadingAudit(text);
+    if(!text || !audit.total) issues.push('الصَّفْحَةُ '+(index+1)+': النَّصُّ فَارِغٌ.');
+    else if(audit.ratio < 0.8) issues.push('الصَّفْحَةُ '+(index+1)+': التَّشْكِيلُ غَيْرُ كَافٍ ('+Math.round(audit.ratio*100)+'٪).');
+  });
+  if(issues.length){
+    alert('تَعَذَّرَ حِفْظُ الْقِصَّةِ لِلْقِرَاءَةِ الصَّوْتِيَّةِ قَبْلَ مُرَاجَعَةِ التَّشْكِيلِ:\n'+issues.join('\n')+'\nيَبْقَى النَّصُّ فِي الْمُحَرِّرِ لِتَصْحِيحِهِ.');
+    return false;
+  }
+  return true;
 }
 
 function saveCustomStory(story){
