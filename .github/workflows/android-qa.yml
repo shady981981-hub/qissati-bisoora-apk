@@ -5,6 +5,7 @@ on:
     branches:
       - development/arabic-quality-reader
       - development/voice-fusha-conversion
+      - main
   pull_request:
     branches:
       - main
@@ -38,7 +39,7 @@ jobs:
       - name: Stage web assets and launcher icon
         run: |
           mkdir -p src/main/assets src/main/res/drawable-nodpi
-                    for asset in icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg scene_world.jpg scene_bird.jpg scene_friends.jpg scene_ocean.jpg scene_rainbow.jpg scene_reading.jpg qissati_icon.jpg; do
+          for asset in icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg scene_world.jpg scene_bird.jpg scene_friends.jpg scene_ocean.jpg scene_rainbow.jpg scene_reading.jpg qissati_icon.jpg; do
             test -s "$asset" || { echo "Missing required image: $asset"; exit 1; }
             cp "$asset" src/main/assets/
           done
