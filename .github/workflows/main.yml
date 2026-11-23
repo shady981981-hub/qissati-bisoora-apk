@@ -28,6 +28,11 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+      - name: Stage app web assets
+        run: |
+          mkdir -p src/main/assets
+          cp index.html src/main/assets/
+          find . -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) -exec cp {} src/main/assets/ \;
       - name: Build Debug APK
         run: gradle assembleDebug --no-daemon --stacktrace
       - name: Upload APK
