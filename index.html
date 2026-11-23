@@ -1126,19 +1126,6 @@ function readAloud(){
 
   if(window.QissatiAndroid && typeof window.QissatiAndroid.speakArabic === 'function'){
     window.QissatiAndroid.speakArabic(cleanText);
-    startSimulatedHighlight(words.length, rate);
-    if(cinemaMode){
-      const estMs = Math.max(3000, words.length * Math.round(460 / rate) + 900);
-      wordTimer = setTimeout(()=>{
-        if(cinemaMode && pageIndex < activeStory.pages.length - 1){
-          turnPage(1);
-        } else {
-          cinemaMode = false;
-          updateCinemaBtn();
-          $('ttsStatus').textContent = '✓ انْتَهَتِ الْقِرَاءَةُ';
-        }
-      }, estMs);
-    }
     return;
   }
 
@@ -1192,6 +1179,24 @@ function readAloud(){
   };
 
   window.speechSynthesis.speak(utter);
+}
+
+function nativeSpeechStatus(message){
+  if($('ttsStatus')) $('ttsStatus').textContent = message;
+  if(String(message).includes('⚠️')){
+    cinemaMode = false;
+    updateCinemaBtn();
+  }
+}
+function nativeSpeechFinished(){
+  clearWordHighlights();
+  if($('ttsStatus')) $('ttsStatus').textContent = '✓ اكْتَمَلَتِ الْقِرَاءَةُ الصَّوْتِيَّةُ.';
+  if(cinemaMode && activeStory && pageIndex < activeStory.pages.length - 1){
+    setTimeout(()=>{ if(cinemaMode) turnPage(1); },650);
+  }else if(cinemaMode){
+    cinemaMode = false;
+    updateCinemaBtn();
+  }
 }
 
 function stopSpeech(){
