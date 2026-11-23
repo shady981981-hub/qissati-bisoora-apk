@@ -601,7 +601,7 @@ main.wrap{padding-bottom:100px}
         <button class="btn-danger" onclick="stopSpeech()">⏹ إِيقَافٌ</button>
         <select id="speechRateSelect" class="speed-select" aria-label="سرعة القراءة">
           <option value="0.72">🐢 بَطِيءٌ (لِلتَّعَلُّمِ)</option>
-          <option value="0.88" selected>🚶 مُتَوَسِّطٌ (فُصْحَى وَاضِحَةٌ)</option>
+          <option value="0.80" selected>🚶 مُتَوَسِّطٌ (فُصْحَى وَاضِحَةٌ)</option>
           <option value="1.05">🐇 سَرِيعٌ</option>
         </select>
         <span id="ttsStatus" style="font-size:12.5px;font-weight:800;color:var(--primary-dark)"></span>
@@ -1207,7 +1207,7 @@ function saveReadingPosition(){
 function getBestArabicVoice(){
   if(!('speechSynthesis' in window)) return null;
   const voices = window.speechSynthesis.getVoices() || [];
-  const preferred = ['ar-SA', 'ar-AE', 'ar-JO', 'ar-EG', 'ar-LB', 'ar'];
+  const preferred = ['ar-JO', 'ar-LB', 'ar-PS', 'ar-SA', 'ar-AE', 'ar-EG', 'ar'];
   for(const code of preferred){
     const found = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(code.toLowerCase()));
     if(found) return found;
@@ -1273,7 +1273,7 @@ function readAloud(){
   utter.lang = arVoice.lang;
   utter.voice = arVoice;
   utter.rate = rate;
-  utter.pitch = 1.04;
+  utter.pitch = 1.0;
 
   let usedBoundary = false;
   utter.onboundary = (ev) => {
@@ -1495,7 +1495,7 @@ function previewVoiceRead(){
     u.lang = 'ar-SA';
     const v = getBestArabicVoice();
     if(v) u.voice = v;
-    u.rate = 0.88;
+    u.rate = 0.80;
     window.speechSynthesis.speak(u);
   }else{
     $('voiceStatus').textContent = '⚠️ الْقِرَاءَةُ الصَّوْتِيَّةُ غَيْرُ مُتَاحَةٍ فِي هَذَا الْمُتَصَفِّحِ.';
