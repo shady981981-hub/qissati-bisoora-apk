@@ -12,6 +12,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQ_RECORD_AUDIO = 101;
     private WebView webView;
     private TextToSpeech tts;
+    private volatile boolean arabicTtsReady = false;
     private SpeechRecognizer speechRecognizer;
     private boolean keepListening = false;
 
@@ -54,15 +56,31 @@ public class MainActivity extends AppCompatActivity {
         webView.addJavascriptInterface(new QissatiBridge(), "QissatiAndroid");
 
         tts = new TextToSpeech(this, status -> {
-            if (status == TextToSpeech.SUCCESS) {
-                Locale fusha = new Locale("ar", "SA");
-                int res = tts.setLanguage(fusha);
-                if (res == TextToSpeech.LANG_MISSING_DATA || res == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    tts.setLanguage(new Locale("ar"));
-                }
-                tts.setSpeechRate(0.88f);
-                tts.setPitch(1.04f);
+            if (status != TextToSpeech.SUCCESS || tts == null) {
+                evalJs("nativeSpeechStatus('⚠️ تَعَذَّرَ تَشْغِيلُ مُحَرِّكِ النُّطْقِ الْعَرَبِيِّ.');");
+                return;
             }
+            Locale fusha = new Locale("ar", "SA");
+            int result = tts.setLanguage(fusha);
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                arabicTtsReady = false;
+                evalJs("nativeSpeechStatus('⚠️ بَيَانَاتُ الصَّوْتِ الْعَرَبِيِّ غَيْرُ مُتَوَفِّرَةٍ عَلَى الْجِهَازِ.');");
+                return;
+            }
+            arabicTtsReady = true;
+            tts.setSpeechRate(0.88f);
+            tts.setPitch(1.0f);
+            tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override public void onStart(String utteranceId) {
+                    evalJs("nativeSpeechStatus('🔊 تَجْرِي الْقِرَاءَةُ الْآنَ.');");
+                }
+                @Override public void onDone(String utteranceId) {
+                    evalJs("nativeSpeechFinished();");
+                }
+                @Override public void onError(String utteranceId) {
+                    evalJs("nativeSpeechStatus('⚠️ حَدَثَ خَطَأٌ أَثْنَاءَ النُّطْقِ.');");
+                }
+            });
         });
 
         webView.loadUrl("file:///android_asset/index.html");
@@ -151,8 +169,15 @@ public class MainActivity extends AppCompatActivity {
     public class QissatiBridge {
         @JavascriptInterface
         public void speakArabic(String text) {
-            if (tts != null && text != null) {
-                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "qissati-reader");
+            if (!arabicTtsReady || tts == null) {
+                evalJs("nativeSpeechStatus('⚠️ لَا يَتَوَفَّرُ مُحَرِّكُ نُطْقٍ عَرَبِيٍّ جَاهِزٌ.');");
+                return;
+            }
+            if (text != null && !text.trim().isEmpty()) {
+                int result = tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "qissati-reader");
+                if (result == TextToSpeech.ERROR) {
+                    evalJs("nativeSpeechStatus('⚠️ تَعَذَّرَ بَدْءُ النُّطْقِ الْعَرَبِيِّ.');");
+                }
             }
         }
 
