@@ -28,38 +28,25 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Stage app web assets
+      - name: Stage app web assets and launcher icon
         run: |
-          mkdir -p src/main/assets
+          mkdir -p src/main/assets src/main/res/drawable-nodpi
           cp index.html src/main/assets/
           for asset in icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg ic_launcher.png qissati_icon.png; do
             test -s "$asset" || { echo "Missing required image: $asset"; exit 1; }
             cp "$asset" src/main/assets/
           done
-          mkdir -p src/main/res/drawable-nodpi
           cp icon.jpg src/main/res/drawable-nodpi/qissati_launcher.jpg
-          ls -lh src/main/assets/ src/main/res/drawable-nodpi/
       - name: Build Debug APK
         run: gradle assembleDebug --no-daemon --stacktrace
-      - name: Verify bundled images in APK
+      - name: Verify packaged images
         run: |
           APK=$(find build/outputs/apk/debug app/build/outputs/apk/debug -name '*.apk' -type f 2>/dev/null | head -n 1)
           test -n "$APK" || { echo 'APK not found'; exit 1; }
           unzip -Z1 "$APK" > /tmp/qissati-apk-files.txt
-          grep -Fx 'res/drawable-nodpi-v4/qissati_launcher.jpg' /tmp/qissati-apk-files.txt || grep -E '^res/drawable-nodpi(-v4)?/qissati_launcher.jpg
-            grep -Fx "assets/$asset" /tmp/qissati-apk-files.txt || { echo "APK missing assets/$asset"; exit 1; }
-          done
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Qissati-Bisoora-Debug-APK
-          path: |
-            build/outputs/apk/debug/*.apk
-            app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
- /tmp/qissati-apk-files.txt || { echo 'APK missing launcher icon'; exit 1; }
+          grep -Eq '^res/drawable-nodpi(-v4)?/qissati_launcher.jpg$' /tmp/qissati-apk-files.txt || { echo 'Launcher icon missing'; exit 1; }
           for asset in index.html icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg; do
-            grep -Fx "assets/$asset" /tmp/qissati-apk-files.txt || { echo "APK missing assets/$asset"; exit 1; }
+            grep -Fx "assets/$asset" /tmp/qissati-apk-files.txt || { echo "Missing assets/$asset"; exit 1; }
           done
       - name: Upload APK
         uses: actions/upload-artifact@v4
