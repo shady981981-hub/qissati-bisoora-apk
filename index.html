@@ -1,0 +1,1611 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4c238f">
+<title>قصتي بصورة | المنصة التفاعلية التربوية للطلاب (8–14 سنة)</title>
+<style>
+:root{
+  --bg:#faf7ff;
+  --card:#ffffff;
+  --ink:#1e1936;
+  --muted:#5c5475;
+  --primary:#5b2cb8;
+  --primary-dark:#3c1982;
+  --secondary:#0f968a;
+  --accent:#f26d00;
+  --gold:#f5b000;
+  --border:#e5dcf5;
+  --shadow:0 12px 28px rgba(58,28,125,0.09);
+  --radius:24px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Tajawal','Cairo','Segoe UI',Tahoma,Arial,sans-serif;overflow-x:hidden}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0;transition:transform .14s ease,box-shadow .14s ease,background .2s ease}
+button:active{transform:scale(.97)}
+.hidden{display:none!important}
+
+/* Header & Hero */
+.app-header{
+  background:linear-gradient(135deg,#3c1982 0%,#6736c7 55%,#0f968a 100%);
+  color:#fff;padding:16px 18px 26px;border-radius:0 0 34px 34px;
+  box-shadow:0 10px 28px rgba(60,25,130,0.22);
+}
+.top-bar{
+  max-width:1100px;margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.brand-box{display:flex;align-items:center;gap:12px}
+.app-icon-img{
+  width:56px;height:56px;border-radius:17px;object-fit:cover;
+  border:3px solid rgba(255,255,255,0.92);box-shadow:0 6px 16px rgba(0,0,0,0.24);
+  background:#fff;cursor:pointer;
+}
+.brand-title{font-size:23px;font-weight:900;line-height:1.15}
+.brand-sub{font-size:12px;opacity:.95;font-weight:700}
+.hud-pills{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hud-pill{
+  background:rgba(255,255,255,0.18);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.32);color:#fff;
+  padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:800;
+  display:flex;align-items:center;gap:6px;
+}
+.hud-pill.gold{background:linear-gradient(135deg,#ffe07d,#f5b000);color:#362100;border-color:#fff0b3}
+
+.hero{
+  max-width:1100px;margin:18px auto 0;display:grid;
+  grid-template-columns:1.12fr 0.88fr;gap:20px;align-items:center;
+}
+@media(max-width:840px){.hero{grid-template-columns:1fr;text-align:center}.hero-actions{justify-content:center}}
+.hero h1{margin:0 0 8px;font-size:clamp(25px,4vw,38px);line-height:1.25;font-weight:900}
+.hero p{margin:0 0 14px;font-size:15px;line-height:1.85;color:rgba(255,255,255,0.96)}
+.age-band-bar{
+  display:inline-flex;gap:6px;background:rgba(255,255,255,0.16);
+  padding:5px;border-radius:16px;border:1px solid rgba(255,255,255,0.28);margin-bottom:14px;flex-wrap:wrap;
+}
+.age-chip{
+  background:transparent;color:#fff;padding:6px 12px;border-radius:12px;
+  font-size:12.5px;font-weight:800;
+}
+.age-chip.active{background:#fff;color:var(--primary-dark)}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-hero-main{
+  background:linear-gradient(135deg,#ff9914,#f26d00);color:#fff;
+  font-weight:900;font-size:14.5px;padding:12px 20px;border-radius:17px;
+  box-shadow:0 5px 0 #b85200,0 10px 18px rgba(0,0,0,0.2);
+}
+.btn-hero-sec{
+  background:#fff;color:var(--primary-dark);font-weight:800;font-size:14px;
+  padding:12px 17px;border-radius:17px;box-shadow:0 4px 0 #d5c7f0;
+}
+.hero-frame{
+  position:relative;border-radius:24px;overflow:hidden;
+  border:4px solid rgba(255,255,255,0.9);box-shadow:0 14px 32px rgba(20,10,48,0.34);
+  background:#281854;aspect-ratio:16/9;cursor:pointer;
+}
+.hero-frame img{width:100%;height:100%;object-fit:cover;display:block;animation:kenBurnsSlow 16s ease-in-out infinite alternate}
+.hero-badge{
+  position:absolute;bottom:10px;right:10px;background:rgba(30,25,54,0.84);
+  backdrop-filter:blur(6px);color:#ffe07d;font-size:12px;font-weight:800;
+  padding:5px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.25);
+}
+@keyframes kenBurnsSlow{0%{transform:scale(1) translate3d(0,0,0)}100%{transform:scale(1.06) translate3d(-1%,-1%,0)}}
+
+/* Navigation & Layout */
+.wrap{max-width:1100px;margin:0 auto;padding:18px 16px 96px}
+.nav-tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{
+  white-space:nowrap;background:#fff;color:var(--muted);
+  border:2px solid var(--border);padding:10px 16px;border-radius:17px;
+  font-weight:800;font-size:14px;box-shadow:0 3px 8px rgba(0,0,0,0.03);
+}
+.nav-tab.active{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 4px 0 var(--primary-dark)}
+
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 12px;flex-wrap:wrap}
+.section-title{font-size:21px;font-weight:900;margin:0;color:var(--primary-dark)}
+.panel{background:var(--card);border:2px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:18px}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:18px}
+.story-card{
+  background:#fff;border:2px solid var(--border);border-radius:22px;
+  overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;
+  cursor:pointer;transition:transform .18s ease,border-color .18s ease;
+}
+.story-card:hover{transform:translateY(-3px);border-color:var(--primary)}
+.story-card-thumb{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#efe8fc}
+.story-card-body{padding:15px;display:flex;flex-direction:column;gap:8px;flex:1}
+.story-card-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:999px;background:#f2ebff;color:var(--primary-dark)}
+.tag.teal{background:#dff6f3;color:#0b6960}
+.tag.amber{background:#fff0dc;color:#a85200}
+.story-card h3{margin:0;font-size:17.5px;font-weight:900;color:var(--ink)}
+.story-card p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.65;flex:1}
+.card-footer-btns{display:flex;gap:8px;margin-top:6px}
+
+/* Quick Student Guide Strip */
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px}
+.guide-step{
+  background:#faf7ff;border:1.5px solid var(--border);border-radius:18px;padding:14px;
+  display:flex;flex-direction:column;gap:6px;
+}
+.guide-num{
+  width:30px;height:30px;border-radius:10px;background:var(--primary);color:#fff;
+  font-weight:900;font-size:14px;display:inline-flex;align-items:center;justify-content:center;
+}
+.guide-step h4{margin:0;font-size:15px;font-weight:900;color:var(--primary-dark)}
+.guide-step p{margin:0;font-size:13px;line-height:1.65;color:var(--muted)}
+
+/* Buttons & Inputs */
+.btn-primary{background:var(--primary);color:#fff;font-weight:800;padding:11px 18px;border-radius:15px;box-shadow:0 4px 0 var(--primary-dark)}
+.btn-secondary{background:#fff;color:var(--primary-dark);border:2px solid var(--border);font-weight:800;padding:10px 15px;border-radius:15px}
+.btn-teal{background:var(--secondary);color:#fff;font-weight:800;padding:11px 18px;border-radius:15px;box-shadow:0 4px 0 #0a6b62}
+.btn-amber{background:var(--accent);color:#fff;font-weight:800;padding:11px 18px;border-radius:15px;box-shadow:0 4px 0 #bd5500}
+.btn-danger{background:#ffe8ec;color:#b81d38;font-weight:800;padding:9px 14px;border-radius:13px}
+
+.field-input{
+  width:100%;padding:12px 14px;border-radius:15px;
+  border:2px solid var(--border);background:#fff;font-size:15px;line-height:1.75;color:var(--ink);margin-top:6px;
+}
+.field-input:focus{outline:none;border-color:var(--primary)}
+
+/* HD Gallery */
+.hd-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:14px}
+.hd-item{border-radius:18px;overflow:hidden;border:2px solid var(--border);background:#fff;box-shadow:0 6px 16px rgba(0,0,0,0.05);cursor:pointer}
+.hd-item img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.hd-item .cap{padding:9px 12px;font-size:12.5px;font-weight:800;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:6px}
+
+/* Wizard & Composer */
+.steps-bar{display:flex;gap:8px;margin-bottom:14px}
+.step-dot{flex:1;height:9px;border-radius:999px;background:#e6dcf7;transition:background .25s}
+.step-dot.on{background:linear-gradient(90deg,var(--primary),var(--secondary))}
+.choice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin:14px 0}
+.choice-btn{
+  background:#faf7ff;border:2px solid var(--border);border-radius:18px;
+  padding:13px 12px;text-align:center;font-weight:800;color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.choice-btn img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px}
+.choice-btn .ico{font-size:32px}
+.choice-btn.selected{border-color:var(--primary);background:#efe6ff;box-shadow:0 0 0 3px rgba(91,44,184,0.16)}
+.page-editor-row{
+  background:#faf7ff;border:2px solid var(--border);border-radius:18px;
+  padding:14px;margin-top:12px;display:grid;grid-template-columns:160px 1fr;gap:14px;align-items:start;
+}
+@media(max-width:680px){.page-editor-row{grid-template-columns:1fr}}
+.page-editor-row img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px}
+
+/* Voice Wave */
+.voice-wave{display:flex;align-items:center;justify-content:center;gap:5px;height:34px;margin:10px 0}
+.voice-wave span{display:inline-block;width:6px;height:10px;border-radius:999px;background:var(--primary)}
+.voice-wave.active span{animation:waveBounce .7s ease-in-out infinite alternate}
+.voice-wave.active span:nth-child(2){animation-delay:.1s;background:var(--secondary)}
+.voice-wave.active span:nth-child(3){animation-delay:.2s;background:var(--accent)}
+.voice-wave.active span:nth-child(4){animation-delay:.3s;background:var(--gold)}
+.voice-wave.active span:nth-child(5){animation-delay:.15s;background:var(--primary)}
+@keyframes waveBounce{0%{height:8px}100%{height:30px}}
+
+/* Reader & Pedagogical Box */
+.reader-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.reader-stage{
+  position:relative;border-radius:24px;overflow:hidden;
+  border:3px solid var(--border);background:#1b1533;
+  box-shadow:0 12px 28px rgba(30,25,54,0.15);aspect-ratio:4/3;max-height:500px;margin:0 auto 14px;
+}
+.reader-stage img{width:100%;height:100%;object-fit:cover;display:block;animation:kenBurnsSlow 14s ease-in-out infinite alternate}
+.zoom-hd-btn{
+  position:absolute;bottom:12px;left:12px;background:rgba(28,24,48,0.85);
+  backdrop-filter:blur(6px);color:#fff;border:1px solid rgba(255,255,255,0.28);
+  padding:7px 13px;border-radius:999px;font-size:12px;font-weight:800;
+}
+.page-pill{
+  position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.95);
+  color:var(--primary-dark);padding:5px 13px;border-radius:999px;font-size:12.5px;font-weight:900;
+}
+.story-text-box{
+  background:#fffdf9;border:2px solid #efe4d4;border-radius:20px;
+  padding:18px 20px;font-size:20.5px;line-height:2.05;font-weight:700;
+  color:#1e1936;text-align:right;margin-bottom:12px;
+}
+body.large-reading .story-text-box{font-size:25px;line-height:2.15}
+.word-tok{padding:1px 3px;border-radius:6px;transition:background .12s,color .12s}
+.word-tok.active-word{background:#ffe082;color:#382000}
+
+.pedagogy-strip{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;
+}
+@media(max-width:720px){.pedagogy-strip{grid-template-columns:1fr}}
+.ped-card{
+  background:#f7f3ff;border:1.5px solid var(--border);border-radius:16px;padding:12px 14px;
+}
+.ped-card h4{margin:0 0 4px;font-size:14px;font-weight:900;color:var(--primary-dark)}
+.ped-card p{margin:0;font-size:13.5px;line-height:1.7;color:var(--ink)}
+
+.audio-controls{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  background:#f5f0ff;border:2px solid var(--border);padding:11px 14px;border-radius:18px;margin-bottom:14px;
+}
+.speed-select{padding:8px 11px;border-radius:12px;border:2px solid var(--border);background:#fff;font-weight:800;color:var(--primary-dark)}
+
+/* Quiz & Badges */
+.quiz-box{background:linear-gradient(145deg,#fff9e6,#fff1c4);border:2px solid #f7ca44;border-radius:20px;padding:18px;margin-top:16px}
+.quiz-opt{display:block;width:100%;text-align:right;background:#fff;border:2px solid #f0d386;border-radius:13px;padding:10px 14px;margin-top:8px;font-weight:800;color:var(--ink)}
+.quiz-opt.correct{background:#d4f7e6;border-color:#199e5d;color:#0a522e}
+.quiz-opt.wrong{background:#ffe3e8;border-color:#d92b4c;color:#780f22}
+
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px}
+.badge-card{background:#faf7ff;border:2px solid var(--border);border-radius:18px;padding:14px;text-align:center;opacity:.58}
+.badge-card.unlocked{opacity:1;border-color:var(--gold);background:#fffdf4}
+.badge-card .b-ico{font-size:34px;margin-bottom:6px}
+
+/* Lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(15,12,28,0.92);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+.lightbox img{max-width:96vw;max-height:82vh;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,0.6);object-fit:contain}
+.lightbox-bar{margin-top:12px;display:flex;align-items:center;gap:12px;color:#fff;font-weight:800;flex-wrap:wrap;justify-content:center}
+
+/* Mobile Dock */
+.mobile-dock{
+  position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.97);
+  backdrop-filter:blur(10px);border-top:2px solid var(--border);
+  display:none;justify-content:space-around;padding:7px 5px;z-index:900;
+}
+@media(max-width:720px){.mobile-dock{display:flex}}
+.dock-btn{background:transparent;color:var(--muted);font-size:11px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 7px;border-radius:12px}
+.dock-btn.active{color:var(--primary);background:#f2ebff}
+.dock-btn span{font-size:19px}
+
+@media print{
+  .app-header,.nav-tabs,.audio-controls,.reader-top,.mobile-dock,.quiz-box,.zoom-hd-btn{display:none!important}
+  .wrap{padding:0}
+  .reader-stage{max-height:360px;border:1px solid #ccc}
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="top-bar">
+    <div class="brand-box">
+      <img id="appLogoImg" class="app-icon-img" alt="أيقونة قصتي بصورة" onclick="openLightbox(IMAGES.ICON, 'أيقونة قصتي بصورة (1024×1024 px)')">
+      <div>
+        <div class="brand-title">قصتي بصورة</div>
+        <div class="brand-sub">مِنَصَّةٌ تَرْبَوِيَّةٌ تَفَاعُلِيَّةٌ لِلْقِرَاءَةِ وَالْكِتَابَةِ وَالِاسْتِمَاعِ بِالْفُصْحَى</div>
+      </div>
+    </div>
+    <div class="hud-pills">
+      <div class="hud-pill gold">⭐ <span id="hudStars">0</span> نجمة</div>
+      <div class="hud-pill">🏅 <span id="hudLevel">مُسْتَكْشِفٌ صَغِيرٌ</span></div>
+      <button class="hud-pill" id="sfxToggleBtn" onclick="toggleSfx()">🔔 الْأَصْوَاتُ: مفعّلة</button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div>
+      <div class="age-band-bar" role="group" aria-label="الفئة العمرية">
+        <button class="age-chip active" data-age="all" onclick="setAgeBand('all')">الْكُلُّ (8–14 سَنَةً)</button>
+        <button class="age-chip" data-age="8-10" onclick="setAgeBand('8-10')">الصِّغَارُ (8–10 سَنَوَاتٍ)</button>
+        <button class="age-chip" data-age="11-14" onclick="setAgeBand('11-14')">الْيَافِعُونَ (11–14 سَنَةً)</button>
+      </div>
+      <h1>كُلُّ طَالِبٍ كَاتِبُ حِكَايَةٍ وَمُفَكِّرٌ مُمْبِدِعٌ!</h1>
+      <p id="heroDesc">بِيئَةٌ تَعْلِيمِيَّةٌ مُصَمَّمَةٌ لِتَنْمِيَةِ الْقِرَاءَةِ الْفَصِيحَةِ وَالثَّرْوَةِ اللُّغَوِيَّةِ وَالتَّفْكِيرِ النَّقْدِيِّ لَدَى الطُّلَّابِ مِنَ الثَّامِنَةِ إِلَى الرَّابِعَةَ عَشْرَةَ، مَعَ صُوَرٍ ثُلَاثِيَّةِ الْأَبْعَادِ عَالِيَةِ الدِّقَّةِ.</p>
+      <div class="hero-actions">
+        <button class="btn-hero-main" onclick="startWizard('creative')">✨ اصْنَعْ قِصَّتِي بِالصُّوَرِ</button>
+        <button class="btn-hero-sec" onclick="go('voice')">🎙️ احْكِ قِصَّتَكَ بِصَوْتِكَ</button>
+        <button class="btn-hero-sec" onclick="go('catalog')">📖 الْمَكْتَبَةُ التَّعْلِيمِيَّةُ</button>
+      </div>
+    </div>
+    <div class="hero-frame" onclick="openLightbox(IMAGES.HERO, 'المشهد الافتتاحي لعالم قصتي بصورة (1376×768 px)')">
+      <img id="heroBannerImg" alt="مشهد عالم قصتي بصورة">
+      <div class="hero-badge">🔍 عَرْضُ الصُّورَةِ بِالدِّقَّةِ الْكَامِلَةِ</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="nav-tabs" aria-label="التنقل الرئيسي">
+    <button class="nav-tab active" data-nav="home" onclick="go('home')">🏠 الرَّئِيسِيَّةُ</button>
+    <button class="nav-tab" data-nav="wizard" onclick="go('wizard')">🪄 اصْنَعْ قِصَّةً</button>
+    <button class="nav-tab" data-nav="voice" onclick="go('voice')">🎙️ قِصَّتِي بِالصَّوْتِ</button>
+    <button class="nav-tab" data-nav="catalog" onclick="go('catalog')">🌈 الْمَكْتَبَةُ التَّعْلِيمِيَّةُ</button>
+    <button class="nav-tab" data-nav="library" onclick="go('library')">📚 مَكْتَبَتِي وَأَوْسِمَتِي</button>
+  </nav>
+
+  <!-- HOME -->
+  <section id="home">
+    <div class="panel" id="studentQuickGuide">
+      <div class="section-head" style="margin-top:0">
+        <h2 class="section-title" style="font-size:19px">📘 دَلِيلُ الطَّالِبِ السَّرِيعُ (فِي دَقِيقَتَيْنِ)</h2>
+        <button class="btn-secondary" style="padding:7px 12px;font-size:12.5px" onclick="toggleQuickGuide()">إِخْفَاءُ الدَّلِيلِ</button>
+      </div>
+      <div class="guide-grid">
+        <div class="guide-step">
+          <div class="guide-num">١</div>
+          <h4>اخْتَرْ مَرْحَلَتَكَ وَقِصَّتَكَ</h4>
+          <p>حَدِّدِ الْفِئَةَ الْعُمْرِيَّةَ (8–10 أَو 11–14 سَنَةً)، ثُمَّ اقْرَأِ الْقِصَّةَ وَاسْتَمِعْ إِلَيْهَا بِالْفُصْحَى مَعَ تَظْلِيلِ الْكَلِمَاتِ.</p>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">٢</div>
+          <h4>تَأَمَّلِ الْمُفْرَدَةَ وَالسُّؤَالَ</h4>
+          <p>تَعَرَّفْ مَعْنَى الْمُفْرَدَةِ الْجَدِيدَةِ فِي كُلِّ صَفْحَةٍ، وَأَجِبْ عَنْ سُؤَالِ التَّفْكِيرِ وَالِاخْتِبَارِ لِجَمْعِ النُّجُومِ ⭐.</p>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">٣</div>
+          <h4>أَلِّفْ قِصَّتَكَ بِالصُّوَرِ أَوِ الصَّوْتِ</h4>
+          <p>اصْنَعْ قِصَّةً جَدِيدَةً خُطْوَةً بِخُطْوَةٍ، أَوِ احْكِهَا بِصَوْتِكَ فِي اسْتُودْيُو الْفُصْحَى لِتَتَحَوَّلَ إِلَى صَفَحَاتٍ مُصَوَّرَةٍ.</p>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">٤</div>
+          <h4>احْفَظْ إِنْجَازَكَ وَاطْبَعْهُ</h4>
+          <p>تُحْفَظُ قِصَصُكَ وَأَوْسِمَتُكَ عَلَى جِهَازِكَ، وَيُمْكِنُكَ طِبَاعَةُ الْقِصَّةِ أَوْ تَصْدِيرُ نُسْخَةٍ احْتِيَاطِيَّةٍ بِصِيغَةِ JSON.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2 class="section-title">🌟 قِصَصٌ مُخْتَارَةٌ حَسَبَ الْمَرْحَلَةِ</h2>
+      <button class="btn-secondary" onclick="go('catalog')">عَرْضُ جَمِيعِ الْقِصَصِ ←</button>
+    </div>
+    <div id="featuredGrid" class="grid-cards"></div>
+
+    <div class="section-head" style="margin-top:26px">
+      <h2 class="section-title">🎨 مَعْرِضُ الْمَشَاهِدِ الْفَنِّيَّةِ عَالِيَةِ الدِّقَّةِ (HD)</h2>
+      <span style="font-size:13px;color:var(--muted);font-weight:700">دقة أصلية كاملة لجميع الصور</span>
+    </div>
+    <div id="hdGalleryGrid" class="hd-gallery"></div>
+  </section>
+
+  <!-- WIZARD & COMPOSER -->
+  <section id="wizard" class="hidden">
+    <div class="panel">
+      <div class="steps-bar" id="wizSteps"></div>
+      <h2 class="section-title" id="wizHeading" style="margin-bottom:6px"></h2>
+      <p id="wizSub" style="margin:0 0 12px;color:var(--muted);font-weight:600"></p>
+      <div id="wizBody"></div>
+      <div style="display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap">
+        <button class="btn-secondary" id="wizPrevBtn" onclick="wizMove(-1)">→ السَّابِقُ</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-amber" onclick="openCustomPageComposer()">✍️ تَحْرِيرُ الصَّفَحَاتِ يَدَوِيًّا</button>
+          <button class="btn-primary" id="wizNextBtn" onclick="wizMove(1)">التَّالِي ←</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="customComposerPanel" class="panel hidden">
+      <div class="section-head" style="margin-top:0">
+        <h3 class="section-title" style="font-size:19px">✍️ مُحَرِّرُ الصَّفَحَاتِ وَالْمَشَاهِدِ الْمُخَصَّصَةِ</h3>
+        <button class="btn-teal" onclick="addComposerPage()">+ إِضَافَةُ صَفْحَةٍ جَدِيدَةٍ</button>
+      </div>
+      <div style="margin-bottom:10px">
+        <label style="font-weight:800">عُنْوَانُ الْقِصَّةِ:</label>
+        <input id="compTitle" class="field-input" placeholder="اُكْتُبْ عُنْوَانَ قِصَّتِكَ هُنَا...">
+      </div>
+      <div id="composerPagesList"></div>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-primary" onclick="saveComposedStory()">💾 حِفْظُ الْقِصَّةِ وَبَدْءُ الْقِرَاءَةِ</button>
+        <button class="btn-secondary" onclick="$('customComposerPanel').classList.add('hidden')">إِخْفَاءُ الْمُحَرِّرِ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- VOICE STUDIO -->
+  <section id="voice" class="hidden">
+    <div class="panel">
+      <h2 class="section-title">🎙️ اسْتُودْيُو الْحِكَايَةِ الصَّوْتِيَّةِ (بِالْفُصْحَى)</h2>
+      <p style="color:var(--muted);line-height:1.8;margin-top:6px">
+        تَحَدَّثْ بِالْعَرَبِيَّةِ الْفُصْحَى بِوُضُوحٍ أَوِ اكْتُبْ حِكَايَتَكَ مُبَاشَرَةً؛ يُنَسِّقُ النِّظَامُ الْفُصْحَى وَعَلَامَاتِ التَّرْقِيمِ وَيُقَسِّمُ النَّصَّ إِلَى صَفَحَاتٍ مُصَوَّرَةٍ تِلْقَائِيًّا.
+      </p>
+
+      <div style="margin-bottom:12px">
+        <label style="font-weight:800;font-size:14px">عُنْوَانُ الْقِصَّةِ:</label>
+        <input id="voiceTitle" class="field-input" placeholder="مِثَالٌ: مُغَامَرَةُ سَلِيمٍ وَالْعُصْفُورِ الصَّغِيرِ">
+      </div>
+
+      <div class="voice-wave" id="voiceWave">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0">
+        <button class="btn-primary" id="voiceStartBtn" onclick="startVoice()">🎤 ابْدَأِ التَّسْجِيلَ الصَّوْتِيَّ</button>
+        <button class="btn-danger" id="voiceStopBtn" onclick="stopVoice()">⏹ إِيقَافُ التَّسْجِيلِ</button>
+        <button class="btn-secondary" onclick="polishFushaText()">✨ تَنْسِيقُ الْفُصْحَى وَالتَّرْقِيمِ</button>
+        <button class="btn-secondary" onclick="insertSampleVoice()">📝 إدْرَاجُ نَمُوذَجٍ تَجْرِيبِيٍّ</button>
+      </div>
+
+      <div id="voiceStatus" style="font-size:13.5px;font-weight:800;color:var(--primary-dark);margin-bottom:8px">
+        جَاهِزٌ لِلِاسْتِمَاعِ إِلَى حِكَايَتِكَ بِالْعَرَبِيَّةِ الْفُصْحَى.
+      </div>
+
+      <textarea id="voiceText" rows="5" class="field-input" placeholder="تَحَدَّثْ أَوِ اكْتُبْ هُنَا..."></textarea>
+
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-teal" onclick="makeVoiceStory()">📖 حَوِّلْ كَلَامِي إِلَى قِصَّةٍ مُصَوَّرَةٍ</button>
+        <button class="btn-secondary" onclick="previewVoiceRead()">🔊 اسْتَمِعْ إِلَى النَّصِّ قَبْلَ الْحِفْظِ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATALOG -->
+  <section id="catalog" class="hidden">
+    <div class="section-head">
+      <h2 class="section-title">🌈 مَكْتَبَةُ الْقِصَصِ التَّعْلِيمِيَّةِ الْمَشْكُولَةِ</h2>
+    </div>
+    <div id="catalogGrid" class="grid-cards"></div>
+
+    <div class="panel" style="margin-top:22px">
+      <h3 style="margin:0 0 8px;font-size:17px">🌐 رَبْطُ الْمَكْتَبَةِ السَّحَابِيَّةِ (GitHub JSON Catalog)</h3>
+      <p style="margin:0 0 10px;font-size:13.5px;color:var(--muted)">أَضِفْ رَابِطَ مَلَفِّ الْقِصَصِ عَلَى GitHub (HTTPS) لِتَحْمِيلِ قِصَصٍ إِضَافِيَّةٍ تِلْقَائِيًّا:</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input id="catalogEndpoint" class="field-input" style="flex:1;min-width:220px;margin:0" placeholder="https://raw.githubusercontent.com/...">
+        <button class="btn-primary" onclick="saveCatalogEndpoint()">حِفْظٌ وَتَحَقُّقٌ</button>
+        <button class="btn-secondary" onclick="checkCatalog()">↻ تَحْدِيثٌ</button>
+      </div>
+      <div id="catalogStatus" style="margin-top:8px;font-size:13px;font-weight:700;color:var(--secondary)"></div>
+    </div>
+  </section>
+
+  <!-- LIBRARY -->
+  <section id="library" class="hidden">
+    <div class="panel">
+      <h2 class="section-title" style="margin-bottom:12px">🏆 أَوْسِمَتِي وَإِنْجَازَاتِي</h2>
+      <div id="badgesGrid" class="badges-grid"></div>
+    </div>
+
+    <div class="section-head">
+      <h2 class="section-title">📚 قِصَصِي الْمَحْفُوظَةُ</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-secondary" onclick="backupStories()">⬇ تَصْدِيرُ نُسْخَةٍ احْتِيَاطِيَّةٍ</button>
+        <label class="btn-secondary" style="cursor:pointer">
+          ⬆ اسْتِعَادَةُ الْقِصَصِ
+          <input type="file" accept=".json" style="display:none" onchange="restoreStories(event)">
+        </label>
+      </div>
+    </div>
+    <div id="savedGrid" class="grid-cards"></div>
+  </section>
+
+  <!-- READER -->
+  <section id="reader" class="hidden">
+    <div class="panel">
+      <div class="reader-top">
+        <div>
+          <h2 id="readTitle" class="section-title" style="margin:0"></h2>
+          <div id="readMeta" style="font-size:13px;color:var(--muted);font-weight:700;margin-top:3px"></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-secondary" id="fontSizeBtn" onclick="toggleReadingSize()">🔠 تَكْبِيرُ الْخَطِّ</button>
+          <button class="btn-secondary" onclick="printStory()">🖨 طِبَاعَةٌ</button>
+          <button class="btn-secondary" onclick="leaveReader()">↩ الْعَوْدَةُ</button>
+        </div>
+      </div>
+
+      <div class="reader-stage">
+        <img id="readImage" alt="مشهد القصة">
+        <div class="page-pill" id="pageIndicator">1 / 4</div>
+        <button class="zoom-hd-btn" id="zoomSceneBtn" onclick="zoomCurrentScene()">🔍 عَرْضُ الصُّورَةِ بِالدِّقَّةِ الْكَامِلَةِ</button>
+      </div>
+
+      <div class="audio-controls">
+        <button class="btn-primary" id="playAudioBtn" onclick="readAloud()">🔊 اسْتَمِعْ بِالْفُصْحَى</button>
+        <button class="btn-teal" id="cinemaBtn" onclick="toggleCinemaMode()">🎬 سِينَمَا تِلْقَائِيَّةٌ</button>
+        <button class="btn-danger" onclick="stopSpeech()">⏹ إِيقَافٌ</button>
+        <select id="speechRateSelect" class="speed-select" aria-label="سرعة القراءة">
+          <option value="0.72">🐢 بَطِيءٌ (لِلتَّعَلُّمِ)</option>
+          <option value="0.88" selected>🚶 مُتَوَسِّطٌ (فُصْحَى وَاضِحَةٌ)</option>
+          <option value="1.05">🐇 سَرِيعٌ</option>
+        </select>
+        <span id="ttsStatus" style="font-size:12.5px;font-weight:800;color:var(--primary-dark)"></span>
+      </div>
+
+      <div id="readText" class="story-text-box"></div>
+
+      <div class="pedagogy-strip" id="pedagogyStrip">
+        <div class="ped-card">
+          <h4>💡 مُفْرَدَةٌ وَمَعْنًى</h4>
+          <p id="vocabBox"></p>
+        </div>
+        <div class="ped-card">
+          <h4>🤔 سُؤَالٌ لِلتَّفْكِيرِ</h4>
+          <p id="thinkBox"></p>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <button class="btn-secondary" id="prevPageBtn" onclick="turnPage(-1)">→ الصَّفْحَةُ السَّابِقَةُ</button>
+        <button class="btn-primary" id="nextPageBtn" onclick="turnPage(1)">الصَّفْحَةُ التَّالِيَةُ ←</button>
+      </div>
+
+      <div id="quizContainer" class="quiz-box hidden"></div>
+    </div>
+  </section>
+</main>
+
+<div class="mobile-dock">
+  <button class="dock-btn active" data-nav="home" onclick="go('home')"><span>🏠</span>الرئيسية</button>
+  <button class="dock-btn" data-nav="wizard" onclick="go('wizard')"><span>🪄</span>اصنع قصة</button>
+  <button class="dock-btn" data-nav="voice" onclick="go('voice')"><span>🎙️</span>بصوتي</button>
+  <button class="dock-btn" data-nav="catalog" onclick="go('catalog')"><span>🌈</span>المكتبة</button>
+  <button class="dock-btn" data-nav="library" onclick="go('library')"><span>📚</span>مكتبتي</button>
+</div>
+
+<div id="lightboxModal" class="lightbox hidden" onclick="closeLightbox(event)">
+  <img id="lightboxImg" alt="معاينة الصورة بالدقة الكاملة">
+  <div class="lightbox-bar">
+    <span id="lightboxCaption"></span>
+    <a id="lightboxDownload" download="qissati-scene-hd.jpg" class="btn-amber" style="text-decoration:none;padding:8px 14px;font-size:13px">⬇ تَحْمِيلُ الصُّورَةِ (HD)</a>
+    <button class="btn-secondary" style="padding:8px 14px;font-size:13px" onclick="document.getElementById('lightboxModal').classList.add('hidden')">✕ إِغْلَاقٌ</button>
+  </div>
+</div>
+
+<script>
+const IMAGES = {"ICON": "images/icon.jpg", "HERO": "images/hero.jpg", "GARDEN": "images/garden.jpg", "MAGIC": "images/magic.jpg", "SEA": "images/sea.jpg", "FOREST": "images/forest.jpg", "SPACE": "images/space.jpg", "CITY": "images/city.jpg"};
+const IMAGE_META = {"ICON": {"file": "input_file_10.png", "width": 1024, "height": 1024, "format": "JPEG", "bytes": 827309}, "HERO": {"file": "input_file_5.png", "width": 1376, "height": 768, "format": "JPEG", "bytes": 803328}, "GARDEN": {"file": "input_file_4.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 788273}, "MAGIC": {"file": "input_file_6.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 770510}, "SEA": {"file": "input_file_7.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 854276}, "FOREST": {"file": "input_file_8.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 796242}, "SPACE": {"file": "input_file_9.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 765739}, "CITY": {"file": "input_file_11.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 944961}};
+
+const SCENE_CATALOG = [
+  { key:'GARDEN', title:'مُغَامَرَةُ الْعُصْفُورِ الصَّغِيرِ', res:'1200×896', keywords:['عصفور','حديقة','شجرة','زهرة','طائر','صباح','سليم','بذرة','نبتة'] },
+  { key:'FOREST', title:'الْأَرْنَبُ وَالثَّعْلَبُ فِي الْغَابَةِ', res:'1200×896', keywords:['أرنب','ثعلب','غابة','صديق','صداقة','قطة','حيوان','لطف'] },
+  { key:'SPACE', title:'رِحْلَةٌ إِلَى الْفَضَاءِ وَالْكَوَاكِبِ', res:'1200×896', keywords:['فضاء','قمر','نجم','نجوم','كوكب','مركبة','روبوت','علوم','سماء'] },
+  { key:'SEA', title:'أَعْمَاقُ الْبِحَارِ وَالشِّعَابُ الْمَرْجَانِيَّةُ', res:'1200×896', keywords:['بحر','سمكة','سلحفاة','غوص','ماء','محيط','مرجان','شاطئ'] },
+  { key:'CITY', title:'أَلْوَانُ التَّعَاوُنِ وَاللَّوْحَةُ السِّحْرِيَّةُ', res:'1200×896', keywords:['ألوان','رسم','لوحة','تعاون','مدرسة','مدينة','قوس','فريق'] },
+  { key:'MAGIC', title:'الْكِتَابُ السِّحْرِيُّ وَقَلْعَةُ الْخَيَالِ', res:'1200×896', keywords:['كتاب','قلعة','سحر','خيال','قراءة','حكاية','ليل','مكتبة'] }
+];
+
+const PRESET_STORIES = [
+  {
+    id:'preset-1', title:'مُغَامَرَةُ الْعُصْفُورِ الصَّغِيرِ', category:'قِيَمٌ وَرَحْمَةٌ', ageBand:'8-10', theme:'GARDEN',
+    summary:'حِكَايَةُ سَلِيمٍ الَّذِي وَجَدَ عُصْفُورًا صَغِيرًا فِي الْحَدِيقَةِ وَاعْتَنَى بِهِ حَتَّى عَادَ يُحَلِّقُ فِي السَّمَاءِ.',
+    pages:[
+      { text:'فِي صَبَاحٍ مُشْرِقٍ جَمِيلٍ، خَرَجَ سَلِيمٌ إِلَى الْحَدِيقَةِ الْمُزْهِرَةِ، فَوَجَدَ عُصْفُورًا صَغِيرًا يَقِفُ عَلَى صَخْرَةٍ خَضْرَاءَ وَلَا يَسْتَطِيعُ الطَّيَرَانَ.', img:'GARDEN', vocab:'الْمُزْهِرَةِ: الْمَلِيئَةِ بِالْأَزْهَارِ الْمُتَفَتِّحَةِ.', think:'لِمَاذَا لَا يَسْتَطِيعُ الْعُصْفُورُ الطَّيَرَانَ فِي رَأْيِكَ؟' },
+      { text:'اقْتَرَبَ سَلِيمٌ بِهُدُوءٍ وَلُطْفٍ حَتَّى لَا يُخِيفَ الْعُصْفُورَ، ثُمَّ قَدَّمَ لَهُ قَطَرَاتٍ مِنَ الْمَاءِ الْعَذْبِ وَبَعْضَ الْحُبُوبِ الصَّغِيرَةِ.', img:'GARDEN', vocab:'الْعَذْبِ: الْمَاءِ الصَّافِي السَّائِغِ لِلشُّرْبِ.', think:'كَيْفَ يُظْهِرُ الْهُدُوءُ احْتِرَامَ الْكَائِنَاتِ الْحَيَّةِ؟' },
+      { text:'بَعْدَ أَيَّامٍ قَلِيلَةٍ مِنَ الرِّعَايَةِ وَالِاهْتِمَامِ، اسْتَعَادَ الْعُصْفُورُ قُوَّتَهُ، وَرَفْرَفَ بِجَنَاحَيْهِ فَرِحًا فَوْقَ الْأَزْهَارِ الْمُلَوَّنَةِ.', img:'HERO', vocab:'الرِّعَايَةِ: الْحِفَاظُ عَلَى الشَّيْءِ وَالْعِنَايَةُ بِهِ.', think:'مَا أَثَرُ الِاسْتِمْرَارِ فِي الْمُسَاعَدَةِ عَلَى النَّتِيجَةِ؟' },
+      { text:'حَلَّقَ الْعُصْفُورُ عَالِيًا فِي السَّمَاءِ الصَّافِيَةِ، وَغَرَّدَ بِأَجْمَلِ الْأَلْحَانِ كَأَنَّهُ يَشْكُرُ سَلِيمًا عَلَى رَحْمَتِهِ وَعَطْفِهِ.', img:'GARDEN', vocab:'حَلَّقَ: ارْتَفَعَ وَطَارَ عَالِيًا فِي الْجَوِّ.', think:'كَيْفَ نَرُدُّ الْجَمِيلَ لِمَنْ يُحْسِنُ إِلَيْنَا فِي حَيَاتِنَا؟' }
+    ],
+    quiz:[
+      { q:'أَيْنَ وَجَدَ سَلِيمٌ الْعُصْفُورَ الصَّغِيرَ؟', opts:['فِي الْحَدِيقَةِ الْمُزْهِرَةِ','فِي الْفَضَاءِ الْوَاسِعِ','فِي أَعْمَاقِ الْبَحْرِ'], ans:0 },
+      { q:'كَيْفَ تَعَامَلَ سَلِيمٌ مَعَ الْعُصْفُورِ؟', opts:['بِلُطْفٍ وَرِعَايَةٍ وَاهْتِمَامٍ','تَرَكَهُ وَذَهَبَ مُسْرِعًا','أَخَافَهُ بِصَوْتٍ عَالٍ'], ans:0 },
+      { q:'مَا الدَّرْسُ الْمُسْتَفَادُ مِنْ هَذِهِ الْقِصَّةِ؟', opts:['الرِّفْقُ بِالْحَيَوَانِ وَالْعِنَايَةُ بِهِ','إِهْمَالُ الطَّبِيعَةِ','الْخَوْفُ مِنَ الْمُسَاعَدَةِ'], ans:0 }
+    ]
+  },
+  {
+    id:'preset-2', title:'الْأَرْنَبُ الْأَبْيَضُ وَالثَّعْلَبُ الصَّدِيقُ', category:'الصَّدَاقَةُ وَالثِّقَةُ', ageBand:'8-10', theme:'FOREST',
+    summary:'فِي الْغَابَةِ الْمَسْحُورَةِ يَكْتَشِفُ الْأَرْنَبُ وَالثَّعْلَبُ أَنَّ الصَّدَاقَةَ الصَّادِقَةَ تَصْنَعُ الْأَمَانَ وَالْبَهْجَةَ.',
+    pages:[
+      { text:'فِي قَلْبِ الْغَابَةِ الْمَسْحُورَةِ، حَيْثُ تَتَسَلَّلُ أَشِعَّةُ الشَّمْسِ الذَّهَبِيَّةُ بَيْنَ الْأَشْجَارِ، كَانَ الْأَرْنَبُ الْأَبْيَضُ يَبْحَثُ عَنْ صَدِيقٍ يُشَارِكُهُ اللَّعِبَ.', img:'FOREST', vocab:'تَتَسَلَّلُ: تَنْفُذُ وَتَمُرُّ بِخِفَّةٍ وَهُدُوءٍ.', think:'مَا الصِّفَاتُ الَّتِي تُحِبُّهَا فِي صَدِيقِكَ الْمُقَرَّبِ؟' },
+      { text:'التَقَى الْأَرْنَبُ بِثَعْلَبٍ صَغِيرٍ ذِي ابْتِسَامَةٍ دَافِئَةٍ جَالِسٍ عَلَى جِذْعِ شَجَرَةٍ مُغَطًّى بِالطَّحَالِبِ الْخَضْرَاءِ.', img:'FOREST', vocab:'الطَّحَالِبِ: نَبَاتَاتٌ خَضْرَاءُ نَاعِمَةٌ تَنْمُو عَلَى الصُّخُورِ وَالْأَشْجَارِ.', think:'لِمَاذَا نَتَجَنَّبُ الْأَحْكَامَ الْمُسْبَقَةَ قَبْلَ التَّعَارُفِ؟' },
+      { text:'تَحَدَّثَا مَعًا بِأَدَبٍ وَلُطْفٍ، وَتَعَاوَنَا فِي جَمْعِ الثِّمَارِ وَمُسَاعَدَةِ الْفَرَاشَاتِ الصَّغِيرَةِ فِي الْحَدِيقَةِ.', img:'FOREST', vocab:'تَعَاوَنَا: سَاعَدَ كُلُّ مِنْهُمَا الْآخَرَ فِي إِنْجَازِ الْعَمَلِ.', think:'كَيْفَ يُسْهِمُ التَّعَاوُنُ فِي تَقْوِيَةِ الرَّوَابِطِ بَيْنَ الزُّمَلَاءِ؟' },
+      { text:'أَدْرَكَ الْجَمِيعُ فِي الْغَابَةِ أَنَّ الصَّدَاقَةَ الْحَقِيقِيَّةَ تُقَاسُ بِالْأَفْعَالِ الطَّيِّبَةِ وَالْقَلْبِ الصَّادِقِ.', img:'MAGIC', vocab:'أَدْرَكَ: فَهِمَ وَعَرَفَ بِوُضُوحٍ.', think:'كَيْفَ نُعَبِّرُ عَنْ صِدْقِ الصَّدَاقَةِ فِي أَوْقَاتِ الشِّدَّةِ؟' }
+    ],
+    quiz:[
+      { q:'أَيْنَ التَقَى الْأَرْنَبُ بِالثَّعْلَبِ؟', opts:['فِي الْغَابَةِ الْمَسْحُورَةِ','عَلَى سَطْحِ الْقَمَرِ','فِي الْمَدْرَسَةِ'], ans:0 },
+      { q:'كَيْفَ قَضَى الصَّدِيقَانِ وَقْتَهُمَا؟', opts:['فِي التَّعَاوُنِ وَالْحَدِيثِ اللَّطِيفِ','فِي الْخِصَامِ','فِي النَّوْمِ طَوَالَ الْيَوْمِ'], ans:0 },
+      { q:'بِمَاذَا تُقَاسُ الصَّدَاقَةُ الْحَقِيقِيَّةُ؟', opts:['بِالْأَفْعَالِ الطَّيِّبَةِ وَالْقَلْبِ الصَّادِقِ','بِكَثْرَةِ الْكَلَامِ فَقَطْ','بِالْأَنَانِيَّةِ'], ans:0 }
+    ]
+  },
+  {
+    id:'preset-3', title:'رِحْلَةُ سَامِرٍ إِلَى الْفَضَاءِ', category:'الْعُلُومُ وَالِاسْتِكْشَافُ', ageBand:'11-14', theme:'SPACE',
+    summary:'مُغَامَرَةٌ عِلْمِيَّةٌ مُمْتِعَةٌ يَطِيرُ فِيهَا سَامِرٌ مَعَ رُوبُوتِهِ الذَّكِيِّ فَوْقَ كَوْكَبِ الْأَرْضِ.',
+    pages:[
+      { text:'ارْتَدَى سَامِرٌ بَدْلَةَ الْفَضَاءِ الزَّرْقَاءَ، وَانْطَلَقَ مَعَ صَدِيقِهِ الرُّوبُوتِ الذَّكِيِّ فِي رِحْلَةٍ اسْتِكْشَافِيَّةٍ بَيْنَ النُّجُومِ.', img:'SPACE', vocab:'اسْتِكْشَافِيَّةٍ: بَحْثٌ عِلْمِيٌّ لِلتَّعَرُّفِ عَلَى مَا هُوَ جَدِيدٌ.', think:'مَا أَهَمِّيَّةُ التَّسَاؤُلِ الْعِلْمِيِّ فِي تَطْوِيرِ الِاكْتِشَافَاتِ؟' },
+      { text:'نَظَرَ سَامِرٌ إِلَى الْأَسْفَلِ فَرَأَى كَوْكَبَ الْأَرْضِ يَتَلَأْلَأُ كَجَوْهَرَةٍ زَرْقَاءَ جَمِيلَةٍ تُحِيطُ بِهَا السُّحُبُ الْبَيْضَاءُ.', img:'SPACE', vocab:'يَتَلَأْلَأُ: يَلْمَعُ وَيَبْرُقُ بِنُورٍ وَاضِحٍ.', think:'لِمَاذَا يَبْدُو كَوْكَبُ الْأَرْضِ أَزْرَقَ اللَّوْنِ مِنْ فَضَاءِ الْخَارِجِ؟' },
+      { text:'شَاهَدَ الصَّدِيقَانِ الْكَوَاكِبَ ذَاتَ الْحَلَقَاتِ الْمُلَوَّنَةِ، وَدَوَّنَا مَلْحُوظَاتٍ عِلْمِيَّةً دَقِيقَةً عَنْ حَرَكَةِ النُّجُومِ.', img:'SPACE', vocab:'دَوَّنَا: كَتَبَا وَسَجَّلَا بِدِقَّةٍ وَتَرْتِيبٍ.', think:'لِمَاذَا يُعَدُّ تَدْوِينُ الْمُلَاحَظَاتِ خُطْوَةً أَسَاسِيَّةً لِلْبَاحِثِ؟' },
+      { text:'عَادَ سَامِرٌ إِلَى الْأَرْضِ مُتَحَمِّسًا لِقِرَاءَةِ الْمَزِيدِ مِنْ كُتُبِ الْفَلَكِ وَالْعُلُومِ لِيُحَقِّقَ حُلْمَهُ فِي الْمُسْتَقْبَلِ.', img:'MAGIC', vocab:'الْفَلَكِ: الْعِلْمُ الَّذِي يَدْرُسُ الْأَجْرَامَ السَّمَاوِيَّةَ وَحَرَكَتَهَا.', think:'كَيْفَ يُمْكِنُ لِلتَّعَلُّمِ الذَّاتِيِّ أَنْ يُقَرِّبَنَا مِنْ أَهْدَافِنَا؟' }
+    ],
+    quiz:[
+      { q:'مَنْ رَافَقَ سَامِرًا فِي رِحْلَتِهِ الْفَضَائِيَّةِ؟', opts:['الرُّوبُوتُ الذَّكِيُّ','الْعُصْفُورُ الْأَزْرَقُ','السُّلَحْفَاةُ الْبَحْرِيَّةُ'], ans:0 },
+      { q:'كَيْفَ بَدَا كَوْكَبُ الْأَرْضِ مِنَ الْفَضَاءِ؟', opts:['كَجَوْهَرَةٍ زَرْقَاءَ جَمِيلَةٍ','مُظْلِمًا تَمَامًا','مُغَطًّى بِالرِّمَالِ فَقَطْ'], ans:0 },
+      { q:'مَاذَا قَرَّرَ سَامِرٌ بَعْدَ عَوْدَتِهِ؟', opts:['قِرَاءَةُ كُتُبِ الْفَلَكِ وَالْعُلُومِ','تَرْكُ الدِّرَاسَةِ','نِسْيَانُ الرِّحْلَةِ'], ans:0 }
+    ]
+  },
+  {
+    id:'preset-4', title:'لَيْلَى وَأَسْرَارُ أَعْمَاقِ الْبِحَارِ', category:'الْبِيئَةُ وَالْمُغَامَرَةُ', ageBand:'8-10', theme:'SEA',
+    summary:'تَغُوصُ لَيْلَى فِي الْمِيَاهِ الْفَيْرُوزِيَّةِ الصَّافِيَةِ لِتَتَعَرَّفَ عَلَى السُّلَحْفَاةِ الْبَحْرِيَّةِ وَالشِّعَابِ الْمَرْجَانِيَّةِ.',
+    pages:[
+      { text:'ارْتَدَتْ لَيْلَى خُوذَةَ الْغَوْصِ الشَّفَّافَةَ، وَنَزَلَتْ بِهُدُوءٍ إِلَى أَعْمَاقِ الْبَحْرِ الْفَيْرُوزِيِّ الصَّافِي حَيْثُ تَتَلَأْلَأُ أَشِعَّةُ الشَّمْسِ.', img:'SEA', vocab:'الشَّفَّافَةَ: الَّتِي يَنْفُذُ مِنْ خِلَالِهَا الضَّوْءُ فَتُرَى مَا وَرَاءَهَا.', think:'مَا الَّذِي يَجْعَلُ الْغَوْصَ فِي الْمِيَاهِ الصَّافِيَةِ مُمْتِعًا وَآمِنًا؟' },
+      { text:'رَحَّبَتْ بِهَا سَمَكَةُ الْمُهَرِّجِ الْبُرْتُقَالِيَّةُ وَسُلَحْفَاةٌ بَحْرِيَّةٌ لَطِيفَةٌ تَسْبَحُ بَيْنَ الشِّعَابِ الْمَرْجَانِيَّةِ الْمُلَوَّنَةِ.', img:'SEA', vocab:'الشِّعَابِ الْمَرْجَانِيَّةِ: تَكْوِينَاتٌ بَحْرِيَّةٌ تُشَكِّلُ مَوْطِنًا لِكَائِنَاتٍ كَثِيرَةٍ.', think:'كَيْفَ تَتَكَيَّفُ الْكَائِنَاتُ الْبَحْرِيَّةُ مَعَ بِيئَتِهَا تَحْتَ الْمَاءِ؟' },
+      { text:'تَعَلَّمَتْ لَيْلَى أَنَّ نَظَافَةَ الْبِحَارِ وَعَدَمَ إِلْقَاءِ النُّفَايَاتِ فِيهَا يَحْمِي هَذِهِ الْكَائِنَاتِ الْجَمِيلَةَ.', img:'SEA', vocab:'النُّفَايَاتِ: الْمَخَلَّفَاتُ الَّتِي يَجِبُ التَّخَلُّصُ مِنْهَا بِطَرِيقَةٍ سَلِيمَةٍ.', think:'مَا السُّلُوكِيَّاتُ الْيَوْمِيَّةُ الَّتِي تُسَاعِدُ فِي حِمَايَةِ الْبِيئَةِ؟' },
+      { text:'عَادَتْ لَيْلَى إِلَى الشَّاطِئِ وَهِيَ تَحْمِلُ رِسَالَةً وَاضِحَةً: لِنُحَافِظْ جَمِيعًا عَلَى جَمَالِ الْبِحَارِ وَنَقَائِهَا.', img:'HERO', vocab:'نَقَائِهَا: صَفَائِهَا وَخُلُوِّهَا مِنَ التَّلَوُّثِ.', think:'كَيْفَ يُمْكِنُ لِلطُّلَّابِ نَشْرُ الْوَعْيِ الْبِيئِيِّ فِي مَدْرَسَتِهِمْ؟' }
+    ],
+    quiz:[
+      { q:'مَاذَا شَاهَدَتْ لَيْلَى فِي أَعْمَاقِ الْبَحْرِ؟', opts:['سَمَكَةَ الْمُهَرِّجِ وَسُلَحْفَاةً بَحْرِيَّةً','أَسَدًا وَنَمِرًا','مَرْكَبَةً فَضَائِيَّةً'], ans:0 },
+      { q:'كَيْفَ نَحْمِي الْكَائِنَاتِ الْبَحْرِيَّةَ؟', opts:['بِالْمُحَافَظَةِ عَلَى نَظَافَةِ الْبِحَارِ','بِإِلْقَاءِ الْبَلَاسْتِيكِ فِي الْمَاءِ','بِتَلْوِيثِ الشَّاطِئِ'], ans:0 },
+      { q:'كَيْفَ كَانَتْ مِيَاهُ الْبَحْرِ فِي الْقِصَّةِ؟', opts:['فَيْرُوزِيَّةً صَافِيَةً','عَكِرَةً وَمُظْلِمَةً','مُتَجَمِّدَةً'], ans:0 }
+    ]
+  },
+  {
+    id:'preset-5', title:'أَلْوَانُ التَّعَاوُنِ فِي مَدِينَتِنَا', category:'الْعَمَلُ الْجَمَاعِيُّ', ageBand:'11-14', theme:'CITY',
+    summary:'يَتَعَاوَنُ سَلِيمٌ وَلَيْلَى وَالرُّوبُوتُ لِرَسْمِ قَوْسِ قُزَحَ كَبِيرٍ يُزَيِّنُ جِدَارَ الْحَيِّ الْجَمِيلِ.',
+    pages:[
+      { text:'قَرَّرَ سَلِيمٌ وَلَيْلَى تَزْيِينَ جِدَارِ السَّاحَةِ فِي مَدِينَتِهِمَا الْجَمِيلَةِ بِلَوْحَةٍ فَنِّيَّةٍ مَلِيئَةٍ بِالْحَيَاةِ وَالْأَمَلِ.', img:'CITY', vocab:'السَّاحَةِ: الْمِسَاحَةُ الْمَفْتُوحَةُ الْوَاسِعَةُ فِي الْحَيِّ أَوِ الْمَدِينَةِ.', think:'كَيْفَ يُغَيِّرُ الْفَنُّ الْجَمِيلُ مَظْهَرَ الْأَمَاكِنِ الْعَامَّةِ؟' },
+      { text:'أَحْضَرَا الْفُرْشَاةَ وَالْأَلْوَانَ الزَّاهِيَةَ، وَانْضَمَّ إِلَيْهِمَا الرُّوبُوتُ الصَّغِيرُ لِيُسَاعِدَهُمَا فِي رَسْمِ قَوْسِ قُزَحَ مُشْرِقٍ.', img:'CITY', vocab:'الزَّاهِيَةَ: الْمُشْرِقَةَ الْوَاضِحَةَ الْجَذَّابَةَ.', think:'كَيْفَ نُوَزِّعُ الْأَدْوَارَ بِعَدَالَةٍ عِنْدَ الْعَمَلِ ضِمْنَ فَرِيقٍ؟' },
+      { text:'رَسَمَ كُلُّ وَاحِدٍ مِنْهُمْ جُزْءًا مِنَ اللَّوْحَةِ بِإِتْقَانٍ وَسَعَادَةٍ، فَتَحَوَّلَ الْجِدَارُ الْقَدِيمُ إِلَى تُحْفَةٍ فَنِّيَّةٍ رَائِعَةٍ.', img:'CITY', vocab:'بِإِتْقَانٍ: بِدِقَّةٍ عَالِيَةٍ وَحِرْصٍ عَلَى الْجَوْدَةِ.', think:'لِمَاذَا يَجِبُ أَنْ نُتْقِنَ عَمَلَنَا حَتَّى فِي أَبْسَطِ التَّفَاصِيلِ؟' },
+      { text:'أَعْجِبَ أَهْلُ الْمَدِينَةِ بِاللَّوْحَةِ، وَأَدْرَكَ الْأَطْفَالُ أَنَّ التَّعَاوُنَ يَجْعَلُ كُلَّ عَمَلٍ أَجْمَلَ وَأَسْهَلَ.', img:'HERO', vocab:'أَدْرَكَ: تَبَيَّنَ وَعَرَفَ حَقِيقَةَ الْأَمْرِ.', think:'مَا أَكْبَرُ إِنْجَازٍ جَمَاعِيٍّ شَارَكْتَ فِيهِ مَعَ زُمَلَائِكَ؟' }
+    ],
+    quiz:[
+      { q:'مَاذَا رَسَمَ الْأَصْدِقَاءُ عَلَى جِدَارِ السَّاحَةِ؟', opts:['قَوْسَ قُزَحَ مُلَوَّنًا','سَيَّارَةً سَوْدَاءَ','خَرِيطَةً قَدِيمَةً'], ans:0 },
+      { q:'مَنْ سَاعَدَ سَلِيمًا وَلَيْلَى فِي الرَّسْمِ؟', opts:['الرُّوبُوتُ الصَّغِيرُ','الثَّعْلَبُ','السُّلَحْفَاةُ'], ans:0 },
+      { q:'مَا الْقِيمَةُ الَّتِي تُعَلِّمُنَا إِيَّاهَا الْقِصَّةُ؟', opts:['التَّعَاوُنُ وَالْعَمَلُ الْجَمَاعِيُّ','الْعَمَلُ بِمُفْرَدِنَا دَائِمًا','الِاسْتِسْلَامُ'], ans:0 }
+    ]
+  },
+  {
+    id:'preset-6', title:'الْكِتَابُ السِّحْرِيُّ وَقَلْعَةُ الْخَيَالِ', category:'حُبُّ الْقِرَاءَةِ', ageBand:'11-14', theme:'MAGIC',
+    summary:'عِنْدَمَا يَفْتَحُ سَلِيمٌ كِتَابَهُ الْمُفَضَّلَ تَحْتَ النُّجُومِ، تَنْطَلِقُ قَلْعَةُ الْمَعْرِفَةِ وَالْخَيَالِ.',
+    pages:[
+      { text:'فِي مَسَاءٍ هَادِئٍ تَتَلَأْلَأُ فِيهِ النُّجُومُ، جَلَسَ سَلِيمٌ عَلَى الْعُشْبِ الْأَخْضَرِ وَفَتَحَ كِتَابَ الْحِكَايَاتِ الذَّهَبِيَّ.', img:'MAGIC', vocab:'هَادِئٍ: سَاكِنٍ مُطْمَئِنٍّ خَالٍ مِنَ الضَّجِيجِ.', think:'كَيْفَ تَخْتَارُ كِتَابًا يُنَاسِبُ اهْتِمَامَاتِكَ الْقِرَائِيَّةَ؟' },
+      { text:'تَلَأْلَأَتْ صَفَحَاتُ الْكِتَابِ بِنُورٍ دَافِئٍ، وَظَهَرَتْ قَلْعَةُ الْخَيَالِ الشَّامِخَةُ تُحِيطُ بِهَا النُّجُومُ وَالْأَزْهَارُ.', img:'MAGIC', vocab:'الشَّامِخَةُ: الْعَالِيَةُ الرَّاسِخَةُ الْعَظِيمَةُ.', think:'كَيْفَ يُسَاعِدُ الْخَيَالُ الْمُوَجَّهُ عَلَى ابْتِكَارِ أَفْكَارٍ جَدِيدَةٍ؟' },
+      { text:'سَافَرَ سَلِيمٌ بِعَقْلِهِ عَبْرَ الصَّفَحَاتِ، فَتَعَلَّمَ كَلِمَاتٍ عَرَبِيَّةً فَصِيحَةً وَحِكَمًا نَافِعَةً مِنْ كُلِّ قِصَّةٍ.', img:'HERO', vocab:'حِكَمًا: عِبَارَاتٍ قَصِيرَةً تَحْمِلُ خِبْرَةً وَتَوْجِيهًا نَافِعًا.', think:'مَا الْحِكْمَةُ الَّتِي أَعْجَبَتْكَ فِي قِصَّةٍ قَرَأْتَهَا مُؤَخَّرًا؟' },
+      { text:'ابْتَسَمَ سَلِيمٌ وَقَالَ: إِنَّ الْقِرَاءَةَ هِيَ الْمِفْتَاحُ السِّحْرِيُّ الَّذِي يَفْتَحُ لَنَا أَبْوَابَ الْعَالَمِ كُلِّهِ.', img:'MAGIC', vocab:'الْمِفْتَاحُ: الْوَسِيلَةُ الَّتِي تُتِيحُ الْوُصُولَ إِلَى الْمَعْرِفَةِ.', think:'كَيْفَ نَجْعَلُ الْقِرَاءَةَ عَادَةً يَوْمِيَّةً ثَابِتَةً فِي حَيَاتِنَا؟' }
+    ],
+    quiz:[
+      { q:'مَاذَا فَتَحَ سَلِيمٌ فِي الْمَسَاءِ الْهَادِئِ؟', opts:['كِتَابَ الْحِكَايَاتِ الذَّهَبِيَّ','صُنْدُوقَ الْأَلْعَابِ','نَافِذَةَ الْغُرْفَةِ'], ans:0 },
+      { q:'مَاذَا ظَهَرَ مِنْ صَفَحَاتِ الْكِتَابِ الْمُضِيءِ؟', opts:['قَلْعَةُ الْخَيَالِ وَالنُّجُومُ','قِطَارٌ سَرِيعٌ','جَبَلٌ جَلِيدِيٌّ'], ans:0 },
+      { q:'مَاذَا تَعَلَّمَ سَلِيمٌ مِنَ الْقِرَاءَةِ؟', opts:['كَلِمَاتٍ فَصِيحَةً وَحِكَمًا نَافِعَةً','الْكَسَلَ','إِضَاعَةَ الْوَقْتِ'], ans:0 }
+    ]
+  }
+];
+
+const BADGES_DEF = [
+  { id:'first_read', icon:'📖', title:'قَارِئٌ مُبْتَدِئٌ', desc:'أَتْمَمْتَ قِرَاءَةَ أَوَّلِ قِصَّةٍ' },
+  { id:'quiz_master', icon:'🏆', title:'نَجْمُ الْفَهْمِ', desc:'أَجَبْتَ بِصَحَّةٍ عَنْ أَسْئِلَةِ الْقِصَّةِ' },
+  { id:'story_maker', icon:'🪄', title:'مُؤَلِّفٌ صَغِيرٌ', desc:'أَنْشَأْتَ قِصَّتَكَ الْخَاصَّةَ بِالصُّوَرِ' },
+  { id:'voice_star', icon:'🎙️', title:'حَكَوَاتِي الْفُصْحَى', desc:'حَوَّلْتَ صَوْتَكَ إِلَى قِصَّةٍ مُصَوَّرَةٍ' }
+];
+
+let state = { stars:0, badges:[], sfx:true, ageBand:'all', guideHidden:false, onlineCatalog:[] };
+let draft = { mode:'creative', hero:'سَلِيمٌ', theme:'GARDEN', title:'' };
+let composerPages = [
+  { text:'', img:'GARDEN', vocab:'', think:'' },
+  { text:'', img:'FOREST', vocab:'', think:'' }
+];
+let wizStep = 0;
+let activeStory = null;
+let pageIndex = 0;
+let returnTab = 'home';
+let cinemaMode = false;
+let voiceRecognizer = null;
+let wordTimer = null;
+
+const $ = id => document.getElementById(id);
+
+function loadState(){
+  try{
+    const saved = JSON.parse(localStorage.getItem('qissati_v6_state') || '{}');
+    if(typeof saved.stars === 'number') state.stars = saved.stars;
+    if(Array.isArray(saved.badges)) state.badges = saved.badges;
+    if(typeof saved.sfx === 'boolean') state.sfx = saved.sfx;
+    if(typeof saved.ageBand === 'string') state.ageBand = saved.ageBand;
+    if(typeof saved.guideHidden === 'boolean') state.guideHidden = saved.guideHidden;
+    const cachedCat = JSON.parse(localStorage.getItem('qissati-online-catalog') || '[]');
+    if(Array.isArray(cachedCat)) state.onlineCatalog = cachedCat;
+  }catch(e){}
+  applyAgeBandUI();
+  applyGuideUI();
+  updateHud();
+}
+
+function saveState(){
+  try{ localStorage.setItem('qissati_v6_state', JSON.stringify(state)); }catch(e){}
+  updateHud();
+}
+
+function applyGuideUI(){
+  const g = $('studentQuickGuide');
+  if(g) g.classList.toggle('hidden', !!state.guideHidden);
+}
+
+function toggleQuickGuide(){
+  state.guideHidden = !state.guideHidden;
+  saveState();
+  applyGuideUI();
+}
+
+function setAgeBand(band){
+  state.ageBand = band;
+  saveState();
+  applyAgeBandUI();
+  if(!$('home').classList.contains('hidden')) renderHome();
+  if(!$('catalog').classList.contains('hidden')) renderCatalog();
+}
+
+function applyAgeBandUI(){
+  document.querySelectorAll('.age-chip').forEach(b=>{
+    b.classList.toggle('active', b.dataset.age === state.ageBand);
+  });
+  const desc = $('heroDesc');
+  if(state.ageBand === '8-10'){
+    desc.textContent = 'مُصَمَّمٌ لِلْفِئَةِ (8–10 سَنَوَاتٍ): جُمَلٌ فَصِيحَةٌ وَاضِحَةٌ مَشْكُولَةٌ، وَشَرْحٌ مُبَسَّطٌ لِلْمُفْرَدَاتِ، وَأَنْشِطَةُ فَهْمٍ مُشَوِّقَةٌ.';
+  } else if(state.ageBand === '11-14'){
+    desc.textContent = 'مُصَمَّمٌ لِلْفِئَةِ (11–14 سَنَةً): نُصُوصٌ أَدَبِيَّةٌ وَعِلْمِيَّةٌ أَعْمَقُ، وَأَسْئِلَةٌ تَحْلِيلِيَّةٌ لِلتَّفْكِيرِ النَّقْدِيِّ، وَتَأْلِيفٌ حُرٌّ لِلْقِصَصِ.';
+  } else {
+    desc.textContent = 'بِيئَةٌ تَعْلِيمِيَّةٌ مُصَمَّمَةٌ لِتَنْمِيَةِ الْقِرَاءَةِ الْفَصِيحَةِ وَالثَّرْوَةِ اللُّغَوِيَّةِ وَالتَّفْكِيرِ النَّقْدِيِّ لَدَى الطُّلَّابِ مِنَ الثَّامِنَةِ إِلَى الرَّابِعَةَ عَشْرَةَ، مَعَ صُوَرٍ ثُلَاثِيَّةِ الْأَبْعَادِ عَالِيَةِ الدِّقَّةِ.';
+  }
+}
+
+function getFilteredStories(){
+  const all = PRESET_STORIES.concat(state.onlineCatalog);
+  if(state.ageBand === 'all') return all;
+  const f = all.filter(s => !s.ageBand || s.ageBand === state.ageBand);
+  return f.length ? f : all;
+}
+
+function updateHud(){
+  $('hudStars').textContent = state.stars;
+  let lvl = 'مُسْتَكْشِفٌ صَغِيرٌ';
+  if(state.stars >= 60) lvl = 'أَمِيرُ الْحِكَايَاتِ 👑';
+  else if(state.stars >= 30) lvl = 'حَكَوَاتِي مُبْدِعٌ ✨';
+  else if(state.stars >= 10) lvl = 'قَارِئٌ مُتَمَيِّزٌ 🌟';
+  $('hudLevel').textContent = lvl;
+  $('sfxToggleBtn').textContent = state.sfx ? '🔔 الْأَصْوَاتُ: مفعّلة' : '🔕 الْأَصْوَاتُ: صامت';
+}
+
+function toggleSfx(){
+  state.sfx = !state.sfx;
+  saveState();
+  if(state.sfx) playTone(523.25, 0.12);
+}
+
+function playTone(freq, dur=0.14, type='sine'){
+  if(!state.sfx) return;
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + dur);
+  }catch(e){}
+}
+
+function addStars(n, badgeId){
+  state.stars += n;
+  if(badgeId && !state.badges.includes(badgeId)) state.badges.push(badgeId);
+  saveState();
+  playTone(659.25, 0.12);
+  setTimeout(()=>playTone(783.99, 0.18), 110);
+}
+
+function detectSceneKey(text, fallback='GARDEN'){
+  const clean = String(text || '').replace(/[\u064B-\u065F\u0670]/g, '');
+  let bestKey = fallback;
+  let bestScore = 0;
+  for(const sc of SCENE_CATALOG){
+    let score = 0;
+    for(const kw of sc.keywords){
+      if(clean.includes(kw)) score += 2;
+    }
+    if(score > bestScore){
+      bestScore = score;
+      bestKey = sc.key;
+    }
+  }
+  return bestKey;
+}
+
+function getSceneImage(key){
+  return IMAGES[key] || IMAGES.GARDEN;
+}
+
+function openLightbox(src, caption){
+  $('lightboxImg').src = src;
+  $('lightboxCaption').textContent = caption || 'صورة عالية الدقة';
+  $('lightboxDownload').href = src;
+  $('lightboxModal').classList.remove('hidden');
+  playTone(587.33, 0.1);
+}
+
+function closeLightbox(ev){
+  if(ev.target.id === 'lightboxModal') $('lightboxModal').classList.add('hidden');
+}
+
+function zoomCurrentScene(){
+  if(!activeStory) return;
+  const p = activeStory.pages[pageIndex];
+  const key = p.img || activeStory.theme || 'GARDEN';
+  const meta = IMAGE_META[key] || { width:1200, height:896 };
+  openLightbox(getSceneImage(key), `${activeStory.title} — الدقة الأصلية (${meta.width}×${meta.height} px)`);
+}
+
+function go(tab){
+  stopSpeech();
+  cinemaMode = false;
+  updateCinemaBtn();
+  ['home','wizard','voice','catalog','library','reader'].forEach(id=>{
+    $(id).classList.toggle('hidden', id !== tab);
+  });
+  document.querySelectorAll('[data-nav]').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.nav === tab);
+  });
+  if(tab === 'home') renderHome();
+  if(tab === 'catalog') renderCatalog();
+  if(tab === 'library') renderLibrary();
+  if(tab === 'wizard') renderWizard();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function renderHome(){
+  $('featuredGrid').innerHTML = '';
+  getFilteredStories().slice(0, 3).forEach(s => $('featuredGrid').appendChild(buildStoryCard(s, false)));
+
+  const gal = $('hdGalleryGrid');
+  gal.innerHTML = '';
+  const allArts = [
+    { key:'HERO', title:'الْمَشْهَدُ الرَّئِيسِيُّ لِلْقِصَصِ', res:'1376×768' },
+    { key:'ICON', title:'أَيْقُونَةُ التَّطْبِيقِ الرَّسْمِيَّةُ', res:'1024×1024' },
+    ...SCENE_CATALOG
+  ];
+  allArts.forEach(item=>{
+    const div = document.createElement('div');
+    div.className = 'hd-item';
+    div.innerHTML = `<img src="${getSceneImage(item.key)}" alt="${item.title}" loading="lazy">
+      <div class="cap"><span>${item.title}</span><span class="tag teal">${item.res}</span></div>`;
+    div.onclick = ()=> openLightbox(getSceneImage(item.key), `${item.title} (${item.res} px)`);
+    gal.appendChild(div);
+  });
+}
+
+function buildStoryCard(story, isCustom){
+  const card = document.createElement('div');
+  card.className = 'story-card';
+  const coverKey = (story.pages && story.pages[0] && story.pages[0].img) || story.theme || 'GARDEN';
+  const pageCount = (story.pages || []).length;
+  const ageLbl = story.ageBand === '11-14' ? '11–14 سَنَةً' : (story.ageBand === '8-10' ? '8–10 سَنَوَاتٍ' : '8–14 سَنَةً');
+  card.innerHTML = `
+    <img class="story-card-thumb" src="${getSceneImage(coverKey)}" alt="${story.title}" loading="lazy">
+    <div class="story-card-body">
+      <div class="story-card-tags">
+        <span class="tag">${story.category || 'قِصَّةٌ مُصَوَّرَةٌ'}</span>
+        <span class="tag teal">${ageLbl}</span>
+        <span class="tag amber">${pageCount} صَفَحَاتٍ</span>
+      </div>
+      <h3>${story.title}</h3>
+      <p>${story.summary || (story.pages[0] && story.pages[0].text) || ''}</p>
+      <div class="card-footer-btns">
+        <button class="btn-primary" style="flex:1;padding:10px">📖 اقْرَأْ وَاسْتَمِعْ</button>
+        ${isCustom ? '<button class="btn-danger" data-del="1">🗑</button>' : ''}
+      </div>
+    </div>
+  `;
+  card.onclick = (e)=>{
+    if(e.target && e.target.dataset && e.target.dataset.del){
+      e.stopPropagation();
+      deleteSavedStory(story.id);
+      return;
+    }
+    openStory(story, isCustom ? 'library' : 'catalog');
+  };
+  return card;
+}
+
+function openStory(story, fromTab){
+  activeStory = story;
+  pageIndex = 0;
+  returnTab = fromTab || 'home';
+  cinemaMode = false;
+  updateCinemaBtn();
+  ['home','wizard','voice','catalog','library','reader'].forEach(id=>{
+    $(id).classList.toggle('hidden', id !== 'reader');
+  });
+  $('readTitle').textContent = story.title;
+  $('readMeta').textContent = `${story.category || 'حِكَايَةٌ تَرْبَوِيَّةٌ'} • ${story.pages.length} صَفَحَاتٍ مُصَوَّرَةٍ بِالْعَرَبِيَّةِ الْفُصْحَى`;
+  renderReaderPage();
+  addStars(2, 'first_read');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function leaveReader(){
+  stopSpeech();
+  cinemaMode = false;
+  go(returnTab);
+}
+
+function renderReaderPage(){
+  if(!activeStory) return;
+  const p = activeStory.pages[pageIndex];
+  const imgKey = p.img || detectSceneKey(p.text, activeStory.theme || 'GARDEN');
+  p.img = imgKey;
+  $('readImage').src = getSceneImage(imgKey);
+  $('pageIndicator').textContent = `${pageIndex + 1} / ${activeStory.pages.length}`;
+
+  const words = p.text.split(/\s+/).filter(Boolean);
+  $('readText').innerHTML = words.map((w, idx)=>`<span class="word-tok" id="wtok_${idx}">${w}</span>`).join(' ');
+
+  const vocabTxt = p.vocab || 'الْفُصْحَى: اللُّغَةُ الْعَرَبِيَّةُ السَّلِيمَةُ الْوَاضِحَةُ فِي الْقِرَاءَةِ وَالْكِتَابَةِ.';
+  const thinkTxt = p.think || 'مَا الْفِكْرَةُ الرَّئِيسِيَّةُ الَّتِي خَرَجْتَ بِهَا مِنْ هَذِهِ الصَّفْحَةِ؟';
+  $('vocabBox').textContent = vocabTxt;
+  $('thinkBox').textContent = thinkTxt;
+
+  $('prevPageBtn').disabled = (pageIndex === 0);
+  $('nextPageBtn').disabled = (pageIndex === activeStory.pages.length - 1);
+
+  const qBox = $('quizContainer');
+  if(pageIndex === activeStory.pages.length - 1 && Array.isArray(activeStory.quiz) && activeStory.quiz.length){
+    qBox.classList.remove('hidden');
+    qBox.innerHTML = `<h3 style="margin:0 0 8px;color:#784800">🎯 اخْتِبَارُ الْفَهْمِ وَالِاسْتِيعَابِ (+5 نجوم لكل إجابة صحيحة)</h3>` +
+      activeStory.quiz.map((item, qi)=>`
+        <div style="margin-top:12px">
+          <div style="font-weight:900;font-size:15.5px">${qi+1}. ${item.q}</div>
+          ${item.opts.map((opt, oi)=>`<button class="quiz-opt" onclick="answerQuiz(this,${qi},${oi},${item.ans})">${opt}</button>`).join('')}
+        </div>
+      `).join('');
+  } else {
+    qBox.classList.add('hidden');
+    qBox.innerHTML = '';
+  }
+}
+
+function answerQuiz(btn, qi, oi, correctIdx){
+  const parent = btn.parentElement;
+  if(parent.dataset.answered) return;
+  parent.dataset.answered = '1';
+  const btns = parent.querySelectorAll('.quiz-opt');
+  btns.forEach((b, idx)=>{
+    if(idx === correctIdx) b.classList.add('correct');
+    else if(idx === oi) b.classList.add('wrong');
+  });
+  if(oi === correctIdx) addStars(5, 'quiz_master');
+  else playTone(220, 0.2, 'sawtooth');
+}
+
+function turnPage(delta){
+  if(!activeStory) return;
+  stopSpeech();
+  const next = pageIndex + delta;
+  if(next >= 0 && next < activeStory.pages.length){
+    pageIndex = next;
+    renderReaderPage();
+    playTone(440, 0.08);
+    if(cinemaMode) setTimeout(()=>readAloud(), 350);
+  } else {
+    cinemaMode = false;
+    updateCinemaBtn();
+  }
+}
+
+function toggleReadingSize(){
+  const big = document.body.classList.toggle('large-reading');
+  $('fontSizeBtn').textContent = big ? '🔡 تَصْغِيرُ الْخَطِّ' : '🔠 تَكْبِيرُ الْخَطِّ';
+}
+
+function printStory(){
+  if(window.QissatiAndroid && typeof window.QissatiAndroid.printStory === 'function'){
+    window.QissatiAndroid.printStory();
+    return;
+  }
+  window.print();
+}
+
+function cleanArabicForTTS(raw){
+  return String(raw || '')
+    .replace(/[\u{1F300}-\u{1FAFF}]/gu, '')
+    .replace(/[•|★☆✓✔✕✖]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getBestArabicVoice(){
+  if(!('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices() || [];
+  const preferred = ['ar-SA', 'ar-AE', 'ar-JO', 'ar-EG', 'ar-LB', 'ar'];
+  for(const code of preferred){
+    const found = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(code.toLowerCase()));
+    if(found) return found;
+  }
+  return voices.find(v => v.lang && v.lang.toLowerCase().includes('ar')) || null;
+}
+
+if('speechSynthesis' in window){
+  window.speechSynthesis.onvoiceschanged = () => { getBestArabicVoice(); };
+}
+
+function clearWordHighlights(){
+  if(wordTimer){ clearInterval(wordTimer); wordTimer = null; }
+  document.querySelectorAll('.word-tok.active-word').forEach(el => el.classList.remove('active-word'));
+}
+
+function startSimulatedHighlight(wordCount, rate){
+  clearWordHighlights();
+  if(wordCount <= 0) return;
+  let idx = 0;
+  const msPerWord = Math.max(260, Math.round(430 / (rate || 0.88)));
+  const first = $('wtok_0');
+  if(first) first.classList.add('active-word');
+  wordTimer = setInterval(()=>{
+    const prev = $('wtok_' + idx);
+    if(prev) prev.classList.remove('active-word');
+    idx++;
+    if(idx >= wordCount){ clearWordHighlights(); return; }
+    const cur = $('wtok_' + idx);
+    if(cur) cur.classList.add('active-word');
+  }, msPerWord);
+}
+
+function readAloud(){
+  if(!activeStory) return;
+  stopSpeech();
+  const p = activeStory.pages[pageIndex];
+  const cleanText = cleanArabicForTTS(p.text);
+  const rate = parseFloat($('speechRateSelect').value || '0.88');
+  const words = p.text.split(/\s+/).filter(Boolean);
+  $('ttsStatus').textContent = '🔊 يَقْرَأُ الْآنَ بِالْعَرَبِيَّةِ الْفُصْحَى...';
+
+  if(window.QissatiAndroid && typeof window.QissatiAndroid.speakArabic === 'function'){
+    window.QissatiAndroid.speakArabic(cleanText);
+    startSimulatedHighlight(words.length, rate);
+    if(cinemaMode){
+      const estMs = Math.max(3000, words.length * Math.round(460 / rate) + 900);
+      wordTimer = setTimeout(()=>{
+        if(cinemaMode && pageIndex < activeStory.pages.length - 1){
+          turnPage(1);
+        } else {
+          cinemaMode = false;
+          updateCinemaBtn();
+          $('ttsStatus').textContent = '✓ انْتَهَتِ الْقِرَاءَةُ';
+        }
+      }, estMs);
+    }
+    return;
+  }
+
+  if(!('speechSynthesis' in window)){
+    $('ttsStatus').textContent = '⚠️ السَّرْدُ الصَّوْتِيُّ غَيْرُ مَدْعُومٍ فِي هَذَا الْمُتَصَفِّحِ.';
+    return;
+  }
+
+  const utter = new SpeechSynthesisUtterance(cleanText);
+  utter.lang = 'ar-SA';
+  const arVoice = getBestArabicVoice();
+  if(arVoice) utter.voice = arVoice;
+  utter.rate = rate;
+  utter.pitch = 1.04;
+
+  let usedBoundary = false;
+  utter.onboundary = (ev) => {
+    if(ev.name === 'word'){
+      usedBoundary = true;
+      clearWordHighlights();
+      const spokenSoFar = cleanText.slice(0, ev.charIndex).trim();
+      const wIdx = spokenSoFar ? spokenSoFar.split(/\s+/).length : 0;
+      const el = $('wtok_' + wIdx);
+      if(el) el.classList.add('active-word');
+    }
+  };
+
+  utter.onstart = () => {
+    setTimeout(()=>{ if(!usedBoundary) startSimulatedHighlight(words.length, rate); }, 350);
+  };
+
+  utter.onend = () => {
+    clearWordHighlights();
+    $('ttsStatus').textContent = '✓ تَمَّتْ قِرَاءَةُ الصَّفْحَةِ';
+    if(cinemaMode && pageIndex < activeStory.pages.length - 1){
+      setTimeout(()=> turnPage(1), 650);
+    } else if(cinemaMode){
+      cinemaMode = false;
+      updateCinemaBtn();
+    }
+  };
+
+  window.speechSynthesis.speak(utter);
+}
+
+function stopSpeech(){
+  clearWordHighlights();
+  if(window.QissatiAndroid && typeof window.QissatiAndroid.stopSpeaking === 'function'){
+    window.QissatiAndroid.stopSpeaking();
+  }
+  if('speechSynthesis' in window){
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+  }
+  if($('ttsStatus')) $('ttsStatus').textContent = '';
+}
+
+function toggleCinemaMode(){
+  cinemaMode = !cinemaMode;
+  updateCinemaBtn();
+  if(cinemaMode) readAloud();
+  else stopSpeech();
+}
+
+function updateCinemaBtn(){
+  const btn = $('cinemaBtn');
+  if(btn) btn.textContent = cinemaMode ? '⏸ إِيقَافُ السِّينَمَا' : '🎬 سِينَمَا تِلْقَائِيَّةٌ';
+}
+
+/* Voice Studio */
+function voiceNativeStatus(t){
+  $('voiceStatus').textContent = t;
+  const active = t.includes('🎤');
+  $('voiceStartBtn').disabled = active;
+  $('voiceWave').classList.toggle('active', active);
+}
+
+function voiceNativeResult(t){
+  const cur = $('voiceText').value.trim();
+  $('voiceText').value = [cur, String(t || '').trim()].filter(Boolean).join(' ');
+  $('voiceStatus').textContent = '✓ أُضِيفَ كَلَامُكَ بِالْفُصْحَى! وَاصِلِ الْحَدِيثَ أَوِ اضْغَطْ إِيقَافًا.';
+}
+
+function voiceNativeError(t){
+  $('voiceStatus').textContent = t;
+  $('voiceStartBtn').disabled = false;
+  $('voiceWave').classList.remove('active');
+}
+
+function startVoice(){
+  stopSpeech();
+  if(window.QissatiAndroid && typeof window.QissatiAndroid.startVoiceStory === 'function'){
+    $('voiceStartBtn').disabled = true;
+    $('voiceWave').classList.add('active');
+    $('voiceStatus').textContent = '🎤 أَسْتَمِعُ إِلَيْكَ الْآنَ... تَحَدَّثْ بِالْعَرَبِيَّةِ الْفُصْحَى بِوُضُوحٍ.';
+    window.QissatiAndroid.startVoiceStory();
+    return;
+  }
+
+  const SpeechAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechAPI){
+    $('voiceStatus').textContent = '⚠️ الْمِيكْرُوفُونُ غَيْرُ مُتَاحٍ فِي هَذَا الْمُتَصَفِّحِ؛ يُمْكِنُكَ كِتَابَةُ الْقِصَّةِ فِي الْمُرَبَّعِ أَدْنَاهُ.';
+    return;
+  }
+
+  stopVoice();
+  try{
+    const rec = new SpeechAPI();
+    voiceRecognizer = rec;
+    rec.lang = 'ar-SA';
+    rec.continuous = true;
+    rec.interimResults = true;
+    let committed = '';
+    const baseText = $('voiceText').value.trim();
+
+    rec.onstart = () => {
+      $('voiceStartBtn').disabled = true;
+      $('voiceWave').classList.add('active');
+      $('voiceStatus').textContent = '🎤 أَسْتَمِعُ إِلَى حِكَايَتِكَ الْآنَ... تَحَدَّثْ بِالْفُصْحَى.';
+    };
+
+    rec.onresult = (ev) => {
+      let interim = '';
+      for(let i = ev.resultIndex; i < ev.results.length; i++){
+        const tr = ev.results[i][0].transcript;
+        if(ev.results[i].isFinal) committed += ' ' + tr;
+        else interim += ' ' + tr;
+      }
+      $('voiceText').value = [baseText, committed.trim(), interim.trim()].filter(Boolean).join(' ').trim();
+    };
+
+    rec.onerror = (ev) => {
+      $('voiceStatus').textContent = '⚠️ تَعَذَّرَ الِاسْتِمَاعُ (' + ev.error + '). تَأَكَّدْ مِنْ إِذْنِ الْمِيكْرُوفُونِ.';
+      $('voiceStartBtn').disabled = false;
+      $('voiceWave').classList.remove('active');
+    };
+
+    rec.onend = () => {
+      $('voiceStartBtn').disabled = false;
+      $('voiceWave').classList.remove('active');
+      voiceRecognizer = null;
+    };
+
+    rec.start();
+  }catch(e){
+    $('voiceStartBtn').disabled = false;
+    $('voiceWave').classList.remove('active');
+  }
+}
+
+function stopVoice(){
+  if(window.QissatiAndroid && typeof window.QissatiAndroid.stopVoiceStory === 'function'){
+    window.QissatiAndroid.stopVoiceStory();
+  }
+  if(voiceRecognizer){
+    try{ voiceRecognizer.stop(); }catch(e){}
+    voiceRecognizer = null;
+  }
+  $('voiceStartBtn').disabled = false;
+  $('voiceWave').classList.remove('active');
+}
+
+function polishFushaText(){
+  let txt = $('voiceText').value.replace(/\s+/g, ' ').trim();
+  if(!txt){
+    $('voiceStatus').textContent = 'اكْتُبْ أَوْ سَجِّلْ بَعْضَ الْجُمَلِ أَوَّلًا لِتَنْسِيقِهَا.';
+    return;
+  }
+  const replacements = [
+    [/\bيعني\b/g, ''],
+    [/\bبعدين\b/g, 'ثُمَّ'],
+    [/\bعشان\b/g, 'لِكَيْ'],
+    [/\bكتير\b/g, 'كَثِيرًا'],
+    [/\bشوية\b/g, 'قَلِيلًا'],
+    [/\bراح\b/g, 'ذَهَبَ'],
+    [/\bشاف\b/g, 'شَاهَدَ'],
+    [/\bقاله\b/g, 'قَالَ لَهُ'],
+    [/\s+,/g, '،'],
+    [/,/g, '،'],
+    [/\?/g, '؟']
+  ];
+  for(const [rx, rep] of replacements) txt = txt.replace(rx, rep);
+  txt = txt.replace(/\s+/g, ' ').trim();
+  if(!/[.!؟]$/.test(txt)) txt += '.';
+  $('voiceText').value = txt;
+  $('voiceStatus').textContent = '✨ تَمَّ تَنْسِيقُ النَّصِّ بِالْعَرَبِيَّةِ الْفُصْحَى وَعَلَامَاتِ التَّرْقِيمِ!';
+  playTone(587.33, 0.1);
+}
+
+function insertSampleVoice(){
+  $('voiceTitle').value = 'مُغَامَرَةُ سَلِيمٍ وَالرُّوبُوتِ فِي الْفَضَاءِ';
+  $('voiceText').value = 'فِي مَسَاءٍ جَمِيلٍ فَتَحَ سَلِيمٌ كِتَابَ الْعُلُومِ السِّحْرِيَّ. فَجْأَةً ظَهَرَ رُوبُوتٌ صَغِيرٌ وَدَعَاهُ إِلَى رِحْلَةٍ نَحْوَ الْقَمَرِ وَالنُّجُومِ. شَاهَدَ سَلِيمٌ كَوْكَبَ الْأَرْضِ الْأَزْرَقَ مِنَ الْفَضَاءِ الْوَاسِعِ، ثُمَّ عَادَ إِلَى حَدِيقَتِهِ فَرِحًا لِيُخْبِرَ أَصْدِقَاءَهُ.';
+  $('voiceStatus').textContent = '✓ أُدْرِجَ نَمُوذَجٌ بِالْفُصْحَى؛ اضْغَطْ «حَوِّلْ كَلَامِي إِلَى قِصَّةٍ مُصَوَّرَةٍ».';
+}
+
+function previewVoiceRead(){
+  const txt = cleanArabicForTTS($('voiceText').value);
+  if(!txt) return;
+  if(window.QissatiAndroid && typeof window.QissatiAndroid.speakArabic === 'function'){
+    window.QissatiAndroid.speakArabic(txt);
+    return;
+  }
+  if('speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(txt);
+    u.lang = 'ar-SA';
+    const v = getBestArabicVoice();
+    if(v) u.voice = v;
+    u.rate = 0.88;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+function makeVoiceStory(){
+  stopVoice();
+  polishFushaText();
+  const raw = $('voiceText').value.trim();
+  if(raw.length < 15){
+    $('voiceStatus').textContent = '⚠️ احْكِ أَوِ اكْتُبْ جُمْلَتَيْنِ عَلَى الْأَقَلِّ لِإِنْشَاءِ قِصَّةٍ مُصَوَّرَةٍ.';
+    return;
+  }
+  const sentences = raw.match(/[^.!؟]+[.!؟]?/g) || [raw];
+  const cleaned = sentences.map(s => s.trim()).filter(Boolean);
+  const pageCount = Math.min(6, Math.max(2, Math.ceil(cleaned.length / 2)));
+  const buckets = Array.from({length: pageCount}, () => []);
+  cleaned.forEach((sent, idx) => {
+    const target = Math.min(pageCount - 1, Math.floor(idx * pageCount / cleaned.length));
+    buckets[target].push(sent);
+  });
+
+  const pages = buckets.map(arr => arr.join(' ')).filter(Boolean).map(txt => ({
+    text: txt,
+    img: detectSceneKey(txt, 'GARDEN')
+  }));
+
+  const title = $('voiceTitle').value.trim() || 'حِكَايَتِي بِصَوْتِي الْفَصِيحِ';
+  const newStory = {
+    id: 'custom-' + Date.now(), title, category: 'قِصَّةٌ صَوْتِيَّةٌ',
+    ageBand: state.ageBand, theme: pages[0].img, summary: pages[0].text, pages
+  };
+
+  saveCustomStory(newStory);
+  addStars(10, 'voice_star');
+  openStory(newStory, 'library');
+}
+
+/* Wizard & Composer */
+function startWizard(mode){
+  draft = { mode: mode || 'creative', hero:'سَلِيمٌ', theme:'GARDEN', title:'' };
+  wizStep = 0;
+  go('wizard');
+}
+
+function renderWizard(){
+  const steps = ['نَوْعُ الْحِكَايَةِ', 'بَطَلُ الْقِصَّةِ', 'عَالَمُ الْمُغَامَرَةِ', 'الْعُنْوَانُ وَالْإِنْشَاءُ'];
+  $('wizSteps').innerHTML = steps.map((_, i)=>`<div class="step-dot ${i <= wizStep ? 'on' : ''}"></div>`).join('');
+  $('wizHeading').textContent = `الْخُطْوَةُ ${wizStep + 1} مِنْ 4: ${steps[wizStep]}`;
+  const body = $('wizBody');
+  body.innerHTML = '';
+
+  if(wizStep === 0){
+    $('wizSub').textContent = 'اخْتَرِ الطَّابِعَ الَّذِي تُفَضِّلُهُ لِقِصَّتِكَ الْجَدِيدَةِ:';
+    const opts = [
+      ['creative', '🪄', 'مُغَامَرَةٌ خَيَالِيَّةٌ'],
+      ['educational', '📚', 'قِصَّةٌ تَعْلِيمِيَّةٌ'],
+      ['science', '🚀', 'اسْتِكْشَافٌ وَعُلُومٌ'],
+      ['values', '💛', 'قِيَمٌ وَأَخْلَاقٌ']
+    ];
+    const grid = document.createElement('div');
+    grid.className = 'choice-grid';
+    opts.forEach(([val, ico, lbl])=>{
+      const b = document.createElement('button');
+      b.className = 'choice-btn' + (draft.mode === val ? ' selected' : '');
+      b.innerHTML = `<span class="ico">${ico}</span><span>${lbl}</span>`;
+      b.onclick = ()=>{ draft.mode = val; renderWizard(); };
+      grid.appendChild(b);
+    });
+    body.appendChild(grid);
+  } else if(wizStep === 1){
+    $('wizSub').textContent = 'مَنْ سَيَكُونُ بَطَلَ الْحِكَايَةِ؟';
+    const heroes = [
+      ['سَلِيمٌ', '👦', 'سَلِيمٌ الْمُسْتَكْشِفُ'],
+      ['لَيْلَى', '👧', 'لَيْلَى الْمُبْدِعَةُ'],
+      ['الْأَرْنَبُ وَالثَّعْلَبُ', '🦊', 'الْأَرْنَبُ وَالثَّعْلَبُ'],
+      ['الرُّوبُوتُ الذَّكِيُّ', '🤖', 'الرُّوبُوتُ الذَّكِيُّ']
+    ];
+    const grid = document.createElement('div');
+    grid.className = 'choice-grid';
+    heroes.forEach(([val, ico, lbl])=>{
+      const b = document.createElement('button');
+      b.className = 'choice-btn' + (draft.hero === val ? ' selected' : '');
+      b.innerHTML = `<span class="ico">${ico}</span><span>${lbl}</span>`;
+      b.onclick = ()=>{ draft.hero = val; renderWizard(); };
+      grid.appendChild(b);
+    });
+    body.appendChild(grid);
+  } else if(wizStep === 2){
+    $('wizSub').textContent = 'اخْتَرْ مَكَانَ الْأَحْدَاثِ (بِصُوَرٍ ثُلَاثِيَّةِ الْأَبْعَادِ عَالِيَةِ الدِّقَّةِ):';
+    const grid = document.createElement('div');
+    grid.className = 'choice-grid';
+    SCENE_CATALOG.forEach(sc=>{
+      const b = document.createElement('button');
+      b.className = 'choice-btn' + (draft.theme === sc.key ? ' selected' : '');
+      b.innerHTML = `<img src="${getSceneImage(sc.key)}" alt="${sc.title}"><span>${sc.title}</span>`;
+      b.onclick = ()=>{ draft.theme = sc.key; renderWizard(); };
+      grid.appendChild(b);
+    });
+    body.appendChild(grid);
+  } else {
+    $('wizSub').textContent = 'أَدْخِلْ عُنْوَانًا جَمِيلًا لِقِصَّتِكَ ثُمَّ اضْغَطْ «اصْنَعِ الْقِصَّةَ»:';
+    body.innerHTML = `
+      <label style="font-weight:800">عُنْوَانُ الْقِصَّةِ (اخْتِيَارِيٌّ):</label>
+      <input id="wizTitleInput" class="field-input" value="${draft.title}" placeholder="مِثَالٌ: مُغَامَرَةُ ${draft.hero} الْعَجِيبَةُ" oninput="draft.title=this.value">
+    `;
+  }
+
+  $('wizPrevBtn').disabled = (wizStep === 0);
+  $('wizNextBtn').textContent = (wizStep === 3) ? '✨ اصْنَعِ الْقِصَّةَ الْآنَ' : 'التَّالِي ←';
+}
+
+function wizMove(dir){
+  if(wizStep + dir < 0) return;
+  if(wizStep + dir <= 3){
+    wizStep += dir;
+    renderWizard();
+    return;
+  }
+  const h = draft.hero;
+  const th = draft.theme;
+  const title = (draft.title || '').trim() || `مُغَامَرَةُ ${h} الْعَجِيبَةُ`;
+  const templates = {
+    GARDEN: [
+      { text:`فِي صَبَاحٍ مُشْرِقٍ جَمِيلٍ، انْطَلَقَ ${h} إِلَى الْحَدِيقَةِ الْمُزْهِرَةِ لِيَتَأَمَّلَ الْأَزْهَارَ وَالْأَشْجَارَ الْخَضْرَاءَ.`, img:'GARDEN' },
+      { text:`وَجَدَ ${h} عُصْفُورًا صَغِيرًا يَحْتَاجُ إِلَى الْمُسَاعَدَةِ، فَقَدَّمَ لَهُ الْمَاءَ وَالْعِنَايَةَ بِكُلِّ رِفْقٍ وَلُطْفٍ.`, img:'GARDEN' },
+      { text:`تَعَاوَنَ الْأَصْدِقَاءُ فِي الْحَدِيقَةِ حَتَّى اسْتَعَادَ الْعُصْفُورُ نَشَاطَهُ وَحَلَّقَ سَعِيدًا فِي السَّمَاءِ.`, img:'HERO' },
+      { text:`عَادَ ${h} إِلَى مَنْزِلِهِ مَسْرُورًا؛ فَقَدْ تَعَلَّمَ أَنَّ الرَّحْمَةَ وَالْعَطَاءَ يَصْنَعَانِ السَّعَادَةَ.`, img:'MAGIC' }
+    ],
+    FOREST: [
+      { text:`دَخَلَ ${h} إِلَى الْغَابَةِ الْمَسْحُورَةِ حَيْثُ تَتَلَأْلَأُ أَشِعَّةُ الشَّمْسِ بَيْنَ الْأَغْصَانِ وَالْفَرَاشَاتِ.`, img:'FOREST' },
+      { text:`التَقَى ${h} بِالْأَرْنَبِ الْأَبْيَضِ وَالثَّعْلَبِ اللَّطِيفِ، وَتَبَادَلُوا التَّحِيَّةَ بِابْتِسَامَةٍ صَادِقَةٍ.`, img:'FOREST' },
+      { text:`تَشَارَكُوا جَمِيعًا فِي اسْتِكْشَافِ مَمَرَّاتِ الْغَابَةِ وَمُسَاعَدَةِ كُلِّ مَنْ يَحْتَاجُ إِلَى الْعَوْنِ.`, img:'HERO' },
+      { text:`أَدْرَكَ ${h} أَنَّ الصَّدَاقَةَ الْحَقِيقِيَّةَ كَنْزٌ ثَمِينٌ يَزْدَادُ جَمَالًا بِالتَّعَاوُنِ.`, img:'FOREST' }
+    ],
+    SPACE: [
+      { text:`انْطَلَقَ ${h} فِي رِحْلَةٍ عِلْمِيَّةٍ رَائِعَةٍ نَحْوَ الْفَضَاءِ الْوَاسِعِ بَيْنَ النُّجُومِ وَالْكَوَاكِبِ.`, img:'SPACE' },
+      { text:`تَأَمَّلَ ${h} كَوْكَبَ الْأَرْضِ الْأَزْرَقَ مِنْ أَعْلَى، وَشَاهَدَ الْكَوَاكِبَ ذَاتَ الْحَلَقَاتِ الْمُضِيئَةِ.`, img:'SPACE' },
+      { text:`سَجَّلَ ${h} مَعْلُومَاتٍ قَيِّمَةً عَنِ الْفَلَكِ وَالْعُلُومِ بِمُسَاعَدَةِ الرُّوبُوتِ الذَّكِيِّ.`, img:'SPACE' },
+      { text:`عَادَ ${h} لِيُشَارِكَ زُمَلَاءَهُ مَا تَعَلَّمَهُ، مُؤْمِنًا بِأَنَّ الْعِلْمَ يُنِيرُ الْمُسْتَقْبَلَ.`, img:'MAGIC' }
+    ],
+    SEA: [
+      { text:`غَاصَ ${h} فِي أَعْمَاقِ الْبَحْرِ الْفَيْرُوزِيِّ الصَّافِي لِيَسْتَكْشِفَ عَالَمَ الشِّعَابِ الْمَرْجَانِيَّةِ.`, img:'SEA' },
+      { text:`رَحَّبَتِ السُّلَحْفَاةُ الْبَحْرِيَّةُ وَالْأَسْمَاكُ الْمُلَوَّنَةُ بـ ${h} فِي جَوْلَةٍ بَحْرِيَّةٍ مُمْتِعَةٍ.`, img:'SEA' },
+      { text:`تَعَلَّمَ ${h} أَهَمِّيَّةَ الْحِفَاظِ عَلَى نَظَافَةِ الْبِحَارِ وَحِمَايَةِ الْبِيئَةِ الْبَحْرِيَّةِ.`, img:'SEA' },
+      { text:`خَرَجَ ${h} مِنَ الْبَحْرِ وَهُوَ عَازِمٌ عَلَى نَشْرِ الْوَعْيِ الْبِيئِيِّ بَيْنَ جَمِيعِ أَصْدِقَائِهِ.`, img:'HERO' }
+    ],
+    CITY: [
+      { text:`فِي سَاحَةِ الْمَدِينَةِ الْجَمِيلَةِ، بَدَأَ ${h} مَشْرُوعًا فَنِّيًّا لِرَسْمِ قَوْسِ قُزَحَ كَبِيرٍ.`, img:'CITY' },
+      { text:`تَعَاوَنَ الْأَصْدِقَاءُ بِحَمَاسٍ وَإِتْقَانٍ فِي تَلْوِينِ اللَّوْحَةِ بِأَجْمَلِ الْأَلْوَانِ الزَّاهِيَةِ.`, img:'CITY' },
+      { text:`تَحَوَّلَ الْمَكَانُ إِلَى مَعْرِضٍ فَنِّيٍّ مَبْهُورٍ أَسْعَدَ كُلَّ مَنْ مَرَّ بِالسَّاحَةِ.`, img:'CITY' },
+      { text:`تَعَلَّمَ ${h} أَنَّ الْإِبْدَاعَ وَالتَّعَاوُنَ يَصْنَعَانِ الْجَمَالَ فِي كُلِّ مَكَانٍ.`, img:'HERO' }
+    ],
+    MAGIC: [
+      { text:`تَحْتَ سَمَاءِ اللَّيْلِ الْمُزَيَّنَةِ بِالنُّجُومِ، فَتَحَ ${h} كِتَابَ الْحِكَايَاتِ السِّحْرِيَّ.`, img:'MAGIC' },
+      { text:'أَشْرَقَتْ قَلْعَةُ الْخَيَالِ مِنْ بَيْنِ الصَّفَحَاتِ حَامِلَةً أَجْمَلَ الْقِصَصِ وَالْحِكَمِ.', img:'MAGIC' },
+      { text:`قَرَأَ ${h} بِشَغَفٍ وَتَعَلَّمَ أَسَالِيبَ رَائِعَةً فِي اللُّغَةِ الْعَرَبِيَّةِ الْفُصْحَى.`, img:'HERO' },
+      { text:`أَدْرَكَ ${h} أَنَّ الْكِتَابَ خَيْرُ صَدِيقٍ يَأْخُذُنَا فِي رِحْلَاتٍ لَا تَنْتَهِي.`, img:'MAGIC' }
+    ]
+  };
+  const newStory = {
+    id: 'wiz-' + Date.now(), title, category: 'مِنْ تَأْلِيفِي', ageBand: state.ageBand,
+    theme: th, summary: templates[th][0].text, pages: templates[th]
+  };
+  saveCustomStory(newStory);
+  addStars(10, 'story_maker');
+  openStory(newStory, 'library');
+}
+
+function openCustomPageComposer(){
+  $('customComposerPanel').classList.remove('hidden');
+  renderComposerPages();
+}
+
+function renderComposerPages(){
+  const list = $('composerPagesList');
+  list.innerHTML = '';
+  composerPages.forEach((p, i)=>{
+    const row = document.createElement('div');
+    row.className = 'page-editor-row';
+    const optsHtml = Object.keys(IMAGES).map(k=>`<option value="${k}" ${p.img===k?'selected':''}>${k}</option>`).join('');
+    row.innerHTML = `
+      <div>
+        <img src="${getSceneImage(p.img)}" alt="معاينة الصفحة ${i+1}">
+        <select class="speed-select" style="width:100%;margin-top:8px" onchange="composerPages[${i}].img=this.value;renderComposerPages()">${optsHtml}</select>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <strong>الصَّفْحَةُ ${i+1}</strong>
+          ${composerPages.length > 1 ? `<button class="btn-danger" style="padding:5px 10px" onclick="composerPages.splice(${i},1);renderComposerPages()">حَذْفٌ</button>` : ''}
+        </div>
+        <textarea class="field-input" rows="3" placeholder="اُكْتُبْ نَصَّ الصَّفْحَةِ بِالْعَرَبِيَّةِ الْفُصْحَى..." oninput="composerPages[${i}].text=this.value">${p.text}</textarea>
+        <input class="field-input" style="margin-top:8px;font-size:13.5px" placeholder="مُفْرَدَةٌ وَمَعْنَاهَا (اختياري)..." value="${p.vocab || ''}" oninput="composerPages[${i}].vocab=this.value">
+      </div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function addComposerPage(){
+  composerPages.push({ text:'', img:'GARDEN', vocab:'', think:'' });
+  renderComposerPages();
+}
+
+function saveComposedStory(){
+  const pages = composerPages.map(p=>({
+    text: (p.text || '').trim() || 'حِكَايَةٌ جَمِيلَةٌ بِالْعَرَبِيَّةِ الْفُصْحَى.',
+    img: p.img || 'GARDEN',
+    vocab: (p.vocab || '').trim(),
+    think: (p.think || '').trim()
+  }));
+  const title = ($('compTitle').value || '').trim() || 'قِصَّتِي الْمُصَوَّرَةُ الْخَاصَّةُ';
+  const story = {
+    id: 'comp-' + Date.now(), title, category: 'تَأْلِيفٌ حُرٌّ', ageBand: state.ageBand,
+    theme: pages[0].img, summary: pages[0].text, pages
+  };
+  saveCustomStory(story);
+  addStars(10, 'story_maker');
+  openStory(story, 'library');
+}
+
+/* Catalog & Library */
+function renderCatalog(){
+  const grid = $('catalogGrid');
+  grid.innerHTML = '';
+  getFilteredStories().forEach(s => grid.appendChild(buildStoryCard(s, false)));
+}
+
+function getSavedStories(){
+  try{
+    const arr = JSON.parse(localStorage.getItem('qissati-stories') || '[]');
+    return Array.isArray(arr) ? arr : [];
+  }catch(e){ return []; }
+}
+
+function saveCustomStory(story){
+  const list = getSavedStories();
+  list.unshift(story);
+  try{ localStorage.setItem('qissati-stories', JSON.stringify(list)); }catch(e){}
+}
+
+function deleteSavedStory(id){
+  const list = getSavedStories().filter(s => s.id !== id);
+  try{ localStorage.setItem('qissati-stories', JSON.stringify(list)); }catch(e){}
+  renderLibrary();
+}
+
+function renderLibrary(){
+  $('badgesGrid').innerHTML = BADGES_DEF.map(b=>{
+    const ok = state.badges.includes(b.id);
+    return `<div class="badge-card ${ok ? 'unlocked' : ''}">
+      <div class="b-ico">${b.icon}</div>
+      <div style="font-weight:900;font-size:14px">${b.title}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">${b.desc}</div>
+      <div style="font-size:11px;font-weight:800;margin-top:6px;color:${ok?'#0b6960':'#999'}">${ok?'✓ مُكْتَسَبٌ':'🔒 مُقْفَلٌ'}</div>
+    </div>`;
+  }).join('');
+
+  const sGrid = $('savedGrid');
+  const saved = getSavedStories();
+  sGrid.innerHTML = '';
+  if(!saved.length){
+    sGrid.innerHTML = `<div class="panel" style="grid-column:1/-1;text-align:center;color:var(--muted)">
+      لَمْ تَحْفَظْ أَيَّ قِصَّةٍ بَعْدُ. ابْدَأْ بِصُنْعِ قِصَّتِكَ الْأُولَى أَوْ سَجِّلْهَا بِصَوْتِكَ!
+    </div>`;
+    return;
+  }
+  saved.forEach(s => sGrid.appendChild(buildStoryCard(s, true)));
+}
+
+function backupStories(){
+  const data = JSON.stringify(getSavedStories(), null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'qissati-fusha-backup.json';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 1500);
+}
+
+function restoreStories(ev){
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const arr = JSON.parse(reader.result);
+      if(!Array.isArray(arr)) throw Error();
+      localStorage.setItem('qissati-stories', JSON.stringify(arr));
+      renderLibrary();
+      alert('تَمَّتِ اسْتِعَادَةُ الْقِصَصِ بِنَجَاحٍ!');
+    }catch(e){
+      alert('مَلَفُّ النُّسْخَةِ الِاحْتِيَاطِيَّةِ غَيْرُ صَالِحٍ.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function catalogUrl(){
+  try{ return localStorage.getItem('qissati-catalog-url') || ''; }catch(e){ return ''; }
+}
+function saveCatalogEndpoint(){
+  const v = $('catalogEndpoint').value.trim();
+  if(v && !/^https:\/\/[^\s]+$/i.test(v)){
+    $('catalogStatus').textContent = 'يَجِبُ إِدْخَالُ رَابِطِ HTTPS صَحِيحٍ.';
+    return;
+  }
+  try{
+    if(v) localStorage.setItem('qissati-catalog-url', v);
+    else localStorage.removeItem('qissati-catalog-url');
+  }catch(e){}
+  checkCatalog();
+}
+function checkCatalog(){
+  const url = catalogUrl();
+  if(!url){ $('catalogStatus').textContent = 'أَدْخِلْ رَابِطَ الْمَكْتَبَةِ أَوَّلًا.'; return; }
+  $('catalogStatus').textContent = 'جَارٍ فَحْصُ التَّحْدِيثَاتِ...';
+  if(window.QissatiAndroid && typeof window.QissatiAndroid.fetchStoryCatalog === 'function'){
+    window.QissatiAndroid.fetchStoryCatalog(url);
+  } else {
+    fetch(url, {cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.text();}).then(remoteCatalogResult).catch(()=>remoteCatalogError('تَعَذَّرَ جَلْبُ التَّحْدِيثَاتِ.'));
+  }
+}
+function remoteCatalogResult(payload){
+  try{
+    const obj = JSON.parse(payload);
+    if(!obj || !Array.isArray(obj.stories)) throw Error();
+    state.onlineCatalog = obj.stories.map((s, idx)=>({
+      id: 'remote-' + idx,
+      title: String(s.title || 'قِصَّةٌ جَدِيدَةٌ'),
+      category: 'مَكْتَبَةُ السَّحَابَةِ',
+      ageBand: 'all',
+      theme: 'GARDEN',
+      summary: String((s.pages && s.pages[0]) || ''),
+      pages: (s.pages || []).map(p => typeof p === 'string' ? ({ text:p, img:detectSceneKey(p,'GARDEN') }) : p)
+    }));
+    localStorage.setItem('qissati-online-catalog', JSON.stringify(state.onlineCatalog));
+    $('catalogStatus').textContent = '✓ تَمَّ تَحْدِيثُ الْمَكْتَبَةِ: ' + state.onlineCatalog.length + ' قِصَّةً.';
+    renderCatalog();
+  }catch(e){
+    remoteCatalogError('صِيغَةُ مَلَفِّ الْقِصَصِ غَيْرُ صَحِيحَةٍ.');
+  }
+}
+function remoteCatalogError(msg){ $('catalogStatus').textContent = msg; }
+
+/* Boot */
+$('appLogoImg').src = IMAGES.ICON;
+$('heroBannerImg').src = IMAGES.HERO;
+$('catalogEndpoint').value = catalogUrl();
+loadState();
+renderHome();
+</script>
+</body>
+</html>
