@@ -1,0 +1,3 @@
+# Arabic Fusha conversion service
+
+Deploy `fusha-worker.mjs` as a Cloudflare Worker. Set the `OPENAI_API_KEY` secret on the server, never in the APK. Optionally set `OPENAI_MODEL`. Set the HTTPS Worker `/convert` URL in `FUSHA_CONVERSION_ENDPOINT` inside `index.html` and rebuild the APK. This service sends user-supplied text (not raw audio) to an external model; disclose this to guardians, obtain appropriate consent, and configure access controls, rate limits and abuse protection before public use. No AI service is active until deployed and configured. Responses are proposals that must be reviewed.
