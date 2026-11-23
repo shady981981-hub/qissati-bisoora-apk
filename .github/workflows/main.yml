@@ -32,11 +32,11 @@ jobs:
         run: |
           mkdir -p src/main/assets src/main/res/drawable-nodpi
           cp index.html src/main/assets/
-          for asset in icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg ic_launcher.png qissati_icon.png; do
+          for asset in icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg qissati_icon.jpg scene_world.jpg scene_bird.jpg scene_friends.jpg scene_ocean.jpg scene_rainbow.jpg scene_reading.jpg; do
             test -s "$asset" || { echo "Missing required image: $asset"; exit 1; }
             cp "$asset" src/main/assets/
           done
-          cp icon.jpg src/main/res/drawable-nodpi/qissati_launcher.jpg
+          cp qissati_icon.jpg src/main/res/drawable-nodpi/qissati_launcher.jpg
       - name: Build Debug APK
         run: gradle assembleDebug --no-daemon --stacktrace
       - name: Verify packaged images
@@ -45,7 +45,7 @@ jobs:
           test -n "$APK" || { echo 'APK not found'; exit 1; }
           unzip -Z1 "$APK" > /tmp/qissati-apk-files.txt
           grep -Eq '^res/drawable-nodpi(-v4)?/qissati_launcher.jpg$' /tmp/qissati-apk-files.txt || { echo 'Launcher icon missing'; exit 1; }
-          for asset in index.html icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg; do
+          for asset in index.html icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg qissati_icon.jpg scene_world.jpg scene_bird.jpg scene_friends.jpg scene_ocean.jpg scene_rainbow.jpg scene_reading.jpg; do
             grep -Fx "assets/$asset" /tmp/qissati-apk-files.txt || { echo "Missing assets/$asset"; exit 1; }
           done
       - name: Upload APK
