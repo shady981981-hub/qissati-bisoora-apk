@@ -401,7 +401,7 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
     <div class="panel">
       <h2 class="section-title">🎙️ اسْتُودْيُو الْحِكَايَةِ الصَّوْتِيَّةِ (بِالْفُصْحَى)</h2>
       <p style="color:var(--muted);line-height:1.8;margin-top:6px">
-        تَحَدَّثْ بِالْعَرَبِيَّةِ الْفُصْحَى بِوُضُوحٍ أَوِ اكْتُبْ حِكَايَتَكَ مُبَاشَرَةً؛ يُنَسِّقُ النِّظَامُ الْفُصْحَى وَعَلَامَاتِ التَّرْقِيمِ وَيُقَسِّمُ النَّصَّ إِلَى صَفَحَاتٍ مُصَوَّرَةٍ تِلْقَائِيًّا.
+        سَيُفَرِّغُ الْجِهَازُ كَلَامَكَ إِلَى نَصٍّ أَوَّلِيٍّ، وَقَدْ يَكُونُ عَامِّيًّا وَبِلَا تَشْكِيلٍ. اسْتَخْدِمْ خِدْمَةَ التَّحْوِيلِ الْخَادِمِيَّةَ وَرَاجِعِ النَّصَّ قَبْلَ إِنْشَاءِ الْقِصَّةِ.
       </p>
 
       <div style="margin-bottom:12px">
@@ -425,7 +425,8 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
       </div>
 
       <textarea id="voiceText" rows="5" class="field-input" placeholder="تَحَدَّثْ أَوِ اكْتُبْ هُنَا..."></textarea>
-      <div style="margin-top:8px;font-size:12px;color:var(--muted)">تَحْسِينٌ مَحَلِّيٌّ مَجَّانِيٌّ مَحْدُودٌ، لَا يَرْفَعُ النَّصَّ إِلَى خَادِمٍ. رَاجِعِ الْفُصْحَى وَالتَّشْكِيلَ قَبْلَ الْحِفْظِ.</div>
+      <div style="margin-top:8px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#fff9e9;color:#68501d;font-size:13px;line-height:1.8">التفريغ الصوتي الأولي لا يضمن الفصحى أو التشكيل. عند الضغط على زر التحويل، يُرسل النص الظاهر في هذا المربع فقط إلى خادم التحويل؛ لا يرسل هذا الزر ملف التسجيل. راجع وليّ الأمر سياسة الخدمة قبل استخدامها، وتجنّب إدخال أسماء أو معلومات شخصية.</div>
+      <label style="display:flex;gap:9px;align-items:flex-start;margin-top:10px;font-size:13px;line-height:1.7"><input id="guardianFushaConsent" type="checkbox" style="margin-top:5px;accent-color:var(--primary)"><span>أؤكد أن وليّ الأمر راجع إشعار الخصوصية ووافق على إرسال نص القصة للتحويل.</span></label>
       <div id="fushaReview" class="hidden" style="margin-top:10px;padding:12px;border:1px solid var(--border);border-radius:14px">
         <strong>مُرَاجَعَةُ النَّصِّ الْفَصِيحِ الْمُشَكَّلِ</strong>
         <textarea id="fushaProposed" rows="5" class="field-input" style="margin-top:8px" aria-label="النص المقترح بالفصحى"></textarea>
@@ -556,6 +557,7 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
 </div>
 
 <script>
+const FUSHA_CONVERSION_ENDPOINT = 'https://fusha-api-production.up.railway.app/convert';
 const IMAGES = {"ICON": "icon.jpg", "HERO": "hero.jpg", "GARDEN": "garden.jpg", "MAGIC": "magic.jpg", "SEA": "sea.jpg", "FOREST": "forest.jpg", "SPACE": "space.jpg", "CITY": "city.jpg"};
 const IMAGE_META = {"ICON": {"file": "input_file_10.png", "width": 1024, "height": 1024, "format": "JPEG", "bytes": 827309}, "HERO": {"file": "input_file_5.png", "width": 1376, "height": 768, "format": "JPEG", "bytes": 803328}, "GARDEN": {"file": "input_file_4.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 788273}, "MAGIC": {"file": "input_file_6.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 770510}, "SEA": {"file": "input_file_7.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 854276}, "FOREST": {"file": "input_file_8.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 796242}, "SPACE": {"file": "input_file_9.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 765739}, "CITY": {"file": "input_file_11.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 944961}};
 
@@ -1242,7 +1244,7 @@ function voiceNativeStatus(t){
 function voiceNativeResult(t){
   const cur = $('voiceText').value.trim();
   $('voiceText').value = [cur, String(t || '').trim()].filter(Boolean).join(' ');
-  $('voiceStatus').textContent = '✓ حُوِّلَ التَّسْجِيلُ إِلَى نَصٍّ أَوَّلِيٍّ. رَاجِعْهُ قَبْلَ إِنْشَاءِ الْقِصَّةِ.';
+  $('voiceStatus').textContent = '⚠️ تَفْرِيغٌ أَوَّلِيٌّ فَقَطْ؛ لَمْ يُضَفِ التَّشْكِيلُ وَلَمْ تُصَحَّحِ الْعَامِّيَّةُ. اضْغَطْ زِرَّ التَّحْوِيلِ وَرَاجِعِ النَّصَّ.';
 }
 
 function voiceNativeError(t){
@@ -1256,7 +1258,7 @@ function startVoice(){
   if(window.QissatiAndroid && typeof window.QissatiAndroid.startVoiceStory === 'function'){
     $('voiceStartBtn').disabled = true;
     $('voiceWave').classList.add('active');
-    $('voiceStatus').textContent = '🎤 أَسْتَمِعُ إِلَيْكَ الْآنَ... تَحَدَّثْ بِالْعَرَبِيَّةِ الْفُصْحَى بِوُضُوحٍ.';
+    $('voiceStatus').textContent = '🎤 أَسْتَمِعُ إِلَيْكَ. سَيَظْهَرُ تَفْرِيغٌ أَوَّلِيٌّ يَحْتَاجُ إِلَى تَحْوِيلٍ وَمُرَاجَعَةٍ.';
     window.QissatiAndroid.startVoiceStory();
     return;
   }
@@ -1280,7 +1282,7 @@ function startVoice(){
     rec.onstart = () => {
       $('voiceStartBtn').disabled = true;
       $('voiceWave').classList.add('active');
-      $('voiceStatus').textContent = '🎤 أَسْتَمِعُ إِلَى حِكَايَتِكَ الْآنَ... تَحَدَّثْ بِالْفُصْحَى.';
+      $('voiceStatus').textContent = '🎤 أَسْتَمِعُ إِلَى حِكَايَتِكَ. التَّفْرِيغُ لَا يُضِيفُ التَّشْكِيلَ تِلْقَائِيًّا.';
     };
 
     rec.onresult = (ev) => {
@@ -1324,49 +1326,48 @@ function stopVoice(){
   $('voiceWave').classList.remove('active');
 }
 
-// A trusted backend endpoint must be configured by the app distributor.
-// Never embed provider API keys or send a child's voice recording to an unknown service.
-// Free on-device assistance. No subscription, remote request or uploaded child transcript.
-// This dictionary is deliberately limited: users must review grammar and diacritics.
-const OFFLINE_FUSHA_PHRASES = [
-  ['أنا رحت عالحديقة','ذَهَبْتُ إِلَى الْحَدِيقَةِ'],
-  ['أنا رحت على الحديقة','ذَهَبْتُ إِلَى الْحَدِيقَةِ'],
-  ['وشفت عصفور صغير','وَرَأَيْتُ عُصْفُورًا صَغِيرًا'],
-  ['وكان كتير حلو','وَكَانَ جَمِيلًا جِدًّا'],
-  ['بعدين','ثُمَّ'],['عشان','لِكَيْ'],['كتير','كَثِيرًا'],
-  ['شوية','قَلِيلًا'],['هسا','الْآنَ'],['هلأ','الْآنَ'],
-  ['شو','مَاذَا'],['ليش','لِمَاذَا'],['وين','أَيْنَ'],
-  ['بدي','أُرِيدُ'],['بدنا','نُرِيدُ'],['احنا','نَحْنُ'],
-  ['أنا','أَنَا'],['رحت','ذَهَبْتُ'],['شفنا','رَأَيْنَا'],
-  ['شفت','رَأَيْتُ'],['شاف','رَأَى'],['حكيت','قُلْتُ'],
-  ['حكى','قَالَ'],['حلو','جَمِيلٌ'],['منيح','جَيِّدٌ'],
-  ['الولد','الْوَلَدُ'],['البنت','الْبِنْتُ'],['الحديقة','الْحَدِيقَةُ'],
-  ['عصفور','عُصْفُورٌ'],['صغير','صَغِيرٌ'],['كبير','كَبِيرٌ']
-];
-function offlineFushaSuggestion(original){
-  let output=original.replace(/\s+/g,' ').trim();
-  let matches=0;
-  for(const [source,target] of OFFLINE_FUSHA_PHRASES){
-    const escaped=source.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-    const rx=new RegExp('(^|[\\s،,.؟!])('+escaped+')(?=$|[\\s،,.؟!])','gu');
-    output=output.replace(rx,(whole,prefix)=>{matches++;return prefix+target;});
-  }
-  output=output.replace(/,/g,'،').replace(/[?]/g,'؟');
-  if(output && !/[.!؟]$/.test(output)) output+='.';
-  return {text:output,matches};
-}
-function convertRecordedTextToFusha(){
+// Only the transcript text is sent; no provider secret is placed in the APK.
+async function convertRecordedTextToFusha(){
   const original=$('voiceText').value.trim();
   if(original.length<5){$('voiceStatus').textContent='⚠️ سَجِّلْ نَصًّا أَوَّلًا.';return;}
-  const result=offlineFushaSuggestion(original);
-  if(!result.matches){
-    $('fushaReview').classList.add('hidden');
-    $('voiceStatus').textContent='⚠️ لَا تَتَوَفَّرُ قَوَاعِدُ تَحْوِيلٍ مَحَلِّيَّةٌ كَافِيَةٌ لِهَذَا النَّصِّ. يُرْجَى تَحْرِيرُهُ يَدَوِيًّا؛ لَمْ نُغَيِّرْ كَلَامَكَ.';
+  if(!$('guardianFushaConsent').checked){
+    $('voiceStatus').textContent='⚠️ يَجِبُ أَنْ يُرَاجِعَ وَلِيُّ الْأَمْرِ إِشْعَارَ الْخُصُوصِيَّةِ وَيُوَافِقَ قَبْلَ إِرْسَالِ النَّصِّ.';
     return;
   }
-  $('fushaProposed').value=result.text;
-  $('fushaReview').classList.remove('hidden');
-  $('voiceStatus').textContent='⚠️ اقْتِرَاحٌ مَجَّانِيٌّ مَحَلِّيٌّ جُزْئِيٌّ، لَيْسَ تَحْوِيلًا ذَكِيًّا كَامِلًا. صَحِّحِ الْقَوَاعِدَ وَالتَّشْكِيلَ قَبْلَ الِاعْتِمَادِ.';
+  const btn=$('fushaConvertBtn');
+  btn.disabled=true;
+  $('voiceStatus').textContent='⏳ يُحَوَّلُ النَّصُّ إِلَى فُصْحَى مُشَكَّلةٍ...';
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),30000);
+  try{
+    const response=await fetch(FUSHA_CONVERSION_ENDPOINT,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      cache:'no-store',
+      signal:controller.signal,
+      body:JSON.stringify({text:original})
+    });
+    const payload=await response.json().catch(()=>({}));
+    if(!response.ok){
+      if(response.status===503) throw new Error('الخدمة غير مهيأة بعد؛ يلزم ضبط مفتاحها السري على الخادم.');
+      if(response.status===502) throw new Error('تعذر إكمال التحويل من مزود الخدمة. حاول لاحقًا.');
+      throw new Error(payload.error||'تعذر الاتصال بخدمة التحويل.');
+    }
+    const proposed=String(payload.fusha_text||'').trim();
+    if(proposed.length<5) throw new Error('لم تُرجع الخدمة نصًا صالحًا للمراجعة.');
+    const audit=arabicReadingAudit(proposed);
+    if(audit.total<2||audit.ratio<0.8) throw new Error('النص الناتج لا يحتوي تشكيلًا كافيًا؛ لم نعتمده.');
+    $('fushaProposed').value=proposed;
+    $('fushaReview').classList.remove('hidden');
+    $('voiceStatus').textContent='✓ هذا اقتراح آلي بالفصحى والتشكيل؛ راجع المعنى والحركات ثم اعتمده يدويًا.';
+  }catch(error){
+    const message=error.name==='AbortError'?'انتهت مهلة الاتصال بخدمة التحويل.':error.message||'تعذر الاتصال بالخدمة.';
+    $('fushaReview').classList.add('hidden');
+    $('voiceStatus').textContent='⚠️ '+message+' لم نغيّر النص الأصلي.';
+  }finally{
+    clearTimeout(timeout);
+    btn.disabled=false;
+  }
 }
 function acceptFushaProposal(){
   const text = $('fushaProposed').value.trim();
@@ -1416,6 +1417,8 @@ function insertSampleVoice(){
 function previewVoiceRead(){
   const txt = cleanArabicForTTS($('voiceText').value);
   if(!txt) return;
+  const audit=arabicReadingAudit(txt);
+  if(audit.total&&audit.ratio<0.8){$('voiceStatus').textContent='⚠️ حَوِّلِ النَّصَّ وَرَاجِعِ التَّشْكِيلَ قَبْلَ الِاسْتِمَاعِ.';return;}
   if(window.QissatiAndroid && typeof window.QissatiAndroid.speakArabic === 'function'){
     window.QissatiAndroid.speakArabic(txt);
     return;
@@ -1434,6 +1437,8 @@ function previewVoiceRead(){
 function makeVoiceStory(){
   stopVoice();
   const raw = $('voiceText').value.trim();
+  const audit=arabicReadingAudit(raw);
+  if(audit.total&&audit.ratio<0.8){$('voiceStatus').textContent='⚠️ حَوِّلِ التَّفْرِيغَ إِلَى فُصْحَى مُشَكَّلةٍ وَرَاجِعْهُ قَبْلَ إِنْشَاءِ الْقِصَّةِ.';return;}
   if(raw.length < 15){
     $('voiceStatus').textContent = '⚠️ احْكِ أَوِ اكْتُبْ جُمْلَتَيْنِ عَلَى الْأَقَلِّ لِإِنْشَاءِ قِصَّةٍ مُصَوَّرَةٍ.';
     return;
