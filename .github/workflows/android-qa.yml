@@ -37,6 +37,13 @@ jobs:
           gradle-version: '8.10.2'
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
+      - name: Verify packaged story interface
+        run: |
+          APK="$(find build/outputs/apk/debug -name '*.apk' -type f | head -1)"
+          test -n "$APK"
+          unzip -p "$APK" assets/index.html > /tmp/qissati-packaged-index.html
+          cmp index.html /tmp/qissati-packaged-index.html
+          grep -q 'convertRecordedTextToFusha' /tmp/qissati-packaged-index.html
       - name: Publish test APK
         uses: actions/upload-artifact@v4
         with:
