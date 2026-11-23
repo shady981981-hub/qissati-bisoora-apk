@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - development/arabic-quality-reader
+      - development/voice-fusha-conversion
   pull_request:
     branches:
       - main
