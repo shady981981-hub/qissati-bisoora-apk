@@ -1631,9 +1631,16 @@ function wizMove(dir){
       { text:`أَدْرَكَ ${h} أَنَّ الْكِتَابَ خَيْرُ صَدِيقٍ يَأْخُذُنَا فِي رِحْلَاتٍ لَا تَنْتَهِي.`, img:'MAGIC_STORY' }
     ]
   };
+  // Keep every scene offered in SCENE_CATALOG connected to a story template.
+  // The five illustrated scene keys have equivalent narrative templates below.
+  const templateKeyByScene = {
+    BIRD:'GARDEN', FRIENDS:'FOREST', OCEAN_STORY:'SEA',
+    RAINBOW:'CITY', MAGIC_STORY:'MAGIC'
+  };
+  const storyPages = templates[th] || templates[templateKeyByScene[th]] || templates.GARDEN;
   const newStory = {
     id: 'wiz-' + Date.now(), title, category: 'مِنْ تَأْلِيفِي', ageBand: state.ageBand,
-    theme: th, summary: templates[th][0].text, pages: templates[th]
+    theme: th, summary: storyPages[0].text, pages: storyPages
   };
   saveCustomStory(newStory);
   addStars(10, 'story_maker');
