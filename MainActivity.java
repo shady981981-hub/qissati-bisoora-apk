@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private int utteranceSequence = 0;
     private SpeechRecognizer speechRecognizer;
     private boolean keepListening = false;
+    private boolean chatVoiceMode = false;
+    private boolean pendingChatVoice = false;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -138,13 +140,23 @@ public class MainActivity extends AppCompatActivity {
             speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
             speechRecognizer.setRecognitionListener(new RecognitionListener() {
                 @Override public void onReadyForSpeech(Bundle params) {
-                    evalJs("voiceNativeStatus('🎤 تَحَدَّثْ الْآنَ بِالْعَرَبِيَّةِ الْفُصْحَى...');");
+                    if (chatVoiceMode) {
+                        evalJs("chatNativeStatus('🎤 تَحَدَّثْ بِعَرَبِيَّةٍ وَاضِحَةٍ...');");
+                    } else {
+                        evalJs("voiceNativeStatus('🎤 تَحَدَّثْ الْآنَ بِالْعَرَبِيَّةِ الْفُصْحَى...');");
+                    }
                 }
                 @Override public void onBeginningOfSpeech() {}
                 @Override public void onRmsChanged(float rmsdB) {}
                 @Override public void onBufferReceived(byte[] buffer) {}
                 @Override public void onEndOfSpeech() {}
                 @Override public void onError(int error) {
+                    if (chatVoiceMode) {
+                        chatVoiceMode = false;
+                        keepListening = false;
+                        evalJs("chatNativeError('لَمْ أَفْهَمِ الْكَلَامَ؛ حَاوِلْ مَرَّةً أُخْرَى.');");
+                        return;
+                    }
                     if (keepListening && (error == SpeechRecognizer.ERROR_NO_MATCH || error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT)) {
                         restartListeningLoop();
                     } else {
@@ -155,7 +167,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override public void onResults(Bundle results) {
                     ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                     if (matches != null && !matches.isEmpty()) {
-                        evalJs("voiceNativeResult('" + escapeJs(matches.get(0)) + "');");
+                        if (chatVoiceMode) {
+                            chatVoiceMode = false;
+                            keepListening = false;
+                            evalJs("chatNativeResult('" + escapeJs(matches.get(0)) + "');");
+                        } else {
+                            evalJs("voiceNativeResult('" + escapeJs(matches.get(0)) + "');");
+                        }
                     }
                     if (keepListening) {
                         restartListeningLoop();
@@ -183,10 +201,19 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQ_RECORD_AUDIO && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            chatVoiceMode = pendingChatVoice;
+            pendingChatVoice = false;
             keepListening = true;
             initAndStartRecognizer();
         } else {
-            evalJs("voiceNativeError('يُرْجَى السَّمَاحُ بِإِذْنِ الْمِيكْرُوفُونِ لِلتَّسْجِيلِ الصَّوْتِيِّ.');");
+            boolean wasChatRequest = pendingChatVoice;
+            pendingChatVoice = false;
+            chatVoiceMode = false;
+            if (wasChatRequest) {
+                evalJs("chatNativeError('يُرْجَى السَّمَاحُ بِإِذْنِ الْمِيكْرُوفُونِ لِلْمُحَادَثَةِ.');");
+            } else {
+                evalJs("voiceNativeError('يُرْجَى السَّمَاحُ بِإِذْنِ الْمِيكْرُوفُونِ لِلتَّسْجِيلِ الصَّوْتِيِّ.');");
+            }
         }
     }
 
@@ -218,6 +245,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
+        public void startChatVoice() {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                pendingChatVoice = true;
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, REQ_RECORD_AUDIO);
+                return;
+            }
+            pendingChatVoice = false;
+            chatVoiceMode = true;
+            keepListening = true;
+            initAndStartRecognizer();
+        }
+
+        @JavascriptInterface
         public void startVoiceStory() {
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, REQ_RECORD_AUDIO);
@@ -230,6 +270,8 @@ public class MainActivity extends AppCompatActivity {
         @JavascriptInterface
         public void stopVoiceStory() {
             keepListening = false;
+            chatVoiceMode = false;
+            pendingChatVoice = false;
             runOnUiThread(() -> {
                 if (speechRecognizer != null) {
                     speechRecognizer.stopListening();
