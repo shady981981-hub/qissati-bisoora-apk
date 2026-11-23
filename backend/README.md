@@ -1,22 +1,30 @@
-# Arabic Fusha conversion service
+# Arabic story and AI chat service
 
-The app can send the recognized transcript text (not the audio recording from the Convert button) to this service and review the returned proposal before saving a story.
+The app uses this Railway backend for Arabic Fusha conversion and a short-turn AI story companion.
 
 ## Railway deployment
 
 - Repository: `shady981981-hub/qissati-bisoora-apk`
 - Service root directory: `/backend`
-- Deploy branch: `development/voice-fusha-conversion` until the backend files land on `main`
+- Deploy branch: `main`
 - Start command: `npm start`
 - Health check: `/health`
-- Public conversion route: `/convert`
+- Routes: `POST /convert` and `POST /chat`
 
-The production domain is configured in `index.html` as `FUSHA_CONVERSION_ENDPOINT`. Update it there if the service domain changes, then rebuild the APK.
+The production domain is configured in `index.html`. The conversion route is `/convert`; the story chat route is `/chat`.
 
 Set `OPENAI_API_KEY` as a Railway secret, never in the APK or GitHub. The service returns `503` until this secret exists. Optionally set `OPENAI_MODEL`. Never expose secrets in logs or commit them.
 
-## Child privacy and safe use
+## Request behavior
 
-The initial speech-to-text step uses Android or browser speech recognition; that provider may process audio according to its own policy, which must be reviewed separately. Pressing Convert sends the text shown in the editor to this backend; the backend sends that text to the model API with `store:false`. Do not enter a child's name, address, school, or other identifying information.
+- `POST /convert` accepts the transcript text and returns a vocalized Fusha proposal.
+- `POST /chat` accepts up to eight recent user/assistant text messages and returns a short child-friendly Arabic response.
+- Both routes call the Responses API with `store:false`; the server does not write message content to its logs or a database.
+- The chat keeps its short context in the current page session only. Clearing it removes that context from the page.
+- The app sends recognized text to the backend, not the microphone recording. The speech-recognition provider may process audio according to its own settings and policy.
 
-Before enabling conversion for children, the guardian must review and approve the data flow and applicable privacy notice. Keep access limits and abuse protection enabled. The returned text is only a proposal: the app requires a checked guardian-consent acknowledgement and manual text review before the text is used to create a story. This checkbox does not authenticate the guardian or complete a privacy review; the app owner must still approve the data flow and applicable notice before enabling the service for children. A successful health check alone does not mean conversion is configured; verify `/health` returns `configured:true`, then test Arabic MSA, diacritics, error handling, and the resulting speech on target devices.
+## Child-safe use
+
+A guardian should review and approve the data flow before a child uses either feature. Do not enter a child's real name, address, school, phone number, photos, or other identifying details. The chat instructions guide the model toward age-appropriate story conversation, but do not replace adult supervision or guarantee that every answer is correct. Review generated language and story content.
+
+A successful health check only confirms that the service is configured. Verify Fusha quality, chat behavior, error handling, privacy notices, and speech playback on the target device before calling the feature ready.
