@@ -86,6 +86,24 @@ button:active{transform:scale(.97)}
   background:#281854;aspect-ratio:16/9;cursor:pointer;
 }
 .hero-frame img{width:100%;height:100%;object-fit:cover;display:block;animation:kenBurnsSlow 16s ease-in-out infinite alternate}
+.scene-motion{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.scene-motion .spark{position:absolute;width:9px;height:9px;border-radius:50%;background:#fff4a8;box-shadow:0 0 14px 5px #ffe77a;opacity:0;animation:sceneSparkle 3.6s ease-in-out infinite}
+.scene-motion .spark:nth-child(1){left:12%;top:25%;animation-delay:.2s}
+.scene-motion .spark:nth-child(2){left:72%;top:18%;animation-delay:1.1s}
+.scene-motion .spark:nth-child(3){left:83%;top:66%;animation-delay:2s}
+.scene-motion .spark:nth-child(4){left:35%;top:75%;animation-delay:2.7s}
+.scene-motion .firefly{position:absolute;width:7px;height:7px;border-radius:50%;background:#d9ff8d;box-shadow:0 0 13px 4px #bafa66;left:var(--x);top:var(--y);animation:fireflyDrift 7s ease-in-out infinite alternate;animation-delay:var(--delay)}
+.scene-motion .flying-bird{position:absolute;right:15%;top:28%;width:34px;height:20px;animation:birdGlide 8s ease-in-out infinite alternate}
+.scene-motion .flying-bird:before,.scene-motion .flying-bird:after{content:"";position:absolute;width:18px;height:8px;background:#fff4d1;border-radius:100% 0 100% 0;filter:drop-shadow(0 1px 2px #5a348c)}
+.scene-motion .flying-bird:before{left:1px;top:2px;transform:rotate(22deg);animation:wingBeat .55s ease-in-out infinite alternate}
+.scene-motion .flying-bird:after{right:1px;top:2px;transform:scaleX(-1) rotate(22deg);animation:wingBeat .55s ease-in-out infinite alternate-reverse}
+.hero-frame .scene-motion{mix-blend-mode:screen}
+.scene-motion .spark:nth-child(2n){width:6px;height:6px}
+@keyframes sceneSparkle{0%,100%{transform:scale(.3);opacity:0}45%{transform:scale(1.1);opacity:.85}70%{transform:scale(.6);opacity:.35}}
+@keyframes fireflyDrift{0%{transform:translate3d(0,12px,0);opacity:.2}50%{opacity:.9}100%{transform:translate3d(26px,-22px,0);opacity:.35}}
+@keyframes birdGlide{0%{transform:translate3d(-8px,7px,0) rotate(-5deg)}100%{transform:translate3d(34px,-18px,0) rotate(4deg)}}
+@keyframes wingBeat{from{transform:rotate(22deg) scaleY(.55)}to{transform:rotate(-12deg) scaleY(1)}}
+.hero-frame .hero-badge{z-index:2}
 .hero-badge{
   position:absolute;bottom:10px;right:10px;background:rgba(30,25,54,0.84);
   backdrop-filter:blur(6px);color:#ffe07d;font-size:12px;font-weight:800;
@@ -194,6 +212,17 @@ button:active{transform:scale(.97)}
   box-shadow:0 12px 28px rgba(30,25,54,0.15);aspect-ratio:4/3;max-height:500px;margin:0 auto 14px;
 }
 .reader-stage img{width:100%;height:100%;object-fit:cover;display:block;animation:kenBurnsSlow 14s ease-in-out infinite alternate}
+.reader-stage .scene-motion{background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.12) 48%,transparent 61%);background-size:220% 100%;animation:pageLightSweep 12s ease-in-out infinite}
+.reader-stage .page-pill,.reader-stage .zoom-hd-btn{z-index:2}
+.reader-stage .flying-bird{display:none}
+.reader-stage[data-scene="BIRD"] .flying-bird,.reader-stage[data-scene="FRIENDS"] .flying-bird{display:block}
+.reader-stage[data-scene="OCEAN_STORY"] .scene-motion:before,.reader-stage[data-scene="OCEAN_STORY"] .scene-motion:after{content:"";position:absolute;bottom:-18px;width:15px;height:15px;border:2px solid rgba(225,255,255,.78);border-radius:50%;box-shadow:inset 0 0 5px #fff8;animation:bubbleRise 6s ease-in infinite}
+.reader-stage[data-scene="OCEAN_STORY"] .scene-motion:before{left:18%;animation-delay:.8s}
+.reader-stage[data-scene="OCEAN_STORY"] .scene-motion:after{left:76%;width:9px;height:9px;animation-delay:3s}
+@keyframes pageLightSweep{0%,45%{background-position:130% 0}75%,100%{background-position:-120% 0}}
+@keyframes bubbleRise{0%{transform:translateY(0) scale(.65);opacity:0}18%{opacity:.8}100%{transform:translateY(-390px) scale(1.15);opacity:0}}
+.reader-stage{animation:pageArrival .55s ease-out both}
+@keyframes pageArrival{from{opacity:.7;transform:translateY(8px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
 .zoom-hd-btn{
   position:absolute;bottom:12px;left:12px;background:rgba(28,24,48,0.85);
   backdrop-filter:blur(6px);color:#fff;border:1px solid rgba(255,255,255,0.28);
@@ -260,6 +289,7 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
   .wrap{padding:0}
   .reader-stage{max-height:360px;border:1px solid #ccc}
 }
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 #pictureBookOverlay{position:fixed;inset:0;z-index:99999;background:rgba(23,14,51,.94);display:none;align-items:center;justify-content:center;padding:12px;direction:rtl}
 .picture-book-shell{background:#fffaf1;border-radius:22px;width:min(680px,100%);max-height:95vh;overflow:auto;padding:14px;box-shadow:0 20px 80px #0008}
 .picture-book-toolbar,.picture-book-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px}
@@ -268,23 +298,89 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
 .picture-book-cover h2{font-size:clamp(22px,5vw,36px);color:#4c238f}
 .picture-book-page p{font-size:clamp(20px,4.2vw,27px);line-height:2;color:#281e45;white-space:pre-wrap;padding:8px}
 .picture-book-nav button:disabled{opacity:.4}
+
+/* Child-friendly story world */
+:root{--primary:#5926c7;--primary-dark:#35106e;--secondary:#00a99a;--accent:#ff782b;--gold:#ffd129;--bg:#f2f6ff;--border:#e3d8ff;--radius:22px}
+body{background:radial-gradient(ellipse at 50% 0,#fff 0,#f2f5ff 56%,#f8f1ff 100%)}
+.app-header{position:relative;isolation:isolate;overflow:hidden;padding:12px 16px 24px;border-radius:0 0 30px 30px;background:linear-gradient(125deg,rgba(54,17,128,.9),rgba(92,40,190,.78) 48%,rgba(0,146,153,.64)),url('scene_world.jpg') center 45%/cover no-repeat;box-shadow:0 9px 24px #43218b38}
+.app-header:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(32,9,91,.18),rgba(35,12,93,.58))}
+.top-bar{max-width:1160px;padding:9px 12px;border-radius:22px;background:rgba(47,17,112,.52);border:1px solid #ffffff5c;backdrop-filter:blur(8px)}
+.app-icon-img{width:62px;height:62px;border-radius:19px;border:2px solid #ffe68b;box-shadow:0 5px 0 #54228d,0 8px 15px #170b3b66}
+.brand-title{font-size:25px;text-shadow:0 2px 0 #371177,0 3px 10px #251051}
+.brand-sub{font-size:12px}
+.hud-pills{gap:6px}
+.hud-pill{padding:7px 11px;border-radius:15px;font-size:12px;box-shadow:inset 0 1px #ffffff70,0 3px 0 #31106f88}
+.hero{max-width:1050px;margin-top:15px;gap:15px}
+.hero h1{color:#fff4a6;font-size:clamp(24px,3.5vw,35px);text-shadow:0 3px 0 #4b218e,0 6px 12px #170b3b99}
+.hero p{font-size:14px;line-height:1.65;color:#fff}
+.age-band-bar{background:#ffffff23;border-radius:15px}
+.age-chip{font-size:11px;padding:6px 9px}
+.hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:475px}
+.btn-kid{min-height:70px;border:2px solid #ffffffa8;border-radius:20px;padding:9px 12px;color:#fff;font-weight:900;font-size:14px;line-height:1.3;display:flex;align-items:center;justify-content:center;gap:9px;text-align:center;box-shadow:inset 0 2px #ffffff75,0 5px 0 #30106e88,0 9px 16px #1d0e5050;text-shadow:0 1px 2px #30106e;animation:kidButtonFloat 4s ease-in-out infinite}
+.btn-kid:nth-child(2){animation-delay:.3s}.btn-kid:nth-child(3){animation-delay:.6s}.btn-kid:nth-child(4){animation-delay:.9s}
+.btn-kid.orange{background:linear-gradient(140deg,#ffb327,#f1571d)}.btn-kid.purple{background:linear-gradient(140deg,#a046ff,#6220cb)}.btn-kid.green{background:linear-gradient(140deg,#49d85d,#079f76)}.btn-kid.blue{background:linear-gradient(140deg,#38cafa,#146fdb)}
+.kid-icon{width:31px;height:31px;flex:none;filter:drop-shadow(0 2px 1px #32127580)}
+.hero-frame{border:3px solid #ffe98a;border-radius:28px;box-shadow:0 7px 0 #4b1a8e,0 14px 26px #170b3b77;aspect-ratio:16/10}
+.hero-frame img{animation:kenBurnsSlow 20s ease-in-out infinite alternate}
+.hero-badge{font-size:11px;padding:5px 9px}
+.wrap{padding-top:13px}
+.nav-tabs{justify-content:center;gap:7px;padding-bottom:8px}
+.nav-tab{background:linear-gradient(#fff,#f0eaff);border:1px solid #d8c5ff;border-radius:17px;padding:7px 12px;color:#58309a;display:flex;align-items:center;gap:6px;box-shadow:0 3px 0 #c6b0f1;font-size:12px}
+.nav-tab.active{background:linear-gradient(#a746fa,#5c20bc);border-color:#f8d75d;color:#fff;box-shadow:0 0 0 2px #ffe56a,0 4px 0 #321070}
+.nav-icon{width:23px;height:23px;filter:drop-shadow(0 2px 1px #27075d55)}
+.section-title{color:#4c218d}
+#featuredGrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:3px 2px 13px;gap:13px;scrollbar-width:thin}
+#featuredGrid .story-card{min-width:220px;max-width:255px;scroll-snap-align:start;border:2px solid #e3c46b;border-radius:20px;box-shadow:0 5px 0 #b78435,0 8px 14px #40206c20}
+#featuredGrid .story-card-thumb{aspect-ratio:1.12;object-fit:cover}
+#featuredGrid .story-card-body{padding:12px;gap:6px}
+#featuredGrid .story-card h3{font-size:15px}
+.story-card:hover{transform:translateY(-4px) rotate(-.5deg)}
+.section-head .section-title{background:linear-gradient(90deg,#fff4c9,#fff);border:1px solid #ffe28b;border-radius:16px;padding:8px 13px;box-shadow:0 3px 0 #e2bc55}
+.panel{border-radius:24px;border-color:#e6d9ff}
+.mobile-dock{display:flex;justify-content:space-around;gap:1px;padding:6px 3px calc(6px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#762bd0,#421588);border:2px solid #c18aff;border-radius:22px 22px 0 0;box-shadow:0 -5px 20px #45208438}
+.dock-btn{color:#fff;font-size:9px;min-width:0;padding:3px 4px;border-radius:13px;gap:0}
+.dock-btn.active{color:#fff2a3;background:linear-gradient(#9c48ec,#6225b6);box-shadow:0 0 0 2px #ffe46c,0 0 16px #ffdb4f88}
+.dock-icon{width:27px;height:27px;filter:drop-shadow(0 2px 1px #25065c77)}
+.dock-btn.active .dock-icon{transform:translateY(-2px);filter:drop-shadow(0 0 5px #ffdf64)}
+main.wrap{padding-bottom:100px}
+@keyframes kidButtonFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media(max-width:840px){.app-header{padding:9px 10px 18px}.top-bar{padding:8px}.brand-sub{display:none}.hero{grid-template-columns:1fr;text-align:center}.hero-frame{order:-1;aspect-ratio:16/10}.hero-actions{margin:0 auto}.hero h1{font-size:26px}.hud-pill{font-size:10px;padding:6px 8px}.app-icon-img{width:52px;height:52px}.nav-tabs{display:none}#featuredGrid .story-card{min-width:68vw;max-width:68vw}}
+@media(max-width:390px){.brand-title{font-size:21px}.hud-pills{gap:4px}.hero-actions{gap:8px}.btn-kid{font-size:12px;min-height:64px;padding:7px}.kid-icon{width:27px;height:27px}.dock-btn{font-size:8px}.dock-icon{width:24px;height:24px}}
+@media(min-width:721px){.mobile-dock{display:none}}
 </style>
 </head>
 <body>
 
+<svg xmlns="http://www.w3.org/2000/svg" class="icon-defs" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <linearGradient id="gPurple" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff1a0"/><stop offset="1" stop-color="#ff70db"/></linearGradient>
+    <linearGradient id="gBook" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff4ad"/><stop offset="1" stop-color="#67f7dc"/></linearGradient>
+  </defs>
+  <symbol id="i-book" viewBox="0 0 48 48"><path d="M5 10c8-3 14-1 19 4v26c-5-5-11-7-19-4V10Zm38 0c-8-3-14-1-19 4v26c5-5 11-7 19-4V10Z" fill="url(#gBook)" stroke="#4a238f" stroke-width="3" stroke-linejoin="round"/><path d="M10 16c4-1 7 0 10 2M10 23c4-1 7 0 10 2m18-9c-4-1-7 0-10 2m10 5c-4-1-7 0-10 2" fill="none" stroke="#8953c9" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 48 48"><rect x="17" y="5" width="14" height="25" rx="7" fill="url(#gPurple)" stroke="#4a238f" stroke-width="3"/><path d="M10 22a14 14 0 0 0 28 0M24 36v7m-8 0h16" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M10 22a14 14 0 0 0 28 0M24 36v7m-8 0h16" fill="none" stroke="#4a238f" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-movie" viewBox="0 0 48 48"><rect x="7" y="11" width="34" height="30" rx="6" fill="url(#gPurple)" stroke="#4a238f" stroke-width="3"/><path d="m20 19 13 7-13 8V19Z" fill="#fff" stroke="#4a238f" stroke-width="2"/><path d="M6 7 41 4l2 8-35 4-2-9Z" fill="#fff1a0" stroke="#4a238f" stroke-width="3"/><path d="m14 6 5 7m7-8 5 7m7-8 4 6" stroke="#8c4ae3" stroke-width="2"/></symbol>
+  <symbol id="i-palette" viewBox="0 0 48 48"><path d="M24 5C13 5 5 13 5 23s8 19 19 19h3c4 0 6-4 4-7-2-3 0-6 4-6h2c6 0 8-5 6-11C41 10 33 5 24 5Z" fill="url(#gBook)" stroke="#4a238f" stroke-width="3"/><circle cx="15" cy="20" r="3" fill="#ff6e68"/><circle cx="22" cy="13" r="3" fill="#ffce36"/><circle cx="31" cy="15" r="3" fill="#56df8b"/><circle cx="35" cy="23" r="3" fill="#65a8ff"/></symbol>
+  <symbol id="i-home" viewBox="0 0 48 48"><path d="m5 22 19-16 19 16h-5v20H10V22H5Z" fill="url(#gPurple)" stroke="#fff0a0" stroke-width="3" stroke-linejoin="round"/><path d="M20 42V27h8v15" fill="none" stroke="#4a238f" stroke-width="3"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 48 48"><path d="M14 7h20v9c0 9-4 14-10 14s-10-5-10-14V7Zm0 5H6v5c0 6 4 9 11 9m17-14h8v5c0 6-4 9-11 9M24 30v8m-9 4h18l-2-5H17l-2 5Z" fill="url(#gBook)" stroke="#5a298f" stroke-width="3" stroke-linejoin="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 48 48"><path d="m24 4 6.2 12.7 14 2-10.1 9.8 2.4 13.9L24 35.8l-12.5 6.6 2.4-13.9L3.8 18.7l14-2L24 4Z" fill="url(#gPurple)" stroke="#fff2a2" stroke-width="3" stroke-linejoin="round"/></symbol>
+  <symbol id="i-level" viewBox="0 0 48 48"><rect x="6" y="25" width="8" height="17" rx="3" fill="#70f3db"/><rect x="20" y="15" width="8" height="27" rx="3" fill="#6ac9ff"/><rect x="34" y="5" width="8" height="37" rx="3" fill="#ffd552"/><path d="M4 44h40" stroke="#fff" stroke-width="3" stroke-linecap="round"/></symbol>
+  <symbol id="i-friends" viewBox="0 0 48 48"><circle cx="18" cy="17" r="8" fill="#ffd1a3" stroke="#52218d" stroke-width="3"/><circle cx="33" cy="19" r="7" fill="#a8e7ff" stroke="#52218d" stroke-width="3"/><path d="M4 40c1-8 6-13 14-13s13 5 14 13H4Zm24 0c0-6 4-10 10-10s8 4 9 10H28Z" fill="url(#gBook)" stroke="#52218d" stroke-width="3" stroke-linejoin="round"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 48 48"><path d="M7 20h34v23H7V20Zm-3-9h40v10H4V11Zm20 0v32" fill="url(#gPurple)" stroke="#fff1a0" stroke-width="3" stroke-linejoin="round"/><path d="M24 11C13 12 8 8 11 4c4-5 11 2 13 7Zm0 0c11 1 16-3 13-7-4-5-11 2-13 7Z" fill="#ff6cd7" stroke="#fff1a0" stroke-width="2.5" stroke-linejoin="round"/></symbol>
+</svg>
+
 <header class="app-header">
   <div class="top-bar">
     <div class="brand-box">
-      <img id="appLogoImg" class="app-icon-img" alt="أيقونة قصتي بصورة" onclick="openLightbox(IMAGES.ICON, 'أيقونة قصتي بصورة (1024×1024 px)')">
+      <img id="appLogoImg" class="app-icon-img" alt="أيقونة قصتي بصورة" onclick="openLightbox(IMAGES.ICON, 'أيقونة قصتي بصورة')">
       <div>
         <div class="brand-title">قصتي بصورة</div>
-        <div class="brand-sub">مِنَصَّةٌ تَرْبَوِيَّةٌ تَفَاعُلِيَّةٌ لِلْقِرَاءَةِ وَالْكِتَابَةِ وَالِاسْتِمَاعِ بِالْفُصْحَى</div>
+        <div class="brand-sub">أَحْكِي • أَقْرَأُ • أُبْدِعُ • أَسْتَمِعُ</div>
       </div>
     </div>
     <div class="hud-pills">
-      <div class="hud-pill gold">⭐ <span id="hudStars">0</span> نجمة</div>
-      <div class="hud-pill">🏅 <span id="hudLevel">مُسْتَكْشِفٌ صَغِيرٌ</span></div>
-      <button class="hud-pill" id="sfxToggleBtn" onclick="toggleSfx()">🔔 الْأَصْوَاتُ: مفعّلة</button>
+      <div class="hud-pill gold"><svg class="nav-icon"><use href="#i-star"/></svg><span id="hudStars">0</span> نَجْمَةٌ</div>
+      <div class="hud-pill"><svg class="nav-icon"><use href="#i-level"/></svg><span id="hudLevel">مُسْتَكْشِفٌ صَغِيرٌ</span></div>
+      <button class="hud-pill" id="sfxToggleBtn" onclick="toggleSfx()">🔔 الصَّوْتُ</button>
     </div>
   </div>
 
@@ -295,16 +391,18 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
         <button class="age-chip" data-age="8-10" onclick="setAgeBand('8-10')">الصِّغَارُ (8–10 سَنَوَاتٍ)</button>
         <button class="age-chip" data-age="11-14" onclick="setAgeBand('11-14')">الْيَافِعُونَ (11–14 سَنَةً)</button>
       </div>
-      <h1>كُلُّ طَالِبٍ كَاتِبُ حِكَايَةٍ وَمُفَكِّرٌ مُمْبِدِعٌ!</h1>
-      <p id="heroDesc">بِيئَةٌ تَعْلِيمِيَّةٌ مُصَمَّمَةٌ لِتَنْمِيَةِ الْقِرَاءَةِ الْفَصِيحَةِ وَالثَّرْوَةِ اللُّغَوِيَّةِ وَالتَّفْكِيرِ النَّقْدِيِّ لَدَى الطُّلَّابِ مِنَ الثَّامِنَةِ إِلَى الرَّابِعَةَ عَشْرَةَ، مَعَ صُوَرٍ ثُلَاثِيَّةِ الْأَبْعَادِ عَالِيَةِ الدِّقَّةِ.</p>
+      <h1>أَحْكِي • أَقْرَأُ • أُبْدِعُ</h1>
+      <p id="heroDesc">اِخْتَرْ بَابَكَ وَانْطَلِقْ إِلَى عَالَمِ الْحِكَايَاتِ!</p>
       <div class="hero-actions">
-        <button class="btn-hero-main" onclick="startWizard('creative')">✨ اصْنَعْ قِصَّتِي بِالصُّوَرِ</button>
-        <button class="btn-hero-sec" onclick="go('voice')">🎙️ احْكِ قِصَّتَكَ بِصَوْتِكَ</button>
-        <button class="btn-hero-sec" onclick="go('catalog')">📖 الْمَكْتَبَةُ التَّعْلِيمِيَّةُ</button>
+        <button class="btn-kid orange" onclick="go('voice')"><svg class="kid-icon"><use href="#i-mic"/></svg><span>أَحْكِي قِصَّتِي<br>بِصَوْتِي</span></button>
+        <button class="btn-kid purple" onclick="go('catalog')"><svg class="kid-icon"><use href="#i-book"/></svg><span>أَقْرَأُ قِصَّةً<br>جَمِيلَةً</span></button>
+        <button class="btn-kid green" onclick="startWizard('creative')"><svg class="kid-icon"><use href="#i-movie"/></svg><span>قِصَّةٌ<br>مُتَحَرِّكَةٌ</span></button>
+        <button class="btn-kid blue" onclick="startWizard('creative')"><svg class="kid-icon"><use href="#i-palette"/></svg><span>أَصْنَعُ قِصَّتِي<br>بِالصُّوَرِ</span></button>
       </div>
     </div>
-    <div class="hero-frame" onclick="openLightbox(IMAGES.HERO, 'المشهد الافتتاحي لعالم قصتي بصورة (1376×768 px)')">
+    <div class="hero-frame" onclick="openLightbox(IMAGES.HERO, 'المشهد الافتتاحي لعالم قصتي بصورة')">
       <img id="heroBannerImg" alt="مشهد عالم قصتي بصورة">
+      <div class="scene-motion" aria-hidden="true"><i class="spark"></i><i class="spark"></i><i class="spark"></i><i class="spark"></i><i class="firefly" style="--x:18%;--y:72%;--delay:.6s"></i><i class="firefly" style="--x:66%;--y:81%;--delay:2.1s"></i><i class="flying-bird"></i></div>
       <div class="hero-badge">🔍 عَرْضُ الصُّورَةِ بِالدِّقَّةِ الْكَامِلَةِ</div>
     </div>
   </div>
@@ -312,11 +410,13 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
 
 <main class="wrap">
   <nav class="nav-tabs" aria-label="التنقل الرئيسي">
-    <button class="nav-tab active" data-nav="home" onclick="go('home')">🏠 الرَّئِيسِيَّةُ</button>
-    <button class="nav-tab" data-nav="wizard" onclick="go('wizard')">🪄 اصْنَعْ قِصَّةً</button>
-    <button class="nav-tab" data-nav="voice" onclick="go('voice')">🎙️ قِصَّتِي بِالصَّوْتِ</button>
-    <button class="nav-tab" data-nav="catalog" onclick="go('catalog')">🌈 الْمَكْتَبَةُ التَّعْلِيمِيَّةُ</button>
-    <button class="nav-tab" data-nav="library" onclick="go('library')">📚 مَكْتَبَتِي وَأَوْسِمَتِي</button>
+    <button class="nav-tab" data-nav="library" onclick="go('library')"><svg class="nav-icon"><use href="#i-trophy"/></svg>إِنْجَازَاتِي</button>
+    <button class="nav-tab" onclick="go('catalog')"><svg class="nav-icon"><use href="#i-star"/></svg>تَحَدِّيَاتٌ</button>
+    <button class="nav-tab" onclick="go('library')"><svg class="nav-icon"><use href="#i-level"/></svg>مُسْتَوَايَ</button>
+    <button class="nav-tab active" data-nav="home" onclick="go('home')"><svg class="nav-icon"><use href="#i-home"/></svg>الرَّئِيسِيَّةُ</button>
+    <button class="nav-tab" onclick="go('catalog')"><svg class="nav-icon"><use href="#i-book"/></svg>قِصَصِي</button>
+    <button class="nav-tab" data-nav="voice" onclick="go('voice')"><svg class="nav-icon"><use href="#i-friends"/></svg>أَصْدِقَائِي</button>
+    <button class="nav-tab" data-nav="wizard" onclick="startWizard('creative')"><svg class="nav-icon"><use href="#i-gift"/></svg>مُفَاجَآتٌ</button>
   </nav>
 
   <!-- HOME -->
@@ -351,7 +451,7 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
     </div>
 
     <div class="section-head">
-      <h2 class="section-title">🌟 قِصَصٌ مُخْتَارَةٌ حَسَبَ الْمَرْحَلَةِ</h2>
+      <h2 class="section-title"><svg class="nav-icon"><use href="#i-book"/></svg> مَكْتَبَتِي الْقِصَصِيَّةُ</h2>
       <button class="btn-secondary" onclick="go('catalog')">عَرْضُ جَمِيعِ الْقِصَصِ ←</button>
     </div>
     <div id="featuredGrid" class="grid-cards"></div>
@@ -488,8 +588,9 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
         </div>
       </div>
 
-      <div class="reader-stage">
+      <div id="readerStage" class="reader-stage">
         <img id="readImage" alt="مشهد القصة">
+        <div class="scene-motion" aria-hidden="true"><i class="spark"></i><i class="spark"></i><i class="spark"></i><i class="spark"></i><i class="firefly" style="--x:17%;--y:77%;--delay:.4s"></i><i class="firefly" style="--x:74%;--y:80%;--delay:1.9s"></i><i class="flying-bird"></i></div>
         <div class="page-pill" id="pageIndicator">1 / 4</div>
         <button class="zoom-hd-btn" id="zoomSceneBtn" onclick="zoomCurrentScene()">🔍 عَرْضُ الصُّورَةِ بِالدِّقَّةِ الْكَامِلَةِ</button>
       </div>
@@ -529,12 +630,14 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
   </section>
 </main>
 
-<div class="mobile-dock">
-  <button class="dock-btn active" data-nav="home" onclick="go('home')"><span>🏠</span>الرئيسية</button>
-  <button class="dock-btn" data-nav="wizard" onclick="go('wizard')"><span>🪄</span>اصنع قصة</button>
-  <button class="dock-btn" data-nav="voice" onclick="go('voice')"><span>🎙️</span>بصوتي</button>
-  <button class="dock-btn" data-nav="catalog" onclick="go('catalog')"><span>🌈</span>المكتبة</button>
-  <button class="dock-btn" data-nav="library" onclick="go('library')"><span>📚</span>مكتبتي</button>
+<div class="mobile-dock" aria-label="التنقل الرئيسي">
+  <button class="dock-btn" data-nav="library" onclick="go('library')"><svg class="dock-icon"><use href="#i-trophy"/></svg>إِنْجَازَاتِي</button>
+  <button class="dock-btn" onclick="go('catalog')"><svg class="dock-icon"><use href="#i-star"/></svg>التَّحَدِّيَاتُ</button>
+  <button class="dock-btn" onclick="go('library')"><svg class="dock-icon"><use href="#i-level"/></svg>مُسْتَوَايَ</button>
+  <button class="dock-btn active" data-nav="home" onclick="go('home')"><svg class="dock-icon"><use href="#i-home"/></svg>الرَّئِيسِيَّةُ</button>
+  <button class="dock-btn" onclick="go('catalog')"><svg class="dock-icon"><use href="#i-book"/></svg>قِصَصِي</button>
+  <button class="dock-btn" data-nav="voice" onclick="go('voice')"><svg class="dock-icon"><use href="#i-friends"/></svg>أَصْدِقَائِي</button>
+  <button class="dock-btn" data-nav="wizard" onclick="startWizard('creative')"><svg class="dock-icon"><use href="#i-gift"/></svg>مُفَاجَآتٌ</button>
 </div>
 
 <div id="lightboxModal" class="lightbox hidden" onclick="closeLightbox(event)">
@@ -547,10 +650,15 @@ body.large-reading .story-text-box{font-size:25px;line-height:2.15}
 </div>
 
 <script>
-const IMAGES = {"ICON": "icon.jpg", "HERO": "hero.jpg", "GARDEN": "garden.jpg", "MAGIC": "magic.jpg", "SEA": "sea.jpg", "FOREST": "forest.jpg", "SPACE": "space.jpg", "CITY": "city.jpg"};
-const IMAGE_META = {"ICON": {"file": "input_file_10.png", "width": 1024, "height": 1024, "format": "JPEG", "bytes": 827309}, "HERO": {"file": "input_file_5.png", "width": 1376, "height": 768, "format": "JPEG", "bytes": 803328}, "GARDEN": {"file": "input_file_4.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 788273}, "MAGIC": {"file": "input_file_6.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 770510}, "SEA": {"file": "input_file_7.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 854276}, "FOREST": {"file": "input_file_8.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 796242}, "SPACE": {"file": "input_file_9.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 765739}, "CITY": {"file": "input_file_11.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 944961}};
+const IMAGES = {"ICON": "qissati_icon.jpg", "HERO": "scene_world.jpg", "GARDEN": "garden.jpg", "MAGIC": "magic.jpg", "SEA": "sea.jpg", "FOREST": "forest.jpg", "SPACE": "space.jpg", "CITY": "city.jpg", "BIRD": "scene_bird.jpg", "FRIENDS": "scene_friends.jpg", "OCEAN_STORY": "scene_ocean.jpg", "RAINBOW": "scene_rainbow.jpg", "MAGIC_STORY": "scene_reading.jpg"};
+const IMAGE_META = {"ICON": {"file": "qissati_icon.jpg", "width": 1536, "height": 1536, "format": "JPEG", "bytes": 244816}, "HERO": {"file": "scene_world.jpg", "width": 1536, "height": 857, "format": "JPEG", "bytes": 155513}, "GARDEN": {"file": "input_file_4.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 788273}, "MAGIC": {"file": "input_file_6.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 770510}, "SEA": {"file": "input_file_7.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 854276}, "FOREST": {"file": "input_file_8.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 796242}, "SPACE": {"file": "input_file_9.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 765739}, "CITY": {"file": "input_file_11.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 944961}, "BIRD": {"file": "scene_bird.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 188393}, "FRIENDS": {"file": "scene_friends.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 186720}, "OCEAN_STORY": {"file": "scene_ocean.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 204674}, "RAINBOW": {"file": "scene_rainbow.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 249759}, "MAGIC_STORY": {"file": "scene_reading.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 165607}};
 
 const SCENE_CATALOG = [
+  { key:'BIRD', title:'سَلِيمٌ وَعُصْفُورُ الْحَدِيقَةِ', res:'1536×1147', keywords:['عصفور','حديقة','شجرة','زهرة','طائر','صباح','سليم','بذرة','نبتة'] },
+  { key:'FRIENDS', title:'صَدِيقَانِ فِي الْغَابَةِ الْخَضْرَاءِ', res:'1536×1147', keywords:['أرنب','ثعلب','غابة','صديق','صداقة','قطة','حيوان','لطف'] },
+  { key:'OCEAN_STORY', title:'رِحْلَةٌ سِحْرِيَّةٌ تَحْتَ الْبَحْرِ', res:'1536×1147', keywords:['بحر','سمكة','سلحفاة','غوص','ماء','محيط','مرجان','شاطئ'] },
+  { key:'RAINBOW', title:'أَلْوَانُ التَّعَاوُنِ وَقَوْسُ قُزَحَ', res:'1536×1147', keywords:['ألوان','رسم','لوحة','تعاون','مدرسة','مدينة','قوس','فريق'] },
+  { key:'MAGIC_STORY', title:'لَيْلَةٌ مَعَ الْكِتَابِ السِّحْرِيِّ', res:'1536×1147', keywords:['كتاب','قلعة','سحر','خيال','قراءة','حكاية','ليل','مكتبة'] },
   { key:'GARDEN', title:'مُغَامَرَةُ الْعُصْفُورِ الصَّغِيرِ', res:'1200×896', keywords:['عصفور','حديقة','شجرة','زهرة','طائر','صباح','سليم','بذرة','نبتة'] },
   { key:'FOREST', title:'الْأَرْنَبُ وَالثَّعْلَبُ فِي الْغَابَةِ', res:'1200×896', keywords:['أرنب','ثعلب','غابة','صديق','صداقة','قطة','حيوان','لطف'] },
   { key:'SPACE', title:'رِحْلَةٌ إِلَى الْفَضَاءِ وَالْكَوَاكِبِ', res:'1200×896', keywords:['فضاء','قمر','نجم','نجوم','كوكب','مركبة','روبوت','علوم','سماء'] },
@@ -561,13 +669,13 @@ const SCENE_CATALOG = [
 
 const PRESET_STORIES = [
   {
-    id:'preset-1', title:'مُغَامَرَةُ الْعُصْفُورِ الصَّغِيرِ', category:'قِيَمٌ وَرَحْمَةٌ', ageBand:'8-10', theme:'GARDEN',
+    id:'preset-1', title:'مُغَامَرَةُ الْعُصْفُورِ الصَّغِيرِ', category:'قِيَمٌ وَرَحْمَةٌ', ageBand:'8-10', theme:'BIRD',
     summary:'حِكَايَةُ سَلِيمٍ الَّذِي وَجَدَ عُصْفُورًا صَغِيرًا فِي الْحَدِيقَةِ وَاعْتَنَى بِهِ حَتَّى عَادَ يُحَلِّقُ فِي السَّمَاءِ.',
     pages:[
-      { text:'فِي صَبَاحٍ مُشْرِقٍ جَمِيلٍ، خَرَجَ سَلِيمٌ إِلَى الْحَدِيقَةِ الْمُزْهِرَةِ، فَوَجَدَ عُصْفُورًا صَغِيرًا يَقِفُ عَلَى صَخْرَةٍ خَضْرَاءَ وَلَا يَسْتَطِيعُ الطَّيَرَانَ.', img:'GARDEN', vocab:'الْمُزْهِرَةِ: الْمَلِيئَةِ بِالْأَزْهَارِ الْمُتَفَتِّحَةِ.', think:'لِمَاذَا لَا يَسْتَطِيعُ الْعُصْفُورُ الطَّيَرَانَ فِي رَأْيِكَ؟' },
-      { text:'اقْتَرَبَ سَلِيمٌ بِهُدُوءٍ وَلُطْفٍ حَتَّى لَا يُخِيفَ الْعُصْفُورَ، ثُمَّ قَدَّمَ لَهُ قَطَرَاتٍ مِنَ الْمَاءِ الْعَذْبِ وَبَعْضَ الْحُبُوبِ الصَّغِيرَةِ.', img:'GARDEN', vocab:'الْعَذْبِ: الْمَاءِ الصَّافِي السَّائِغِ لِلشُّرْبِ.', think:'كَيْفَ يُظْهِرُ الْهُدُوءُ احْتِرَامَ الْكَائِنَاتِ الْحَيَّةِ؟' },
+      { text:'فِي صَبَاحٍ مُشْرِقٍ جَمِيلٍ، خَرَجَ سَلِيمٌ إِلَى الْحَدِيقَةِ الْمُزْهِرَةِ، فَوَجَدَ عُصْفُورًا صَغِيرًا يَقِفُ عَلَى صَخْرَةٍ خَضْرَاءَ وَلَا يَسْتَطِيعُ الطَّيَرَانَ.', img:'BIRD', vocab:'الْمُزْهِرَةِ: الْمَلِيئَةِ بِالْأَزْهَارِ الْمُتَفَتِّحَةِ.', think:'لِمَاذَا لَا يَسْتَطِيعُ الْعُصْفُورُ الطَّيَرَانَ فِي رَأْيِكَ؟' },
+      { text:'اقْتَرَبَ سَلِيمٌ بِهُدُوءٍ وَلُطْفٍ حَتَّى لَا يُخِيفَ الْعُصْفُورَ، ثُمَّ قَدَّمَ لَهُ قَطَرَاتٍ مِنَ الْمَاءِ الْعَذْبِ وَبَعْضَ الْحُبُوبِ الصَّغِيرَةِ.', img:'BIRD', vocab:'الْعَذْبِ: الْمَاءِ الصَّافِي السَّائِغِ لِلشُّرْبِ.', think:'كَيْفَ يُظْهِرُ الْهُدُوءُ احْتِرَامَ الْكَائِنَاتِ الْحَيَّةِ؟' },
       { text:'بَعْدَ أَيَّامٍ قَلِيلَةٍ مِنَ الرِّعَايَةِ وَالِاهْتِمَامِ، اسْتَعَادَ الْعُصْفُورُ قُوَّتَهُ، وَرَفْرَفَ بِجَنَاحَيْهِ فَرِحًا فَوْقَ الْأَزْهَارِ الْمُلَوَّنَةِ.', img:'HERO', vocab:'الرِّعَايَةِ: الْحِفَاظُ عَلَى الشَّيْءِ وَالْعِنَايَةُ بِهِ.', think:'مَا أَثَرُ الِاسْتِمْرَارِ فِي الْمُسَاعَدَةِ عَلَى النَّتِيجَةِ؟' },
-      { text:'حَلَّقَ الْعُصْفُورُ عَالِيًا فِي السَّمَاءِ الصَّافِيَةِ، وَغَرَّدَ بِأَجْمَلِ الْأَلْحَانِ كَأَنَّهُ يَشْكُرُ سَلِيمًا عَلَى رَحْمَتِهِ وَعَطْفِهِ.', img:'GARDEN', vocab:'حَلَّقَ: ارْتَفَعَ وَطَارَ عَالِيًا فِي الْجَوِّ.', think:'كَيْفَ نَرُدُّ الْجَمِيلَ لِمَنْ يُحْسِنُ إِلَيْنَا فِي حَيَاتِنَا؟' }
+      { text:'حَلَّقَ الْعُصْفُورُ عَالِيًا فِي السَّمَاءِ الصَّافِيَةِ، وَغَرَّدَ بِأَجْمَلِ الْأَلْحَانِ كَأَنَّهُ يَشْكُرُ سَلِيمًا عَلَى رَحْمَتِهِ وَعَطْفِهِ.', img:'BIRD', vocab:'حَلَّقَ: ارْتَفَعَ وَطَارَ عَالِيًا فِي الْجَوِّ.', think:'كَيْفَ نَرُدُّ الْجَمِيلَ لِمَنْ يُحْسِنُ إِلَيْنَا فِي حَيَاتِنَا؟' }
     ],
     quiz:[
       { q:'أَيْنَ وَجَدَ سَلِيمٌ الْعُصْفُورَ الصَّغِيرَ؟', opts:['فِي الْحَدِيقَةِ الْمُزْهِرَةِ','فِي الْفَضَاءِ الْوَاسِعِ','فِي أَعْمَاقِ الْبَحْرِ'], ans:0 },
@@ -576,13 +684,13 @@ const PRESET_STORIES = [
     ]
   },
   {
-    id:'preset-2', title:'الْأَرْنَبُ الْأَبْيَضُ وَالثَّعْلَبُ الصَّدِيقُ', category:'الصَّدَاقَةُ وَالثِّقَةُ', ageBand:'8-10', theme:'FOREST',
+    id:'preset-2', title:'الْأَرْنَبُ الْأَبْيَضُ وَالثَّعْلَبُ الصَّدِيقُ', category:'الصَّدَاقَةُ وَالثِّقَةُ', ageBand:'8-10', theme:'FRIENDS',
     summary:'فِي الْغَابَةِ الْمَسْحُورَةِ يَكْتَشِفُ الْأَرْنَبُ وَالثَّعْلَبُ أَنَّ الصَّدَاقَةَ الصَّادِقَةَ تَصْنَعُ الْأَمَانَ وَالْبَهْجَةَ.',
     pages:[
-      { text:'فِي قَلْبِ الْغَابَةِ الْمَسْحُورَةِ، حَيْثُ تَتَسَلَّلُ أَشِعَّةُ الشَّمْسِ الذَّهَبِيَّةُ بَيْنَ الْأَشْجَارِ، كَانَ الْأَرْنَبُ الْأَبْيَضُ يَبْحَثُ عَنْ صَدِيقٍ يُشَارِكُهُ اللَّعِبَ.', img:'FOREST', vocab:'تَتَسَلَّلُ: تَنْفُذُ وَتَمُرُّ بِخِفَّةٍ وَهُدُوءٍ.', think:'مَا الصِّفَاتُ الَّتِي تُحِبُّهَا فِي صَدِيقِكَ الْمُقَرَّبِ؟' },
-      { text:'التَقَى الْأَرْنَبُ بِثَعْلَبٍ صَغِيرٍ ذِي ابْتِسَامَةٍ دَافِئَةٍ جَالِسٍ عَلَى جِذْعِ شَجَرَةٍ مُغَطًّى بِالطَّحَالِبِ الْخَضْرَاءِ.', img:'FOREST', vocab:'الطَّحَالِبِ: نَبَاتَاتٌ خَضْرَاءُ نَاعِمَةٌ تَنْمُو عَلَى الصُّخُورِ وَالْأَشْجَارِ.', think:'لِمَاذَا نَتَجَنَّبُ الْأَحْكَامَ الْمُسْبَقَةَ قَبْلَ التَّعَارُفِ؟' },
-      { text:'تَحَدَّثَا مَعًا بِأَدَبٍ وَلُطْفٍ، وَتَعَاوَنَا فِي جَمْعِ الثِّمَارِ وَمُسَاعَدَةِ الْفَرَاشَاتِ الصَّغِيرَةِ فِي الْحَدِيقَةِ.', img:'FOREST', vocab:'تَعَاوَنَا: سَاعَدَ كُلُّ مِنْهُمَا الْآخَرَ فِي إِنْجَازِ الْعَمَلِ.', think:'كَيْفَ يُسْهِمُ التَّعَاوُنُ فِي تَقْوِيَةِ الرَّوَابِطِ بَيْنَ الزُّمَلَاءِ؟' },
-      { text:'أَدْرَكَ الْجَمِيعُ فِي الْغَابَةِ أَنَّ الصَّدَاقَةَ الْحَقِيقِيَّةَ تُقَاسُ بِالْأَفْعَالِ الطَّيِّبَةِ وَالْقَلْبِ الصَّادِقِ.', img:'MAGIC', vocab:'أَدْرَكَ: فَهِمَ وَعَرَفَ بِوُضُوحٍ.', think:'كَيْفَ نُعَبِّرُ عَنْ صِدْقِ الصَّدَاقَةِ فِي أَوْقَاتِ الشِّدَّةِ؟' }
+      { text:'فِي قَلْبِ الْغَابَةِ الْمَسْحُورَةِ، حَيْثُ تَتَسَلَّلُ أَشِعَّةُ الشَّمْسِ الذَّهَبِيَّةُ بَيْنَ الْأَشْجَارِ، كَانَ الْأَرْنَبُ الْأَبْيَضُ يَبْحَثُ عَنْ صَدِيقٍ يُشَارِكُهُ اللَّعِبَ.', img:'FRIENDS', vocab:'تَتَسَلَّلُ: تَنْفُذُ وَتَمُرُّ بِخِفَّةٍ وَهُدُوءٍ.', think:'مَا الصِّفَاتُ الَّتِي تُحِبُّهَا فِي صَدِيقِكَ الْمُقَرَّبِ؟' },
+      { text:'التَقَى الْأَرْنَبُ بِثَعْلَبٍ صَغِيرٍ ذِي ابْتِسَامَةٍ دَافِئَةٍ جَالِسٍ عَلَى جِذْعِ شَجَرَةٍ مُغَطًّى بِالطَّحَالِبِ الْخَضْرَاءِ.', img:'FRIENDS', vocab:'الطَّحَالِبِ: نَبَاتَاتٌ خَضْرَاءُ نَاعِمَةٌ تَنْمُو عَلَى الصُّخُورِ وَالْأَشْجَارِ.', think:'لِمَاذَا نَتَجَنَّبُ الْأَحْكَامَ الْمُسْبَقَةَ قَبْلَ التَّعَارُفِ؟' },
+      { text:'تَحَدَّثَا مَعًا بِأَدَبٍ وَلُطْفٍ، وَتَعَاوَنَا فِي جَمْعِ الثِّمَارِ وَمُسَاعَدَةِ الْفَرَاشَاتِ الصَّغِيرَةِ فِي الْحَدِيقَةِ.', img:'FRIENDS', vocab:'تَعَاوَنَا: سَاعَدَ كُلُّ مِنْهُمَا الْآخَرَ فِي إِنْجَازِ الْعَمَلِ.', think:'كَيْفَ يُسْهِمُ التَّعَاوُنُ فِي تَقْوِيَةِ الرَّوَابِطِ بَيْنَ الزُّمَلَاءِ؟' },
+      { text:'أَدْرَكَ الْجَمِيعُ فِي الْغَابَةِ أَنَّ الصَّدَاقَةَ الْحَقِيقِيَّةَ تُقَاسُ بِالْأَفْعَالِ الطَّيِّبَةِ وَالْقَلْبِ الصَّادِقِ.', img:'MAGIC_STORY', vocab:'أَدْرَكَ: فَهِمَ وَعَرَفَ بِوُضُوحٍ.', think:'كَيْفَ نُعَبِّرُ عَنْ صِدْقِ الصَّدَاقَةِ فِي أَوْقَاتِ الشِّدَّةِ؟' }
     ],
     quiz:[
       { q:'أَيْنَ التَقَى الْأَرْنَبُ بِالثَّعْلَبِ؟', opts:['فِي الْغَابَةِ الْمَسْحُورَةِ','عَلَى سَطْحِ الْقَمَرِ','فِي الْمَدْرَسَةِ'], ans:0 },
@@ -597,7 +705,7 @@ const PRESET_STORIES = [
       { text:'ارْتَدَى سَامِرٌ بَدْلَةَ الْفَضَاءِ الزَّرْقَاءَ، وَانْطَلَقَ مَعَ صَدِيقِهِ الرُّوبُوتِ الذَّكِيِّ فِي رِحْلَةٍ اسْتِكْشَافِيَّةٍ بَيْنَ النُّجُومِ.', img:'SPACE', vocab:'اسْتِكْشَافِيَّةٍ: بَحْثٌ عِلْمِيٌّ لِلتَّعَرُّفِ عَلَى مَا هُوَ جَدِيدٌ.', think:'مَا أَهَمِّيَّةُ التَّسَاؤُلِ الْعِلْمِيِّ فِي تَطْوِيرِ الِاكْتِشَافَاتِ؟' },
       { text:'نَظَرَ سَامِرٌ إِلَى الْأَسْفَلِ فَرَأَى كَوْكَبَ الْأَرْضِ يَتَلَأْلَأُ كَجَوْهَرَةٍ زَرْقَاءَ جَمِيلَةٍ تُحِيطُ بِهَا السُّحُبُ الْبَيْضَاءُ.', img:'SPACE', vocab:'يَتَلَأْلَأُ: يَلْمَعُ وَيَبْرُقُ بِنُورٍ وَاضِحٍ.', think:'لِمَاذَا يَبْدُو كَوْكَبُ الْأَرْضِ أَزْرَقَ اللَّوْنِ مِنْ فَضَاءِ الْخَارِجِ؟' },
       { text:'شَاهَدَ الصَّدِيقَانِ الْكَوَاكِبَ ذَاتَ الْحَلَقَاتِ الْمُلَوَّنَةِ، وَدَوَّنَا مَلْحُوظَاتٍ عِلْمِيَّةً دَقِيقَةً عَنْ حَرَكَةِ النُّجُومِ.', img:'SPACE', vocab:'دَوَّنَا: كَتَبَا وَسَجَّلَا بِدِقَّةٍ وَتَرْتِيبٍ.', think:'لِمَاذَا يُعَدُّ تَدْوِينُ الْمُلَاحَظَاتِ خُطْوَةً أَسَاسِيَّةً لِلْبَاحِثِ؟' },
-      { text:'عَادَ سَامِرٌ إِلَى الْأَرْضِ مُتَحَمِّسًا لِقِرَاءَةِ الْمَزِيدِ مِنْ كُتُبِ الْفَلَكِ وَالْعُلُومِ لِيُحَقِّقَ حُلْمَهُ فِي الْمُسْتَقْبَلِ.', img:'MAGIC', vocab:'الْفَلَكِ: الْعِلْمُ الَّذِي يَدْرُسُ الْأَجْرَامَ السَّمَاوِيَّةَ وَحَرَكَتَهَا.', think:'كَيْفَ يُمْكِنُ لِلتَّعَلُّمِ الذَّاتِيِّ أَنْ يُقَرِّبَنَا مِنْ أَهْدَافِنَا؟' }
+      { text:'عَادَ سَامِرٌ إِلَى الْأَرْضِ مُتَحَمِّسًا لِقِرَاءَةِ الْمَزِيدِ مِنْ كُتُبِ الْفَلَكِ وَالْعُلُومِ لِيُحَقِّقَ حُلْمَهُ فِي الْمُسْتَقْبَلِ.', img:'MAGIC_STORY', vocab:'الْفَلَكِ: الْعِلْمُ الَّذِي يَدْرُسُ الْأَجْرَامَ السَّمَاوِيَّةَ وَحَرَكَتَهَا.', think:'كَيْفَ يُمْكِنُ لِلتَّعَلُّمِ الذَّاتِيِّ أَنْ يُقَرِّبَنَا مِنْ أَهْدَافِنَا؟' }
     ],
     quiz:[
       { q:'مَنْ رَافَقَ سَامِرًا فِي رِحْلَتِهِ الْفَضَائِيَّةِ؟', opts:['الرُّوبُوتُ الذَّكِيُّ','الْعُصْفُورُ الْأَزْرَقُ','السُّلَحْفَاةُ الْبَحْرِيَّةُ'], ans:0 },
@@ -606,12 +714,12 @@ const PRESET_STORIES = [
     ]
   },
   {
-    id:'preset-4', title:'لَيْلَى وَأَسْرَارُ أَعْمَاقِ الْبِحَارِ', category:'الْبِيئَةُ وَالْمُغَامَرَةُ', ageBand:'8-10', theme:'SEA',
+    id:'preset-4', title:'لَيْلَى وَأَسْرَارُ أَعْمَاقِ الْبِحَارِ', category:'الْبِيئَةُ وَالْمُغَامَرَةُ', ageBand:'8-10', theme:'OCEAN_STORY',
     summary:'تَغُوصُ لَيْلَى فِي الْمِيَاهِ الْفَيْرُوزِيَّةِ الصَّافِيَةِ لِتَتَعَرَّفَ عَلَى السُّلَحْفَاةِ الْبَحْرِيَّةِ وَالشِّعَابِ الْمَرْجَانِيَّةِ.',
     pages:[
-      { text:'ارْتَدَتْ لَيْلَى خُوذَةَ الْغَوْصِ الشَّفَّافَةَ، وَنَزَلَتْ بِهُدُوءٍ إِلَى أَعْمَاقِ الْبَحْرِ الْفَيْرُوزِيِّ الصَّافِي حَيْثُ تَتَلَأْلَأُ أَشِعَّةُ الشَّمْسِ.', img:'SEA', vocab:'الشَّفَّافَةَ: الَّتِي يَنْفُذُ مِنْ خِلَالِهَا الضَّوْءُ فَتُرَى مَا وَرَاءَهَا.', think:'مَا الَّذِي يَجْعَلُ الْغَوْصَ فِي الْمِيَاهِ الصَّافِيَةِ مُمْتِعًا وَآمِنًا؟' },
-      { text:'رَحَّبَتْ بِهَا سَمَكَةُ الْمُهَرِّجِ الْبُرْتُقَالِيَّةُ وَسُلَحْفَاةٌ بَحْرِيَّةٌ لَطِيفَةٌ تَسْبَحُ بَيْنَ الشِّعَابِ الْمَرْجَانِيَّةِ الْمُلَوَّنَةِ.', img:'SEA', vocab:'الشِّعَابِ الْمَرْجَانِيَّةِ: تَكْوِينَاتٌ بَحْرِيَّةٌ تُشَكِّلُ مَوْطِنًا لِكَائِنَاتٍ كَثِيرَةٍ.', think:'كَيْفَ تَتَكَيَّفُ الْكَائِنَاتُ الْبَحْرِيَّةُ مَعَ بِيئَتِهَا تَحْتَ الْمَاءِ؟' },
-      { text:'تَعَلَّمَتْ لَيْلَى أَنَّ نَظَافَةَ الْبِحَارِ وَعَدَمَ إِلْقَاءِ النُّفَايَاتِ فِيهَا يَحْمِي هَذِهِ الْكَائِنَاتِ الْجَمِيلَةَ.', img:'SEA', vocab:'النُّفَايَاتِ: الْمَخَلَّفَاتُ الَّتِي يَجِبُ التَّخَلُّصُ مِنْهَا بِطَرِيقَةٍ سَلِيمَةٍ.', think:'مَا السُّلُوكِيَّاتُ الْيَوْمِيَّةُ الَّتِي تُسَاعِدُ فِي حِمَايَةِ الْبِيئَةِ؟' },
+      { text:'ارْتَدَتْ لَيْلَى خُوذَةَ الْغَوْصِ الشَّفَّافَةَ، وَنَزَلَتْ بِهُدُوءٍ إِلَى أَعْمَاقِ الْبَحْرِ الْفَيْرُوزِيِّ الصَّافِي حَيْثُ تَتَلَأْلَأُ أَشِعَّةُ الشَّمْسِ.', img:'OCEAN_STORY', vocab:'الشَّفَّافَةَ: الَّتِي يَنْفُذُ مِنْ خِلَالِهَا الضَّوْءُ فَتُرَى مَا وَرَاءَهَا.', think:'مَا الَّذِي يَجْعَلُ الْغَوْصَ فِي الْمِيَاهِ الصَّافِيَةِ مُمْتِعًا وَآمِنًا؟' },
+      { text:'رَحَّبَتْ بِهَا سَمَكَةُ الْمُهَرِّجِ الْبُرْتُقَالِيَّةُ وَسُلَحْفَاةٌ بَحْرِيَّةٌ لَطِيفَةٌ تَسْبَحُ بَيْنَ الشِّعَابِ الْمَرْجَانِيَّةِ الْمُلَوَّنَةِ.', img:'OCEAN_STORY', vocab:'الشِّعَابِ الْمَرْجَانِيَّةِ: تَكْوِينَاتٌ بَحْرِيَّةٌ تُشَكِّلُ مَوْطِنًا لِكَائِنَاتٍ كَثِيرَةٍ.', think:'كَيْفَ تَتَكَيَّفُ الْكَائِنَاتُ الْبَحْرِيَّةُ مَعَ بِيئَتِهَا تَحْتَ الْمَاءِ؟' },
+      { text:'تَعَلَّمَتْ لَيْلَى أَنَّ نَظَافَةَ الْبِحَارِ وَعَدَمَ إِلْقَاءِ النُّفَايَاتِ فِيهَا يَحْمِي هَذِهِ الْكَائِنَاتِ الْجَمِيلَةَ.', img:'OCEAN_STORY', vocab:'النُّفَايَاتِ: الْمَخَلَّفَاتُ الَّتِي يَجِبُ التَّخَلُّصُ مِنْهَا بِطَرِيقَةٍ سَلِيمَةٍ.', think:'مَا السُّلُوكِيَّاتُ الْيَوْمِيَّةُ الَّتِي تُسَاعِدُ فِي حِمَايَةِ الْبِيئَةِ؟' },
       { text:'عَادَتْ لَيْلَى إِلَى الشَّاطِئِ وَهِيَ تَحْمِلُ رِسَالَةً وَاضِحَةً: لِنُحَافِظْ جَمِيعًا عَلَى جَمَالِ الْبِحَارِ وَنَقَائِهَا.', img:'HERO', vocab:'نَقَائِهَا: صَفَائِهَا وَخُلُوِّهَا مِنَ التَّلَوُّثِ.', think:'كَيْفَ يُمْكِنُ لِلطُّلَّابِ نَشْرُ الْوَعْيِ الْبِيئِيِّ فِي مَدْرَسَتِهِمْ؟' }
     ],
     quiz:[
@@ -621,12 +729,12 @@ const PRESET_STORIES = [
     ]
   },
   {
-    id:'preset-5', title:'أَلْوَانُ التَّعَاوُنِ فِي مَدِينَتِنَا', category:'الْعَمَلُ الْجَمَاعِيُّ', ageBand:'11-14', theme:'CITY',
+    id:'preset-5', title:'أَلْوَانُ التَّعَاوُنِ فِي مَدِينَتِنَا', category:'الْعَمَلُ الْجَمَاعِيُّ', ageBand:'11-14', theme:'RAINBOW',
     summary:'يَتَعَاوَنُ سَلِيمٌ وَلَيْلَى وَالرُّوبُوتُ لِرَسْمِ قَوْسِ قُزَحَ كَبِيرٍ يُزَيِّنُ جِدَارَ الْحَيِّ الْجَمِيلِ.',
     pages:[
-      { text:'قَرَّرَ سَلِيمٌ وَلَيْلَى تَزْيِينَ جِدَارِ السَّاحَةِ فِي مَدِينَتِهِمَا الْجَمِيلَةِ بِلَوْحَةٍ فَنِّيَّةٍ مَلِيئَةٍ بِالْحَيَاةِ وَالْأَمَلِ.', img:'CITY', vocab:'السَّاحَةِ: الْمِسَاحَةُ الْمَفْتُوحَةُ الْوَاسِعَةُ فِي الْحَيِّ أَوِ الْمَدِينَةِ.', think:'كَيْفَ يُغَيِّرُ الْفَنُّ الْجَمِيلُ مَظْهَرَ الْأَمَاكِنِ الْعَامَّةِ؟' },
-      { text:'أَحْضَرَا الْفُرْشَاةَ وَالْأَلْوَانَ الزَّاهِيَةَ، وَانْضَمَّ إِلَيْهِمَا الرُّوبُوتُ الصَّغِيرُ لِيُسَاعِدَهُمَا فِي رَسْمِ قَوْسِ قُزَحَ مُشْرِقٍ.', img:'CITY', vocab:'الزَّاهِيَةَ: الْمُشْرِقَةَ الْوَاضِحَةَ الْجَذَّابَةَ.', think:'كَيْفَ نُوَزِّعُ الْأَدْوَارَ بِعَدَالَةٍ عِنْدَ الْعَمَلِ ضِمْنَ فَرِيقٍ؟' },
-      { text:'رَسَمَ كُلُّ وَاحِدٍ مِنْهُمْ جُزْءًا مِنَ اللَّوْحَةِ بِإِتْقَانٍ وَسَعَادَةٍ، فَتَحَوَّلَ الْجِدَارُ الْقَدِيمُ إِلَى تُحْفَةٍ فَنِّيَّةٍ رَائِعَةٍ.', img:'CITY', vocab:'بِإِتْقَانٍ: بِدِقَّةٍ عَالِيَةٍ وَحِرْصٍ عَلَى الْجَوْدَةِ.', think:'لِمَاذَا يَجِبُ أَنْ نُتْقِنَ عَمَلَنَا حَتَّى فِي أَبْسَطِ التَّفَاصِيلِ؟' },
+      { text:'قَرَّرَ سَلِيمٌ وَلَيْلَى تَزْيِينَ جِدَارِ السَّاحَةِ فِي مَدِينَتِهِمَا الْجَمِيلَةِ بِلَوْحَةٍ فَنِّيَّةٍ مَلِيئَةٍ بِالْحَيَاةِ وَالْأَمَلِ.', img:'RAINBOW', vocab:'السَّاحَةِ: الْمِسَاحَةُ الْمَفْتُوحَةُ الْوَاسِعَةُ فِي الْحَيِّ أَوِ الْمَدِينَةِ.', think:'كَيْفَ يُغَيِّرُ الْفَنُّ الْجَمِيلُ مَظْهَرَ الْأَمَاكِنِ الْعَامَّةِ؟' },
+      { text:'أَحْضَرَا الْفُرْشَاةَ وَالْأَلْوَانَ الزَّاهِيَةَ، وَانْضَمَّ إِلَيْهِمَا الرُّوبُوتُ الصَّغِيرُ لِيُسَاعِدَهُمَا فِي رَسْمِ قَوْسِ قُزَحَ مُشْرِقٍ.', img:'RAINBOW', vocab:'الزَّاهِيَةَ: الْمُشْرِقَةَ الْوَاضِحَةَ الْجَذَّابَةَ.', think:'كَيْفَ نُوَزِّعُ الْأَدْوَارَ بِعَدَالَةٍ عِنْدَ الْعَمَلِ ضِمْنَ فَرِيقٍ؟' },
+      { text:'رَسَمَ كُلُّ وَاحِدٍ مِنْهُمْ جُزْءًا مِنَ اللَّوْحَةِ بِإِتْقَانٍ وَسَعَادَةٍ، فَتَحَوَّلَ الْجِدَارُ الْقَدِيمُ إِلَى تُحْفَةٍ فَنِّيَّةٍ رَائِعَةٍ.', img:'RAINBOW', vocab:'بِإِتْقَانٍ: بِدِقَّةٍ عَالِيَةٍ وَحِرْصٍ عَلَى الْجَوْدَةِ.', think:'لِمَاذَا يَجِبُ أَنْ نُتْقِنَ عَمَلَنَا حَتَّى فِي أَبْسَطِ التَّفَاصِيلِ؟' },
       { text:'أَعْجِبَ أَهْلُ الْمَدِينَةِ بِاللَّوْحَةِ، وَأَدْرَكَ الْأَطْفَالُ أَنَّ التَّعَاوُنَ يَجْعَلُ كُلَّ عَمَلٍ أَجْمَلَ وَأَسْهَلَ.', img:'HERO', vocab:'أَدْرَكَ: تَبَيَّنَ وَعَرَفَ حَقِيقَةَ الْأَمْرِ.', think:'مَا أَكْبَرُ إِنْجَازٍ جَمَاعِيٍّ شَارَكْتَ فِيهِ مَعَ زُمَلَائِكَ؟' }
     ],
     quiz:[
@@ -636,13 +744,13 @@ const PRESET_STORIES = [
     ]
   },
   {
-    id:'preset-6', title:'الْكِتَابُ السِّحْرِيُّ وَقَلْعَةُ الْخَيَالِ', category:'حُبُّ الْقِرَاءَةِ', ageBand:'11-14', theme:'MAGIC',
+    id:'preset-6', title:'الْكِتَابُ السِّحْرِيُّ وَقَلْعَةُ الْخَيَالِ', category:'حُبُّ الْقِرَاءَةِ', ageBand:'11-14', theme:'MAGIC_STORY',
     summary:'عِنْدَمَا يَفْتَحُ سَلِيمٌ كِتَابَهُ الْمُفَضَّلَ تَحْتَ النُّجُومِ، تَنْطَلِقُ قَلْعَةُ الْمَعْرِفَةِ وَالْخَيَالِ.',
     pages:[
-      { text:'فِي مَسَاءٍ هَادِئٍ تَتَلَأْلَأُ فِيهِ النُّجُومُ، جَلَسَ سَلِيمٌ عَلَى الْعُشْبِ الْأَخْضَرِ وَفَتَحَ كِتَابَ الْحِكَايَاتِ الذَّهَبِيَّ.', img:'MAGIC', vocab:'هَادِئٍ: سَاكِنٍ مُطْمَئِنٍّ خَالٍ مِنَ الضَّجِيجِ.', think:'كَيْفَ تَخْتَارُ كِتَابًا يُنَاسِبُ اهْتِمَامَاتِكَ الْقِرَائِيَّةَ؟' },
-      { text:'تَلَأْلَأَتْ صَفَحَاتُ الْكِتَابِ بِنُورٍ دَافِئٍ، وَظَهَرَتْ قَلْعَةُ الْخَيَالِ الشَّامِخَةُ تُحِيطُ بِهَا النُّجُومُ وَالْأَزْهَارُ.', img:'MAGIC', vocab:'الشَّامِخَةُ: الْعَالِيَةُ الرَّاسِخَةُ الْعَظِيمَةُ.', think:'كَيْفَ يُسَاعِدُ الْخَيَالُ الْمُوَجَّهُ عَلَى ابْتِكَارِ أَفْكَارٍ جَدِيدَةٍ؟' },
+      { text:'فِي مَسَاءٍ هَادِئٍ تَتَلَأْلَأُ فِيهِ النُّجُومُ، جَلَسَ سَلِيمٌ عَلَى الْعُشْبِ الْأَخْضَرِ وَفَتَحَ كِتَابَ الْحِكَايَاتِ الذَّهَبِيَّ.', img:'MAGIC_STORY', vocab:'هَادِئٍ: سَاكِنٍ مُطْمَئِنٍّ خَالٍ مِنَ الضَّجِيجِ.', think:'كَيْفَ تَخْتَارُ كِتَابًا يُنَاسِبُ اهْتِمَامَاتِكَ الْقِرَائِيَّةَ؟' },
+      { text:'تَلَأْلَأَتْ صَفَحَاتُ الْكِتَابِ بِنُورٍ دَافِئٍ، وَظَهَرَتْ قَلْعَةُ الْخَيَالِ الشَّامِخَةُ تُحِيطُ بِهَا النُّجُومُ وَالْأَزْهَارُ.', img:'MAGIC_STORY', vocab:'الشَّامِخَةُ: الْعَالِيَةُ الرَّاسِخَةُ الْعَظِيمَةُ.', think:'كَيْفَ يُسَاعِدُ الْخَيَالُ الْمُوَجَّهُ عَلَى ابْتِكَارِ أَفْكَارٍ جَدِيدَةٍ؟' },
       { text:'سَافَرَ سَلِيمٌ بِعَقْلِهِ عَبْرَ الصَّفَحَاتِ، فَتَعَلَّمَ كَلِمَاتٍ عَرَبِيَّةً فَصِيحَةً وَحِكَمًا نَافِعَةً مِنْ كُلِّ قِصَّةٍ.', img:'HERO', vocab:'حِكَمًا: عِبَارَاتٍ قَصِيرَةً تَحْمِلُ خِبْرَةً وَتَوْجِيهًا نَافِعًا.', think:'مَا الْحِكْمَةُ الَّتِي أَعْجَبَتْكَ فِي قِصَّةٍ قَرَأْتَهَا مُؤَخَّرًا؟' },
-      { text:'ابْتَسَمَ سَلِيمٌ وَقَالَ: إِنَّ الْقِرَاءَةَ هِيَ الْمِفْتَاحُ السِّحْرِيُّ الَّذِي يَفْتَحُ لَنَا أَبْوَابَ الْعَالَمِ كُلِّهِ.', img:'MAGIC', vocab:'الْمِفْتَاحُ: الْوَسِيلَةُ الَّتِي تُتِيحُ الْوُصُولَ إِلَى الْمَعْرِفَةِ.', think:'كَيْفَ نَجْعَلُ الْقِرَاءَةَ عَادَةً يَوْمِيَّةً ثَابِتَةً فِي حَيَاتِنَا؟' }
+      { text:'ابْتَسَمَ سَلِيمٌ وَقَالَ: إِنَّ الْقِرَاءَةَ هِيَ الْمِفْتَاحُ السِّحْرِيُّ الَّذِي يَفْتَحُ لَنَا أَبْوَابَ الْعَالَمِ كُلِّهِ.', img:'MAGIC_STORY', vocab:'الْمِفْتَاحُ: الْوَسِيلَةُ الَّتِي تُتِيحُ الْوُصُولَ إِلَى الْمَعْرِفَةِ.', think:'كَيْفَ نَجْعَلُ الْقِرَاءَةَ عَادَةً يَوْمِيَّةً ثَابِتَةً فِي حَيَاتِنَا؟' }
     ],
     quiz:[
       { q:'مَاذَا فَتَحَ سَلِيمٌ فِي الْمَسَاءِ الْهَادِئِ؟', opts:['كِتَابَ الْحِكَايَاتِ الذَّهَبِيَّ','صُنْدُوقَ الْأَلْعَابِ','نَافِذَةَ الْغُرْفَةِ'], ans:0 },
@@ -662,8 +770,8 @@ const BADGES_DEF = [
 let state = { stars:0, badges:[], sfx:true, ageBand:'all', guideHidden:false, onlineCatalog:[] };
 let draft = { mode:'creative', hero:'سَلِيمٌ', theme:'GARDEN', title:'' };
 let composerPages = [
-  { text:'', img:'GARDEN', vocab:'', think:'' },
-  { text:'', img:'FOREST', vocab:'', think:'' }
+  { text:'', img:'BIRD', vocab:'', think:'' },
+  { text:'', img:'FRIENDS', vocab:'', think:'' }
 ];
 let wizStep = 0;
 let activeStory = null;
@@ -921,6 +1029,7 @@ function renderReaderPage(){
   const p = activeStory.pages[pageIndex];
   const imgKey = p.img || detectSceneKey(p.text, activeStory.theme || 'GARDEN');
   p.img = imgKey;
+  $('readerStage').dataset.scene = imgKey;
   $('readImage').src = getSceneImage(imgKey);
   $('pageIndicator').textContent = `${pageIndex + 1} / ${activeStory.pages.length}`;
 
@@ -1486,40 +1595,40 @@ function wizMove(dir){
   const title = (draft.title || '').trim() || `مُغَامَرَةُ ${h} الْعَجِيبَةُ`;
   const templates = {
     GARDEN: [
-      { text:`فِي صَبَاحٍ مُشْرِقٍ جَمِيلٍ، انْطَلَقَ ${h} إِلَى الْحَدِيقَةِ الْمُزْهِرَةِ لِيَتَأَمَّلَ الْأَزْهَارَ وَالْأَشْجَارَ الْخَضْرَاءَ.`, img:'GARDEN' },
-      { text:`وَجَدَ ${h} عُصْفُورًا صَغِيرًا يَحْتَاجُ إِلَى الْمُسَاعَدَةِ، فَقَدَّمَ لَهُ الْمَاءَ وَالْعِنَايَةَ بِكُلِّ رِفْقٍ وَلُطْفٍ.`, img:'GARDEN' },
+      { text:`فِي صَبَاحٍ مُشْرِقٍ جَمِيلٍ، انْطَلَقَ ${h} إِلَى الْحَدِيقَةِ الْمُزْهِرَةِ لِيَتَأَمَّلَ الْأَزْهَارَ وَالْأَشْجَارَ الْخَضْرَاءَ.`, img:'BIRD' },
+      { text:`وَجَدَ ${h} عُصْفُورًا صَغِيرًا يَحْتَاجُ إِلَى الْمُسَاعَدَةِ، فَقَدَّمَ لَهُ الْمَاءَ وَالْعِنَايَةَ بِكُلِّ رِفْقٍ وَلُطْفٍ.`, img:'BIRD' },
       { text:`تَعَاوَنَ الْأَصْدِقَاءُ فِي الْحَدِيقَةِ حَتَّى اسْتَعَادَ الْعُصْفُورُ نَشَاطَهُ وَحَلَّقَ سَعِيدًا فِي السَّمَاءِ.`, img:'HERO' },
-      { text:`عَادَ ${h} إِلَى مَنْزِلِهِ مَسْرُورًا؛ فَقَدْ تَعَلَّمَ أَنَّ الرَّحْمَةَ وَالْعَطَاءَ يَصْنَعَانِ السَّعَادَةَ.`, img:'MAGIC' }
+      { text:`عَادَ ${h} إِلَى مَنْزِلِهِ مَسْرُورًا؛ فَقَدْ تَعَلَّمَ أَنَّ الرَّحْمَةَ وَالْعَطَاءَ يَصْنَعَانِ السَّعَادَةَ.`, img:'MAGIC_STORY' }
     ],
     FOREST: [
-      { text:`دَخَلَ ${h} إِلَى الْغَابَةِ الْمَسْحُورَةِ حَيْثُ تَتَلَأْلَأُ أَشِعَّةُ الشَّمْسِ بَيْنَ الْأَغْصَانِ وَالْفَرَاشَاتِ.`, img:'FOREST' },
-      { text:`التَقَى ${h} بِالْأَرْنَبِ الْأَبْيَضِ وَالثَّعْلَبِ اللَّطِيفِ، وَتَبَادَلُوا التَّحِيَّةَ بِابْتِسَامَةٍ صَادِقَةٍ.`, img:'FOREST' },
+      { text:`دَخَلَ ${h} إِلَى الْغَابَةِ الْمَسْحُورَةِ حَيْثُ تَتَلَأْلَأُ أَشِعَّةُ الشَّمْسِ بَيْنَ الْأَغْصَانِ وَالْفَرَاشَاتِ.`, img:'FRIENDS' },
+      { text:`التَقَى ${h} بِالْأَرْنَبِ الْأَبْيَضِ وَالثَّعْلَبِ اللَّطِيفِ، وَتَبَادَلُوا التَّحِيَّةَ بِابْتِسَامَةٍ صَادِقَةٍ.`, img:'FRIENDS' },
       { text:`تَشَارَكُوا جَمِيعًا فِي اسْتِكْشَافِ مَمَرَّاتِ الْغَابَةِ وَمُسَاعَدَةِ كُلِّ مَنْ يَحْتَاجُ إِلَى الْعَوْنِ.`, img:'HERO' },
-      { text:`أَدْرَكَ ${h} أَنَّ الصَّدَاقَةَ الْحَقِيقِيَّةَ كَنْزٌ ثَمِينٌ يَزْدَادُ جَمَالًا بِالتَّعَاوُنِ.`, img:'FOREST' }
+      { text:`أَدْرَكَ ${h} أَنَّ الصَّدَاقَةَ الْحَقِيقِيَّةَ كَنْزٌ ثَمِينٌ يَزْدَادُ جَمَالًا بِالتَّعَاوُنِ.`, img:'FRIENDS' }
     ],
     SPACE: [
       { text:`انْطَلَقَ ${h} فِي رِحْلَةٍ عِلْمِيَّةٍ رَائِعَةٍ نَحْوَ الْفَضَاءِ الْوَاسِعِ بَيْنَ النُّجُومِ وَالْكَوَاكِبِ.`, img:'SPACE' },
       { text:`تَأَمَّلَ ${h} كَوْكَبَ الْأَرْضِ الْأَزْرَقَ مِنْ أَعْلَى، وَشَاهَدَ الْكَوَاكِبَ ذَاتَ الْحَلَقَاتِ الْمُضِيئَةِ.`, img:'SPACE' },
       { text:`سَجَّلَ ${h} مَعْلُومَاتٍ قَيِّمَةً عَنِ الْفَلَكِ وَالْعُلُومِ بِمُسَاعَدَةِ الرُّوبُوتِ الذَّكِيِّ.`, img:'SPACE' },
-      { text:`عَادَ ${h} لِيُشَارِكَ زُمَلَاءَهُ مَا تَعَلَّمَهُ، مُؤْمِنًا بِأَنَّ الْعِلْمَ يُنِيرُ الْمُسْتَقْبَلَ.`, img:'MAGIC' }
+      { text:`عَادَ ${h} لِيُشَارِكَ زُمَلَاءَهُ مَا تَعَلَّمَهُ، مُؤْمِنًا بِأَنَّ الْعِلْمَ يُنِيرُ الْمُسْتَقْبَلَ.`, img:'MAGIC_STORY' }
     ],
     SEA: [
-      { text:`غَاصَ ${h} فِي أَعْمَاقِ الْبَحْرِ الْفَيْرُوزِيِّ الصَّافِي لِيَسْتَكْشِفَ عَالَمَ الشِّعَابِ الْمَرْجَانِيَّةِ.`, img:'SEA' },
-      { text:`رَحَّبَتِ السُّلَحْفَاةُ الْبَحْرِيَّةُ وَالْأَسْمَاكُ الْمُلَوَّنَةُ بـ ${h} فِي جَوْلَةٍ بَحْرِيَّةٍ مُمْتِعَةٍ.`, img:'SEA' },
-      { text:`تَعَلَّمَ ${h} أَهَمِّيَّةَ الْحِفَاظِ عَلَى نَظَافَةِ الْبِحَارِ وَحِمَايَةِ الْبِيئَةِ الْبَحْرِيَّةِ.`, img:'SEA' },
+      { text:`غَاصَ ${h} فِي أَعْمَاقِ الْبَحْرِ الْفَيْرُوزِيِّ الصَّافِي لِيَسْتَكْشِفَ عَالَمَ الشِّعَابِ الْمَرْجَانِيَّةِ.`, img:'OCEAN_STORY' },
+      { text:`رَحَّبَتِ السُّلَحْفَاةُ الْبَحْرِيَّةُ وَالْأَسْمَاكُ الْمُلَوَّنَةُ بـ ${h} فِي جَوْلَةٍ بَحْرِيَّةٍ مُمْتِعَةٍ.`, img:'OCEAN_STORY' },
+      { text:`تَعَلَّمَ ${h} أَهَمِّيَّةَ الْحِفَاظِ عَلَى نَظَافَةِ الْبِحَارِ وَحِمَايَةِ الْبِيئَةِ الْبَحْرِيَّةِ.`, img:'OCEAN_STORY' },
       { text:`خَرَجَ ${h} مِنَ الْبَحْرِ وَهُوَ عَازِمٌ عَلَى نَشْرِ الْوَعْيِ الْبِيئِيِّ بَيْنَ جَمِيعِ أَصْدِقَائِهِ.`, img:'HERO' }
     ],
     CITY: [
-      { text:`فِي سَاحَةِ الْمَدِينَةِ الْجَمِيلَةِ، بَدَأَ ${h} مَشْرُوعًا فَنِّيًّا لِرَسْمِ قَوْسِ قُزَحَ كَبِيرٍ.`, img:'CITY' },
-      { text:`تَعَاوَنَ الْأَصْدِقَاءُ بِحَمَاسٍ وَإِتْقَانٍ فِي تَلْوِينِ اللَّوْحَةِ بِأَجْمَلِ الْأَلْوَانِ الزَّاهِيَةِ.`, img:'CITY' },
-      { text:`تَحَوَّلَ الْمَكَانُ إِلَى مَعْرِضٍ فَنِّيٍّ مَبْهُورٍ أَسْعَدَ كُلَّ مَنْ مَرَّ بِالسَّاحَةِ.`, img:'CITY' },
+      { text:`فِي سَاحَةِ الْمَدِينَةِ الْجَمِيلَةِ، بَدَأَ ${h} مَشْرُوعًا فَنِّيًّا لِرَسْمِ قَوْسِ قُزَحَ كَبِيرٍ.`, img:'RAINBOW' },
+      { text:`تَعَاوَنَ الْأَصْدِقَاءُ بِحَمَاسٍ وَإِتْقَانٍ فِي تَلْوِينِ اللَّوْحَةِ بِأَجْمَلِ الْأَلْوَانِ الزَّاهِيَةِ.`, img:'RAINBOW' },
+      { text:`تَحَوَّلَ الْمَكَانُ إِلَى مَعْرِضٍ فَنِّيٍّ مَبْهُورٍ أَسْعَدَ كُلَّ مَنْ مَرَّ بِالسَّاحَةِ.`, img:'RAINBOW' },
       { text:`تَعَلَّمَ ${h} أَنَّ الْإِبْدَاعَ وَالتَّعَاوُنَ يَصْنَعَانِ الْجَمَالَ فِي كُلِّ مَكَانٍ.`, img:'HERO' }
     ],
     MAGIC: [
-      { text:`تَحْتَ سَمَاءِ اللَّيْلِ الْمُزَيَّنَةِ بِالنُّجُومِ، فَتَحَ ${h} كِتَابَ الْحِكَايَاتِ السِّحْرِيَّ.`, img:'MAGIC' },
-      { text:'أَشْرَقَتْ قَلْعَةُ الْخَيَالِ مِنْ بَيْنِ الصَّفَحَاتِ حَامِلَةً أَجْمَلَ الْقِصَصِ وَالْحِكَمِ.', img:'MAGIC' },
+      { text:`تَحْتَ سَمَاءِ اللَّيْلِ الْمُزَيَّنَةِ بِالنُّجُومِ، فَتَحَ ${h} كِتَابَ الْحِكَايَاتِ السِّحْرِيَّ.`, img:'MAGIC_STORY' },
+      { text:'أَشْرَقَتْ قَلْعَةُ الْخَيَالِ مِنْ بَيْنِ الصَّفَحَاتِ حَامِلَةً أَجْمَلَ الْقِصَصِ وَالْحِكَمِ.', img:'MAGIC_STORY' },
       { text:`قَرَأَ ${h} بِشَغَفٍ وَتَعَلَّمَ أَسَالِيبَ رَائِعَةً فِي اللُّغَةِ الْعَرَبِيَّةِ الْفُصْحَى.`, img:'HERO' },
-      { text:`أَدْرَكَ ${h} أَنَّ الْكِتَابَ خَيْرُ صَدِيقٍ يَأْخُذُنَا فِي رِحْلَاتٍ لَا تَنْتَهِي.`, img:'MAGIC' }
+      { text:`أَدْرَكَ ${h} أَنَّ الْكِتَابَ خَيْرُ صَدِيقٍ يَأْخُذُنَا فِي رِحْلَاتٍ لَا تَنْتَهِي.`, img:'MAGIC_STORY' }
     ]
   };
   const newStory = {
@@ -1562,7 +1671,7 @@ function renderComposerPages(){
 }
 
 function addComposerPage(){
-  composerPages.push({ text:'', img:'GARDEN', vocab:'', think:'' });
+  composerPages.push({ text:'', img:'BIRD', vocab:'', think:'' });
   renderComposerPages();
 }
 
@@ -1730,6 +1839,8 @@ $('appLogoImg').src = IMAGES.ICON;
 $('heroBannerImg').src = IMAGES.HERO;
 $('catalogEndpoint').value = catalogUrl();
 loadState();
+/* Keep the quick guide available below the illustrated home shelves. */
+$('home').appendChild($('studentQuickGuide'));
 renderHome();
 </script>
 </body>
