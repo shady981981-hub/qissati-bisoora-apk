@@ -4,7 +4,17 @@ plugins {
 
 android {
     namespace 'ps.khanyounis.qissati'
-    compileSdk 34
+    compileSdk 35
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['.']
+            java.exclude 'build/**', '.gradle/**', 'github/**', '.github/**'
+            assets.srcDirs = ['.']
+            assets.exclude '**/*.java', '**/*.gradle', '**/*.yml', '**/*.yaml', '**/*.md', '**/*.xml', '.github/**', 'github/**', 'build/**', '.gradle/**', '**/*.png~'
+        }
+    }
 
     defaultConfig {
         applicationId "ps.khanyounis.qissati"
