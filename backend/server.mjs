@@ -2,15 +2,92 @@ import http from 'node:http';
 import { randomUUID } from 'node:crypto';
 const port = Number(process.env.PORT || 3000);
 const limit = new Map();
+const studioLimit = new Map();
 function send(res,status,data){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'Content-Type, X-Qissati-Access','Access-Control-Allow-Methods':'POST, OPTIONS'});res.end(JSON.stringify(data));}
+
+async function readLimited(req,maxBytes){
+  const chunks=[];let size=0;
+  for await(const chunk of req){size+=chunk.length;if(size>maxBytes)throw new Error('body_too_large');chunks.push(chunk);}
+  return Buffer.concat(chunks);
+}
 http.createServer(async (req,res)=>{
   const pathname=new URL(req.url||'/', 'http://localhost').pathname;
   if(req.method==='OPTIONS'){res.writeHead(204,{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'Content-Type, X-Qissati-Access','Access-Control-Allow-Methods':'POST, OPTIONS'});return res.end();}
   if(pathname==='/health')return send(res,200,{ok:true,configured:!!process.env.OPENAI_API_KEY});
+  if(pathname==='/studio/generate'){
+    if(req.method!=='POST')return send(res,405,{code:'method_not_allowed'});
+    if(!process.env.OPENAI_API_KEY)return send(res,503,{code:'service_not_configured'});
+    const studioOrigin=process.env.QISSATI_STUDIO_ORIGIN||'https://qissati-bisoora-web.buzzygerbil33.chatgpt.site';
+    if(req.headers.origin!==studioOrigin)return send(res,403,{code:'studio_origin_not_allowed'});
+    if(process.env.QISSATI_ACCESS_TOKEN && req.headers['x-qissati-access']!==process.env.QISSATI_ACCESS_TOKEN)return send(res,401,{code:'unauthorized'});
+    const ip=(req.headers['x-forwarded-for']||req.socket.remoteAddress||'').toString().split(',').pop().trim();
+    const now=Date.now();let hit=studioLimit.get(ip)||{count:0,until:now+10*60*1000};
+    if(now>hit.until){hit={count:0,until:now+10*60*1000};}
+    if(++hit.count>3)return send(res,429,{code:'studio_rate_limited'});
+    studioLimit.set(ip,hit);
+    if(studioLimit.size>10000)for(const [key,val] of studioLimit){if(val.until<now)studioLimit.delete(key);}
+    const contentType=String(req.headers['content-type']||'');
+    if(!contentType.toLowerCase().startsWith('multipart/form-data;'))return send(res,400,{code:'multipart_required'});
+    let form;
+    try{
+      const raw=await readLimited(req,8*1024*1024);
+      form=await new Request('http://localhost/studio/generate',{method:'POST',headers:{'content-type':contentType},body:raw}).formData();
+    }catch(error){return send(res,error?.message==='body_too_large'?413:400,{code:error?.message==='body_too_large'?'image_too_large':'invalid_request'});}
+    const image=form.get('image');
+    const mode=String(form.get('mode')||'');
+    const profession=String(form.get('profession')||'');
+    const style=String(form.get('style')||'cinematic');
+    const guardian=form.get('guardianConsent')==='yes';
+    const privacy=form.get('privacyNotice')==='yes';
+    const jobs={doctor:'طبيب',engineer:'مهندس',teacher:'معلم',programmer:'مبرمج',scientist:'عالِم',astronaut:'رائد فضاء',pilot:'طيار',artist:'فنان',architect:'مهندس معماري',nurse:'ممرض',farmer:'مزارع',chef:'طاهٍ',robotics:'متخصص روبوتات',athlete:'رياضي',vet:'طبيب بيطري'};
+    const styles={cinematic:'أسلوب فيلم رسوم متحركة ثلاثي الأبعاد، ألوان سينمائية دافئة وتفاصيل لطيفة',clay:'شخصية ثلاثية الأبعاد من الطين اللامع',storybook:'رسوم قصصية ثلاثية الأبعاد ناعمة ومضيئة'};
+    if(!image||typeof image.arrayBuffer!=='function'||image.size<1||image.size>6*1024*1024||!['image/jpeg','image/png','image/webp'].includes(image.type))return send(res,400,{code:'invalid_image'});
+    if(!guardian||!privacy)return send(res,400,{code:'guardian_consent_required'});
+    if(!Object.prototype.hasOwnProperty.call(jobs,profession)||!Object.prototype.hasOwnProperty.call(styles,style)||!['3d','10','20','30'].includes(mode))return send(res,400,{code:'invalid_studio_options'});
+    let prompt;
+    if(mode==='3d'){
+      prompt='Create one polished, child-safe 3D animated portrait based on the reference photo. Preserve the same person’s recognizable face, current age, skin tone, hair and general appearance. Show them confidently working as a '+jobs[profession]+' in an imaginative, warm, age-appropriate professional setting. Visual style: '+styles[style]+'. This is an illustrated career dream, not a factual claim. No text, names, logos, uniforms with real organizations, or additional people. Keep the composition focused on the same person.';
+    }else{
+      const years=Number(mode);
+      prompt='Create a respectful, age-appropriate imagined portrait of the same person in the reference photo about '+years+' years in the future, naturally older by approximately '+years+' years, working as a '+jobs[profession]+'. Preserve recognizable identity and facial traits while showing plausible natural aging. Use a warm, hopeful 3D animated-film style and a suitable professional setting. This is an imaginative possibility, not a prediction or guarantee. No text, names, logos, uniforms with real organizations, or additional people.';
+    }
+    const upstreamForm=new FormData();
+    upstreamForm.append('model',process.env.OPENAI_IMAGE_MODEL||'gpt-image-1.5');
+    upstreamForm.append('image[]',new Blob([await image.arrayBuffer()],{type:image.type}),image.name||'student-photo');
+    upstreamForm.append('prompt',prompt);
+    upstreamForm.append('input_fidelity','high');
+    upstreamForm.append('quality','medium');
+    upstreamForm.append('size','1024x1024');
+    upstreamForm.append('output_format','png');
+    const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),90000);
+    let upstream;
+    try{
+      upstream=await fetch('https://api.openai.com/v1/images/edits',{method:'POST',signal:ctrl.signal,headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY},body:upstreamForm});
+    }catch(error){
+      clearTimeout(timer);
+      return send(res,error?.name==='AbortError'?504:502,{code:error?.name==='AbortError'?'image_timeout':'image_service_unreachable'});
+    }finally{clearTimeout(timer);}
+    if(!upstream.ok){
+      const providerBody=await upstream.json().catch(()=>({}));
+      const rawCode=String(providerBody?.error?.code||providerBody?.error?.type||'');
+      const allowedCodes=new Set(['insufficient_quota','rate_limit_exceeded','model_not_found','invalid_api_key','billing_hard_limit_reached','project_not_found','permission_denied']);
+      const providerCode=allowedCodes.has(rawCode)?rawCode:'unknown';
+      const requestId=String(upstream.headers.get('x-request-id')||randomUUID()).slice(0,100);
+      console.error(JSON.stringify({event:'studio_image_request_failed',status:upstream.status,code:providerCode,request_id:requestId}));
+      if(upstream.status===401)return send(res,503,{code:'api_key_invalid',request_id:requestId});
+      if(upstream.status===429)return send(res,503,{code:providerCode==='insufficient_quota'||providerCode==='billing_hard_limit_reached'?'api_usage_limit':'api_rate_limited',request_id:requestId});
+      if(upstream.status===403)return send(res,503,{code:'image_model_permission',request_id:requestId});
+      if(providerCode==='model_not_found')return send(res,503,{code:'image_model_unavailable',request_id:requestId});
+      return send(res,502,{code:'image_generation_failed',request_id:requestId});
+    }
+    const result=await upstream.json();const encoded=result?.data?.[0]?.b64_json;
+    if(typeof encoded!=='string'||!encoded)return send(res,502,{code:'empty_image_result'});
+    return send(res,200,{image_base64:encoded,mime_type:'image/png',mode,profession});
+  }
   if(!['/convert','/chat'].includes(pathname)||req.method!=='POST')return send(res,404,{error:'not found'});
   if(!process.env.OPENAI_API_KEY)return send(res,503,{code:'service_not_configured'});
   if(process.env.QISSATI_ACCESS_TOKEN && req.headers['x-qissati-access']!==process.env.QISSATI_ACCESS_TOKEN)return send(res,401,{error:'unauthorized'});
-  const ip=(req.headers['x-forwarded-for']||req.socket.remoteAddress||'').toString().split(',')[0];
+  const ip=(req.headers['x-forwarded-for']||req.socket.remoteAddress||'').toString().split(',').pop().trim();
   const now=Date.now();const hit=limit.get(ip)||{count:0,until:now+60000};
   if(now>hit.until){hit.count=0;hit.until=now+60000;}
   if(++hit.count>10)return send(res,429,{error:'rate limited'});
@@ -63,3 +140,4 @@ http.createServer(async (req,res)=>{
     return send(res,200,isChat?{reply:output}:{fusha_text:output});
   }catch{return send(res,400,{code:'invalid_request'});}
 }).listen(port,'0.0.0.0');
+
