@@ -13,7 +13,7 @@ async function readLimited(req,maxBytes){
 http.createServer(async (req,res)=>{
   const pathname=new URL(req.url||'/', 'http://localhost').pathname;
   if(req.method==='OPTIONS'){res.writeHead(204,{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'Content-Type, X-Qissati-Access','Access-Control-Allow-Methods':'POST, OPTIONS'});return res.end();}
-  if(pathname==='/health')return send(res,200,{ok:true,configured:!!process.env.OPENAI_API_KEY,studioConfigured:!!(process.env.CLOUDFLARE_ACCOUNT_ID&&process.env.CLOUDFLARE_API_TOKEN)});
+  if(pathname==='/health'){const configured=!!(process.env.CLOUDFLARE_ACCOUNT_ID&&process.env.CLOUDFLARE_API_TOKEN);return send(res,200,{ok:true,configured,studioConfigured:configured,textConfigured:configured});}
   if(pathname==='/studio/generate'){
     if(req.method!=='POST')return send(res,405,{code:'method_not_allowed'});
     if(!process.env.CLOUDFLARE_ACCOUNT_ID||!process.env.CLOUDFLARE_API_TOKEN)return send(res,503,{code:'ai_provider_not_configured'});
@@ -82,7 +82,7 @@ http.createServer(async (req,res)=>{
     return send(res,200,{image_base64:encoded,mime_type:'image/png',mode,profession});
   }
   if(!['/convert','/chat'].includes(pathname)||req.method!=='POST')return send(res,404,{error:'not found'});
-  if(!process.env.OPENAI_API_KEY)return send(res,503,{code:'service_not_configured'});
+  if(!process.env.CLOUDFLARE_ACCOUNT_ID||!process.env.CLOUDFLARE_API_TOKEN)return send(res,503,{code:'service_not_configured'});
   if(process.env.QISSATI_ACCESS_TOKEN && req.headers['x-qissati-access']!==process.env.QISSATI_ACCESS_TOKEN)return send(res,401,{error:'unauthorized'});
   const ip=(req.headers['x-forwarded-for']||req.socket.remoteAddress||'').toString().split(',').pop().trim();
   const now=Date.now();const hit=limit.get(ip)||{count:0,until:now+60000};
@@ -108,33 +108,40 @@ http.createServer(async (req,res)=>{
     }else{
       const text=typeof data.text==='string'?data.text.trim():'';
       if(text.length<5||text.length>5000)return send(res,400,{error:'invalid length'});
-      input=text;
+      input=[{role:'user',content:text}];
       instructions='أعد صياغة النص المنطوق بالعامية العربية إلى عربية فصحى سليمة، مع تشكيل كامل ودقيق للكلمات بحسب السياق. حافظ على الأحداث والأسماء والمعنى والضمائر. لا تختلق أحداثًا أو تحذف تفاصيل جوهرية. أعد النص المشكول فقط دون مقدمات.';
     }
-    const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),25000);
+    const cfAccount=String(process.env.CLOUDFLARE_ACCOUNT_ID).trim();
+    if(!/^[a-f0-9]{32}$/i.test(cfAccount))return send(res,503,{code:'service_not_configured'});
+    const model=process.env.CLOUDFLARE_TEXT_MODEL||'@cf/google/gemma-4-26b-a4b-it';
+    const messages=[{role:'system',content:instructions},...(isChat?input:input)];
+    const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),35000);
     let upstream;
     try{
-      upstream=await fetch('https://api.openai.com/v1/responses',{method:'POST',signal:ctrl.signal,headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({model:process.env.OPENAI_MODEL||'gpt-4.1-mini',store:false,instructions,input,max_output_tokens:isChat?450:2500})});
+      upstream=await fetch('https://api.cloudflare.com/client/v4/accounts/'+cfAccount+'/ai/run/'+encodeURIComponent(model),{
+        method:'POST',signal:ctrl.signal,
+        headers:{Authorization:'Bearer '+process.env.CLOUDFLARE_API_TOKEN,'Content-Type':'application/json'},
+        body:JSON.stringify({messages,max_tokens:isChat?450:2500,temperature:isChat?0.6:0.15})
+      });
     }catch(error){
       clearTimeout(timer);
       return send(res,error?.name==='AbortError'?504:502,{code:error?.name==='AbortError'?'upstream_timeout':'upstream_unreachable'});
     }finally{clearTimeout(timer);}
-    if(!upstream.ok){
-      const providerBody=await upstream.json().catch(()=>({}));
-      const rawCode=String(providerBody?.error?.code||providerBody?.error?.type||'');
-      const allowedCodes=new Set(['insufficient_quota','rate_limit_exceeded','model_not_found','invalid_api_key','billing_hard_limit_reached','project_not_found','permission_denied']);
-      const providerCode=allowedCodes.has(rawCode)?rawCode:'unknown';
-      const requestId=String(upstream.headers.get('x-request-id')||randomUUID()).slice(0,100);
-      console.error(JSON.stringify({event:'openai_request_failed',status:upstream.status,code:providerCode,request_id:requestId}));
+    const providerPayload=await upstream.json().catch(()=>({}));
+    if(!upstream.ok||providerPayload?.success===false){
+      const providerError=Array.isArray(providerPayload?.errors)?providerPayload.errors[0]:null;
+      const providerCode=String(providerError?.code||'unknown').slice(0,40);
+      const requestId=String(upstream.headers.get('cf-ray')||randomUUID()).slice(0,100);
+      console.error(JSON.stringify({event:'cloudflare_text_request_failed',status:upstream.status,code:providerCode,request_id:requestId}));
       if(upstream.status===401)return send(res,503,{code:'api_key_invalid',request_id:requestId});
-      if(upstream.status===429)return send(res,503,{code:providerCode==='insufficient_quota'||providerCode==='billing_hard_limit_reached'?'api_usage_limit':'api_rate_limited',request_id:requestId});
       if(upstream.status===403)return send(res,503,{code:'api_permission',request_id:requestId});
-      if(providerCode==='model_not_found')return send(res,503,{code:'api_model_unavailable',request_id:requestId});
+      if(upstream.status===429)return send(res,503,{code:providerCode==='3036'?'api_usage_limit':'api_rate_limited',request_id:requestId});
+      if(upstream.status===404||providerCode==='5007')return send(res,503,{code:'api_model_unavailable',request_id:requestId});
       return send(res,502,{code:'upstream_failure',request_id:requestId});
     }
-    const result=await upstream.json();const output=(result.output||[]).flatMap(x=>x.content||[]).filter(x=>x.type==='output_text').map(x=>x.text).join('').trim();
+    const result=providerPayload?.result||{};
+    const output=String(result.response||result.choices?.[0]?.message?.content||'').trim();
     if(!output)return send(res,502,{code:'empty_result'});
     return send(res,200,isChat?{reply:output}:{fusha_text:output});
   }catch{return send(res,400,{code:'invalid_request'});}
 }).listen(port,'0.0.0.0');
-
