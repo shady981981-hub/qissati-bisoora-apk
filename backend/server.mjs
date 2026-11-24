@@ -141,7 +141,7 @@ http.createServer(async (req,res)=>{
     }
     const result=providerPayload?.result||{};
     const output=String(providerPayload?.choices?.[0]?.message?.content||result.response||result.choices?.[0]?.message?.content||'').trim();
-    if(!output)return send(res,502,{code:'empty_result'});
+    if(!output){console.error(JSON.stringify({event:'cloudflare_text_empty',root_keys:Object.keys(providerPayload||{}),result_keys:Object.keys(result||{}),choice_count:Array.isArray(providerPayload?.choices)?providerPayload.choices.length:0,result_choice_count:Array.isArray(result?.choices)?result.choices.length:0,response_type:typeof result?.response,content_type:typeof providerPayload?.choices?.[0]?.message?.content}));return send(res,502,{code:'empty_result'});}
     return send(res,200,isChat?{reply:output}:{fusha_text:output});
   }catch{return send(res,400,{code:'invalid_request'});}
 }).listen(port,'0.0.0.0');
