@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
@@ -17,6 +18,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.ValueCallback;
 import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +35,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQ_RECORD_AUDIO = 101;
+    private static final int REQ_STUDIO_IMAGE = 102;
+    private ValueCallback<Uri[]> filePathCallback;
     private WebView webView;
     private TextToSpeech tts;
     private volatile boolean arabicTtsReady = false;
@@ -57,7 +61,24 @@ public class MainActivity extends AppCompatActivity {
         settings.setMediaPlaybackRequiresUserGesture(false);
 
         webView.setWebViewClient(new WebViewClient());
-        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
+                if (filePathCallback != null) filePathCallback.onReceiveValue(null);
+                filePathCallback = callback;
+                Intent pickImage = new Intent(Intent.ACTION_GET_CONTENT);
+                pickImage.addCategory(Intent.CATEGORY_OPENABLE);
+                pickImage.setType("image/*");
+                try {
+                    startActivityForResult(Intent.createChooser(pickImage, "اختر صورة"), REQ_STUDIO_IMAGE);
+                    return true;
+                } catch (Exception e) {
+                    filePathCallback.onReceiveValue(null);
+                    filePathCallback = null;
+                    return false;
+                }
+            }
+        });
         webView.addJavascriptInterface(new QissatiBridge(), "QissatiAndroid");
 
         tts = new TextToSpeech(this, status -> {
@@ -198,6 +219,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_STUDIO_IMAGE) {
+            if (filePathCallback != null) {
+                Uri[] results = resultCode == RESULT_OK && data != null && data.getData() != null
+                    ? new Uri[]{data.getData()} : null;
+                filePathCallback.onReceiveValue(results);
+                filePathCallback = null;
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQ_RECORD_AUDIO && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -315,6 +350,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         keepListening = false;
+        if (filePathCallback != null) { filePathCallback.onReceiveValue(null); filePathCallback = null; }
         if (speechRecognizer != null) speechRecognizer.destroy();
         if (tts != null) { tts.stop(); tts.shutdown(); }
         super.onDestroy();
