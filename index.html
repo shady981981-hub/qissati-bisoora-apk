@@ -1025,6 +1025,7 @@ function toggleOnlineMode(){
   state.onlineMode=!state.onlineMode;
   saveState();
   updateOnlineModeUI();
+  if(typeof updateStudioGenerationUI==='function')updateStudioGenerationUI();
 }
 
 function playTone(freq, dur=0.14, type='sine'){
@@ -2280,7 +2281,7 @@ function studioModeLabel(mode){
   return mode==='3d'?'صُورَةٌ كَرْتُونِيَّةٌ 3D':'تَصَوُّرٌ خَيَالِيٌّ بَعْدَ '+mode+' سَنَةً';
 }
 function updateStudioGenerationUI(){
-  const ready=!!studioSelectedFile&&$('studioPrivacyConsent')?.checked&&$('studioGuardianConsent')?.checked;
+  const ready=!!studioSelectedFile&&state.onlineMode&&$('studioPrivacyConsent')?.checked&&$('studioGuardianConsent')?.checked;
   document.querySelectorAll('[data-studio-generate]').forEach(btn=>{btn.disabled=!ready||btn.dataset.busy==='yes';});
 }
 async function studioBlobHash(blob){
@@ -2373,6 +2374,7 @@ function showStudioImage(mode,blob,profession){
 }
 async function generateStudioImage(mode){
   if(!['3d','10','20','30'].includes(mode))return;
+  if(!state.onlineMode){$('studioGenStatus').textContent='الاتِّصَالُ مَوْقُوفٌ. شَغِّلْهُ لِتُرْسَلَ الصُّورَةُ لِلتَّوْلِيدِ.';return;}
   if(!studioSelectedFile){$('studioGenStatus').textContent='اخْتَرْ صُورَةً أَوَّلًا.';return;}
   if(!$('studioPrivacyConsent').checked||!$('studioGuardianConsent').checked){$('studioGenStatus').textContent='يَلْزَمُ إِقْرَارُ الطَّالِبِ وَمُوَافَقَةُ وَلِيِّ الْأَمْرِ قَبْلَ إِرْسَالِ الصُّورَةِ.';return;}
   const buttons=Array.from(document.querySelectorAll('[data-studio-generate]'));
@@ -2405,7 +2407,7 @@ async function generateStudioImage(mode){
     status.classList.add('error');
     status.textContent=error.message==='Failed to fetch'?'تَعَذَّرَ الِاتِّصَالُ بِخَادِمِ الصُّوَرِ. تَحَقَّقْ مِنْ نَشْرِهِ وَاتِّصَالِ الْإِنْتَرْنِتِ.':error.message||'حَدَثَ خَطَأٌ أَثْنَاءَ تَوْلِيدِ الصُّورَةِ.';
   }finally{
-    buttons.forEach(btn=>{delete btn.dataset.busy;btn.disabled=!(studioSelectedFile&&$('studioPrivacyConsent').checked&&$('studioGuardianConsent').checked);});
+    buttons.forEach(btn=>{delete btn.dataset.busy;btn.disabled=!(studioSelectedFile&&state.onlineMode&&$('studioPrivacyConsent').checked&&$('studioGuardianConsent').checked);});
   }
 }
 async function saveGeneratedStudioAsset(mode){
