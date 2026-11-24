@@ -18,7 +18,8 @@ http.createServer(async (req,res)=>{
     if(req.method!=='POST')return send(res,405,{code:'method_not_allowed'});
     if(!process.env.OPENAI_API_KEY)return send(res,503,{code:'service_not_configured'});
     const studioOrigin=process.env.QISSATI_STUDIO_ORIGIN||'https://qissati-bisoora-web.buzzygerbil33.chatgpt.site';
-    if(req.headers.origin!==studioOrigin)return send(res,403,{code:'studio_origin_not_allowed'});
+    // Android's packaged WebView sends the opaque `null` origin for file:///android_asset pages.
+    if(!new Set([studioOrigin,'null']).has(req.headers.origin))return send(res,403,{code:'studio_origin_not_allowed'});
     if(process.env.QISSATI_ACCESS_TOKEN && req.headers['x-qissati-access']!==process.env.QISSATI_ACCESS_TOKEN)return send(res,401,{code:'unauthorized'});
     const ip=(req.headers['x-forwarded-for']||req.socket.remoteAddress||'').toString().split(',').pop().trim();
     const now=Date.now();let hit=studioLimit.get(ip)||{count:0,until:now+10*60*1000};
