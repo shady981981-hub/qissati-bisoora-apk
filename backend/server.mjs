@@ -118,10 +118,10 @@ http.createServer(async (req,res)=>{
     const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),35000);
     let upstream;
     try{
-      upstream=await fetch('https://api.cloudflare.com/client/v4/accounts/'+cfAccount+'/ai/run/'+model,{
+      upstream=await fetch('https://api.cloudflare.com/client/v4/accounts/'+cfAccount+'/ai/v1/chat/completions',{
         method:'POST',signal:ctrl.signal,
         headers:{Authorization:'Bearer '+process.env.CLOUDFLARE_API_TOKEN,'Content-Type':'application/json'},
-        body:JSON.stringify({messages,max_tokens:isChat?450:2500,temperature:isChat?0.6:0.15})
+        body:JSON.stringify({model,messages,max_tokens:isChat?450:2500,temperature:isChat?0.6:0.15})
       });
     }catch(error){
       clearTimeout(timer);
@@ -129,8 +129,8 @@ http.createServer(async (req,res)=>{
     }finally{clearTimeout(timer);}
     const providerPayload=await upstream.json().catch(()=>({}));
     if(!upstream.ok||providerPayload?.success===false){
-      const providerError=Array.isArray(providerPayload?.errors)?providerPayload.errors[0]:null;
-      const providerCode=String(providerError?.code||'unknown').slice(0,40);
+      const providerError=Array.isArray(providerPayload?.errors)?providerPayload.errors[0]:providerPayload?.error;
+      const providerCode=String(providerError?.code||providerError?.type||'unknown').slice(0,40);
       const requestId=String(upstream.headers.get('cf-ray')||randomUUID()).slice(0,100);
       console.error(JSON.stringify({event:'cloudflare_text_request_failed',status:upstream.status,code:providerCode,request_id:requestId}));
       if(upstream.status===401)return send(res,503,{code:'api_key_invalid',request_id:requestId});
@@ -140,7 +140,7 @@ http.createServer(async (req,res)=>{
       return send(res,502,{code:'upstream_failure',request_id:requestId});
     }
     const result=providerPayload?.result||{};
-    const output=String(result.response||result.choices?.[0]?.message?.content||'').trim();
+    const output=String(providerPayload?.choices?.[0]?.message?.content||result.response||result.choices?.[0]?.message?.content||'').trim();
     if(!output)return send(res,502,{code:'empty_result'});
     return send(res,200,isChat?{reply:output}:{fusha_text:output});
   }catch{return send(res,400,{code:'invalid_request'});}
