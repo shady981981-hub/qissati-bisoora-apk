@@ -118,7 +118,7 @@ http.createServer(async (req,res)=>{
     const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),35000);
     let upstream;
     try{
-      upstream=await fetch('https://api.cloudflare.com/client/v4/accounts/'+cfAccount+'/ai/run/'+encodeURIComponent(model),{
+      upstream=await fetch('https://api.cloudflare.com/client/v4/accounts/'+cfAccount+'/ai/run/'+model,{
         method:'POST',signal:ctrl.signal,
         headers:{Authorization:'Bearer '+process.env.CLOUDFLARE_API_TOKEN,'Content-Type':'application/json'},
         body:JSON.stringify({messages,max_tokens:isChat?450:2500,temperature:isChat?0.6:0.15})
