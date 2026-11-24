@@ -13,10 +13,10 @@ async function readLimited(req,maxBytes){
 http.createServer(async (req,res)=>{
   const pathname=new URL(req.url||'/', 'http://localhost').pathname;
   if(req.method==='OPTIONS'){res.writeHead(204,{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'Content-Type, X-Qissati-Access','Access-Control-Allow-Methods':'POST, OPTIONS'});return res.end();}
-  if(pathname==='/health')return send(res,200,{ok:true,configured:!!process.env.OPENAI_API_KEY});
+  if(pathname==='/health')return send(res,200,{ok:true,configured:!!process.env.OPENAI_API_KEY,studioConfigured:!!(process.env.CLOUDFLARE_ACCOUNT_ID&&process.env.CLOUDFLARE_API_TOKEN)});
   if(pathname==='/studio/generate'){
     if(req.method!=='POST')return send(res,405,{code:'method_not_allowed'});
-    if(!process.env.OPENAI_API_KEY)return send(res,503,{code:'service_not_configured'});
+    if(!process.env.CLOUDFLARE_ACCOUNT_ID||!process.env.CLOUDFLARE_API_TOKEN)return send(res,503,{code:'ai_provider_not_configured'});
     const studioOrigin=process.env.QISSATI_STUDIO_ORIGIN||'https://qissati-bisoora-web.buzzygerbil33.chatgpt.site';
     // Android's packaged WebView sends the opaque `null` origin for file:///android_asset pages.
     if(!new Set([studioOrigin,'null']).has(req.headers.origin))return send(res,403,{code:'studio_origin_not_allowed'});
@@ -52,38 +52,37 @@ http.createServer(async (req,res)=>{
       const years=Number(mode);
       prompt='Create a respectful, age-appropriate imagined portrait of the same person in the reference photo about '+years+' years in the future, naturally older by approximately '+years+' years, working as a '+jobs[profession]+'. Preserve recognizable identity and facial traits while showing plausible natural aging. Use a warm, hopeful 3D animated-film style and a suitable professional setting. This is an imaginative possibility, not a prediction or guarantee. No text, names, logos, uniforms with real organizations, or additional people.';
     }
+    const cfAccount=String(process.env.CLOUDFLARE_ACCOUNT_ID).trim();
+    if(!/^[a-f0-9]{32}$/i.test(cfAccount))return send(res,503,{code:'ai_provider_not_configured'});
     const upstreamForm=new FormData();
-    upstreamForm.append('model',process.env.OPENAI_IMAGE_MODEL||'gpt-image-1.5');
-    upstreamForm.append('image[]',new Blob([await image.arrayBuffer()],{type:image.type}),image.name||'student-photo');
     upstreamForm.append('prompt',prompt);
-    upstreamForm.append('input_fidelity','high');
-    upstreamForm.append('quality','medium');
-    upstreamForm.append('size','1024x1024');
-    upstreamForm.append('output_format','png');
+    upstreamForm.append('input_image_0',new Blob([await image.arrayBuffer()],{type:image.type}),image.name||'student-photo.jpg');
+    upstreamForm.append('width','1024');
+    upstreamForm.append('height','1024');
+    upstreamForm.append('guidance','7');
     const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),90000);
     let upstream;
     try{
-      upstream=await fetch('https://api.openai.com/v1/images/edits',{method:'POST',signal:ctrl.signal,headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY},body:upstreamForm});
+      upstream=await fetch('https://api.cloudflare.com/client/v4/accounts/'+cfAccount+'/ai/run/@cf/black-forest-labs/flux-2-klein-4b',{method:'POST',signal:ctrl.signal,headers:{Authorization:'Bearer '+process.env.CLOUDFLARE_API_TOKEN},body:upstreamForm});
     }catch(error){
       clearTimeout(timer);
       return send(res,error?.name==='AbortError'?504:502,{code:error?.name==='AbortError'?'image_timeout':'image_service_unreachable'});
     }finally{clearTimeout(timer);}
-    if(!upstream.ok){
-      const providerBody=await upstream.json().catch(()=>({}));
-      const rawCode=String(providerBody?.error?.code||providerBody?.error?.type||'');
-      const allowedCodes=new Set(['insufficient_quota','rate_limit_exceeded','model_not_found','invalid_api_key','billing_hard_limit_reached','project_not_found','permission_denied']);
-      const providerCode=allowedCodes.has(rawCode)?rawCode:'unknown';
-      const requestId=String(upstream.headers.get('x-request-id')||randomUUID()).slice(0,100);
-      console.error(JSON.stringify({event:'studio_image_request_failed',status:upstream.status,code:providerCode,request_id:requestId}));
-      if(upstream.status===401)return send(res,503,{code:'api_key_invalid',request_id:requestId});
-      if(upstream.status===429)return send(res,503,{code:providerCode==='insufficient_quota'||providerCode==='billing_hard_limit_reached'?'api_usage_limit':'api_rate_limited',request_id:requestId});
-      if(upstream.status===403)return send(res,503,{code:'image_model_permission',request_id:requestId});
-      if(providerCode==='model_not_found')return send(res,503,{code:'image_model_unavailable',request_id:requestId});
+    const providerPayload=await upstream.json().catch(()=>({}));
+    if(!upstream.ok||providerPayload?.success===false){
+      const providerError=Array.isArray(providerPayload?.errors)?providerPayload.errors[0]:null;
+      const providerCode=String(providerError?.code||providerError?.message||'unknown').slice(0,120);
+      const requestId=String(upstream.headers.get('cf-ray')||randomUUID()).slice(0,100);
+      console.error(JSON.stringify({event:'studio_image_request_failed',status:upstream.status,provider_code:providerCode,request_id:requestId}));
+      if(upstream.status===401||upstream.status===403)return send(res,503,{code:'ai_provider_auth_error',request_id:requestId});
+      if(upstream.status===429)return send(res,503,{code:'ai_provider_rate_limited',request_id:requestId});
+      if(upstream.status===404)return send(res,503,{code:'ai_model_unavailable',request_id:requestId});
+      if(upstream.status===413)return send(res,413,{code:'image_too_large',request_id:requestId});
       return send(res,502,{code:'image_generation_failed',request_id:requestId});
     }
-    const result=await upstream.json();const encoded=result?.data?.[0]?.b64_json;
+    const encoded=providerPayload?.result?.image;
     if(typeof encoded!=='string'||!encoded)return send(res,502,{code:'empty_image_result'});
-    return send(res,200,{image_base64:encoded,mime_type:'image/png',mode,profession});
+    return send(res,200,{image_base64:encoded.replace(/^data:image\\/png;base64,/i,''),mime_type:'image/png',mode,profession});
   }
   if(!['/convert','/chat'].includes(pathname)||req.method!=='POST')return send(res,404,{error:'not found'});
   if(!process.env.OPENAI_API_KEY)return send(res,503,{code:'service_not_configured'});
