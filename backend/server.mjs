@@ -82,7 +82,7 @@ http.createServer(async (req,res)=>{
     }
     const encoded=providerPayload?.result?.image;
     if(typeof encoded!=='string'||!encoded)return send(res,502,{code:'empty_image_result'});
-    return send(res,200,{image_base64:encoded.replace(/^data:image\\/png;base64,/i,''),mime_type:'image/png',mode,profession});
+    return send(res,200,{image_base64:encoded,mime_type:'image/png',mode,profession});
   }
   if(!['/convert','/chat'].includes(pathname)||req.method!=='POST')return send(res,404,{error:'not found'});
   if(!process.env.OPENAI_API_KEY)return send(res,503,{code:'service_not_configured'});
