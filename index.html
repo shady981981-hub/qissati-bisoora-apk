@@ -388,6 +388,23 @@ main.wrap{padding-bottom:100px}
 .studio-empty{padding:20px;border:1px dashed #6c4890;border-radius:16px;color:#c5b1dd;text-align:center;line-height:1.7}
 .network-on{background:rgba(0,128,95,.28);border-color:#68dfbd}
 .network-off{background:rgba(177,55,67,.25);border-color:#ff9aa4}
+.studio-gen-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+.studio-gen-actions button{min-height:46px}
+.studio-gen-actions button:first-child{grid-column:1/-1;background:linear-gradient(120deg,#ffd45a,#ff8b5c);color:#2d1644}
+.studio-gen-actions button:disabled{opacity:.48;cursor:not-allowed}
+.studio-gen-status{min-height:30px;padding:8px 10px;border-radius:10px;background:#10071f;color:#8debd1;font-size:13px;font-weight:800}
+.studio-gen-status.error{color:#ffc3c5}
+.studio-ai-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:14px}
+.studio-ai-result{overflow:hidden;border-radius:17px;border:1px solid #7b56a1;background:#110821;padding:9px}
+.studio-ai-result h4{margin:3px 0 8px;color:#ffe27a;font-size:14px}
+.studio-ai-stage{perspective:800px;border-radius:13px;overflow:hidden;background:#24123a}
+.studio-ai-stage img{display:block;width:100%;aspect-ratio:1;object-fit:cover;animation:studioGentleFloat 5s ease-in-out infinite;transform-origin:50% 70%}
+.studio-ai-result[data-mode="3d"] .studio-ai-stage img{animation:studioTurn 8s ease-in-out infinite}
+.studio-ai-result .studio-note{margin:8px 0}
+.studio-duplicate-status{min-height:24px;color:#a9f2dc;font-size:12px;margin:6px 0}
+@keyframes studioGentleFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.015)}}
+@keyframes studioTurn{0%,100%{transform:perspective(700px) rotateY(-4deg) translateY(0)}50%{transform:perspective(700px) rotateY(4deg) translateY(-5px)}}
+@media(max-width:560px){.studio-career-controls{grid-template-columns:1fr}.studio-gen-actions{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -625,40 +642,58 @@ main.wrap{padding-bottom:100px}
     </div>
   </section>
 
-  <!-- 3D PIXAR STUDIO -->
+  <!-- 3D AND CAREER STUDIO -->
   <section id="studio" class="hidden">
     <div class="studio-banner">
       <span class="studio-kicker">🎨 اسْتُودْيُو الْإِبْدَاعِ</span>
-      <h2>اسْتُودْيُو الْأَيْقُونَاتِ وَالْعَنَاصِرِ ثُلَاثِيَّةِ الْأَبْعَادِ</h2>
-      <p>أَضِفْ صُوَرَكَ، جَرِّبْ مَظْهَرًا مُجَسَّمًا، وَاحْفَظْ عَنَاصِرَكَ عَلَى هَذَا الْجِهَازِ بِدُونِ رَفْعِهَا إِلَى الْخَادِمِ.</p>
+      <h2>مِهْنَتُكَ الْمُسْتَقْبَلِيَّةُ فِي صُورَةٍ ثُلَاثِيَّةِ الْأَبْعَادِ</h2>
+      <p>اخْتَرْ صُورَةً وَمِهْنَةً، وَأَنْشِئْ صُورَةً أُسْلُوبُهَا رُسُومٌ مُتَحَرِّكَةٌ ثُلَاثِيَّةُ الْأَبْعَادِ، أَوْ تَصَوُّرًا خَيَالِيًّا بَعْدَ ١٠ أَوْ ٢٠ أَوْ ٣٠ سَنَةً. كُلُّ صُورَةٍ تُنْشَأُ بِطَلَبٍ مُنْفَصِلٍ.</p>
     </div>
     <div class="studio-grid">
       <div class="studio-panel">
-        <h3>📤 اسْتِيرَادُ صُورَةٍ أَوْ شِعَارٍ</h3>
-        <p>اخْتَرْ صُورَةً مِنْ جِهَازِكَ لِمُعَايَنَتِهَا وَحِفْظِهَا فِي مَكْتَبَةِ الِاسْتُودْيُو.</p>
-        <label for="studioAssetName">اسْمُ الْعُنْصُرِ</label>
-        <input id="studioAssetName" class="field-input" maxlength="48" placeholder="مِثَالٌ: رُوبُوتِي الصَّغِيرُ">
+        <h3>🪄 صَمِّمْ صُورَةَ الْمِهْنَةِ وَالْمُسْتَقْبَلِ</h3>
+        <p>اخْتَرْ صُورَةً مِنْ جِهَازِكَ. تَبْقَى عَلَى جِهَازِكَ حَتَّى تَضْغَطَ أَحَدَ أَزْرَارِ الْإِنْشَاءِ؛ عِنْدَئِذٍ تُرْسَلُ نُسْخَةٌ مُصَغَّرَةٌ إِلَى خَادِمِ التَّوْلِيدِ وَمُزَوِّدِ خِدْمَةِ الصُّوَرِ لِلْمُعَالَجَةِ.</p>
         <label for="studioAssetStyle">النَّمَطُ الْفَنِّيُّ</label>
         <select id="studioAssetStyle" class="field-input">
-          <option value="clay">طِينٌ لَامِعٌ (Clay &amp; Glow)</option>
-          <option value="pixar">حِكَايَةٌ سِينَمَائِيَّةٌ</option>
-          <option value="storybook">رَسْمٌ كِتَابِيٌّ نَاعِمٌ</option>
+          <option value="cinematic">رُسُومٌ سِينَمَائِيَّةٌ ثُلَاثِيَّةُ الْأَبْعَادِ</option>
+          <option value="clay">شَخْصِيَّةٌ طِينِيَّةٌ لَامِعَةٌ</option>
+          <option value="storybook">حِكَايَةٌ مُصَوَّرَةٌ نَاعِمَةٌ</option>
         </select>
-        <input id="studioImageInput" type="file" accept="image/*" class="hidden" onchange="previewStudioImage(event)">
+        <label for="studioProfession">الْمِهْنَةُ الَّتِي يَخْتَارُهَا الطَّالِبُ</label>
+        <select id="studioProfession" class="field-input">
+          <option value="doctor">طَبِيبٌ</option><option value="engineer">مُهَنْدِسٌ</option><option value="teacher">مُعَلِّمٌ</option><option value="programmer">مُبَرْمِجٌ</option><option value="scientist">عَالِمٌ</option><option value="astronaut">رَائِدُ فَضَاءٍ</option><option value="pilot">طَيَّارٌ</option><option value="artist">فَنَّانٌ</option><option value="architect">مُهَنْدِسٌ مِعْمَارِيٌّ</option><option value="nurse">مُمَرِّضٌ</option><option value="farmer">مُزَارِعٌ</option><option value="chef">طَاهٍ</option><option value="robotics">مُتَخَصِّصٌ فِي الرُّوبُوتَاتِ</option><option value="athlete">رِيَاضِيٌّ</option><option value="vet">طَبِيبٌ بَيْطَرِيٌّ</option>
+        </select>
+        <input id="studioImageInput" type="file" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewStudioImage(event)">
         <button class="studio-upload" onclick="document.getElementById('studioImageInput').click()">🖼️ اضْغَطْ لِاخْتِيَارِ صُورَةٍ مِنْ جِهَازِكَ</button>
         <div id="studioPreviewWrap" class="studio-preview-wrap hidden">
           <div id="studioPreviewCard" class="studio-preview-card"><img id="studioPreviewImg" alt="مُعَايَنَةُ الْعُنْصُرِ"></div>
           <p>مُعَايَنَةٌ بِتَأْثِيرٍ ثُلَاثِيِّ الْأَبْعَادِ</p>
         </div>
-        <button class="btn-primary" id="studioSaveBtn" onclick="saveStudioAsset()" disabled>💾 حِفْظُ الْعُنْصُرِ فِي الِاسْتُودْيُو</button>
-        <div id="studioStatus" class="studio-status" role="status">اخْتَرْ صُورَةً لِتَبْدَأَ.</div>
-        <p class="studio-note">الْمُعَايَنَةُ تُضِيفُ تَأْثِيرًا بَصَرِيًّا فَقَطْ؛ تَوْلِيدُ صُوَرٍ جَدِيدَةٍ بِذَكَاءٍ اصْطِنَاعِيٍّ يَحْتَاجُ خِدْمَةَ صُوَرٍ مُنْفَصِلَةً.</p>
+        <div class="studio-consent">
+          <label><input type="checkbox" id="studioPrivacyConsent"><span>أَفْهَمُ أَنَّ الصُّورَةَ سَتُرْسَلُ إِلَى خِدْمَةِ الذَّكَاءِ الِاصْطِنَاعِيِّ لِتَوْلِيدِ صُورَةٍ، وَأَلَّا أَضَعَ اسْمًا حَقِيقِيًّا أَوْ مَعْلُومَاتٍ شَخْصِيَّةً.</span></label>
+          <label><input type="checkbox" id="studioGuardianConsent"><span>أُؤَكِّدُ أَنَّ وَلِيَّ الْأَمْرِ اطَّلَعَ عَلَى ذَلِكَ وَوَافَقَ عَلَى إِرْسَالِ صُورَةِ الطَّالِبِ.</span></label>
+        </div>
+        <div class="studio-gen-actions">
+          <button class="btn-primary" data-studio-generate="3d" disabled>🎬 صُورَةٌ كَرْتُونِيَّةٌ 3D</button>
+          <button class="btn-secondary" data-studio-generate="10" disabled>بَعْدَ ١٠ سَنَوَاتٍ</button>
+          <button class="btn-secondary" data-studio-generate="20" disabled>بَعْدَ ٢٠ سَنَةً</button>
+          <button class="btn-secondary" data-studio-generate="30" disabled>بَعْدَ ٣٠ سَنَةً</button>
+        </div>
+        <div id="studioGenStatus" class="studio-gen-status" role="status" aria-live="polite">اخْتَرْ صُورَةً وَوَافِقْ أَنْتَ وَوَلِيُّ الْأَمْرِ لِتَفْعِيلِ الْإِنْشَاءِ.</div>
+        <div id="studioAiResults" class="studio-ai-results"></div>
+        <label for="studioAssetName">اسْمُ النَّسْخَةِ الْمَحَلِّيَّةِ</label>
+        <input id="studioAssetName" class="field-input" maxlength="48" placeholder="مِثَالٌ: صُورَتِي مُهَنْدِسًا">
+        <button class="btn-secondary" id="studioSaveBtn" onclick="saveStudioAsset()" disabled>💾 حِفْظُ الصُّورَةِ الْأَصْلِيَّةِ مَحَلِّيًّا</button>
+        <div id="studioStatus" class="studio-status" role="status">لَمْ تُحْفَظْ صُورَةٌ بَعْدُ.</div>
+        <p class="studio-note">تَصَوُّرَاتُ الْعُمْرِ الْمُسْتَقْبَلِيِّ خَيَالِيَّةٌ وَلَيْسَتْ تَنَبُّؤًا بِالشَّكْلِ الْحَقِيقِيِّ. لَا يَحْفَظُ خَادِمُ التَّطْبِيقِ الصُّوَرَ بَعْدَ إِعَادَةِ النَّتِيجَةِ؛ وَيَخْضَعُ التَّعَامُلُ أَثْنَاءَ التَّوْلِيدِ لِسِيَاسَةِ مُزَوِّدِ خِدْمَةِ الصُّوَرِ. كُلُّ صُورَةٍ تُنْشَأُ بِطَلَبٍ مُنْفَصِلٍ وَقَدْ تَسْتَهْلِكُ رَصِيدَ الْخِدْمَةِ.</p>
       </div>
       <div class="studio-panel studio-library-panel">
         <div class="section-head" style="margin-top:0">
           <h3 style="margin:0">🧊 عَنَاصِرِي الْمَحْفُوظَةُ</h3>
           <button class="btn-secondary" onclick="renderStudioAssets()">↻ تَحْدِيثٌ</button>
         </div>
+        <button class="btn-secondary" id="studioCleanupBtn" onclick="cleanupStudioDuplicates()">🧹 تَنْظِيفُ النُّسَخِ الْمُكَرَّرَةِ الْمُتَطَابِقَةِ</button>
+        <div id="studioDuplicateStatus" class="studio-duplicate-status" role="status">يَحْذِفُ التَّنْظِيفُ النُّسَخَ الْمُطَابِقَةَ فَقَطْ، وَيُبْقِي نُسْخَةً وَاحِدَةً. احْذِفْ بِيَدِكَ مَا لَا تَحْتَاجُهُ مِنَ الْعَنَاصِرِ الْأُخْرَى.</div>
         <div id="studioAssetGrid" class="studio-assets-grid"></div>
       </div>
     </div>
@@ -765,6 +800,7 @@ main.wrap{padding-bottom:100px}
 <script>
 const FUSHA_CONVERSION_ENDPOINT = 'https://fusha-api-production.up.railway.app/convert';
 const AI_CHAT_ENDPOINT = 'https://fusha-api-production.up.railway.app/chat';
+const STUDIO_AI_ENDPOINT = FUSHA_CONVERSION_ENDPOINT.replace(/\/convert$/, '/studio/generate');
 const IMAGES = {"ICON": "qissati_icon.jpg", "HERO": "scene_world.jpg", "GARDEN": "garden.jpg", "MAGIC": "magic.jpg", "SEA": "sea.jpg", "FOREST": "forest.jpg", "SPACE": "space.jpg", "CITY": "city.jpg", "BIRD": "scene_bird.jpg", "FRIENDS": "scene_friends.jpg", "OCEAN_STORY": "scene_ocean.jpg", "RAINBOW": "scene_rainbow.jpg", "MAGIC_STORY": "scene_reading.jpg"};
 const IMAGE_META = {"ICON": {"file": "qissati_icon.jpg", "width": 1536, "height": 1536, "format": "JPEG", "bytes": 244816}, "HERO": {"file": "scene_world.jpg", "width": 1536, "height": 857, "format": "JPEG", "bytes": 155513}, "GARDEN": {"file": "input_file_4.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 788273}, "MAGIC": {"file": "input_file_6.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 770510}, "SEA": {"file": "input_file_7.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 854276}, "FOREST": {"file": "input_file_8.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 796242}, "SPACE": {"file": "input_file_9.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 765739}, "CITY": {"file": "input_file_11.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 944961}, "BIRD": {"file": "scene_bird.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 188393}, "FRIENDS": {"file": "scene_friends.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 186720}, "OCEAN_STORY": {"file": "scene_ocean.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 204674}, "RAINBOW": {"file": "scene_rainbow.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 249759}, "MAGIC_STORY": {"file": "scene_reading.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 165607}};
 
@@ -2199,6 +2235,8 @@ let studioDbPromise=null;
 let studioSelectedFile=null;
 let studioPreviewUrl=null;
 let studioAssetUrls=[];
+let studioGeneratedUrls=[];
+let studioGeneratedAssets={};
 function openStudioDb(){
   if(!('indexedDB' in window))return Promise.reject(new Error('IndexedDB unavailable'));
   if(studioDbPromise)return studioDbPromise;
@@ -2221,8 +2259,8 @@ function studioRequest(mode,action,value){
 function previewStudioImage(ev){
   const file=ev.target.files&&ev.target.files[0];
   if(!file)return;
-  if(!file.type.startsWith('image/')){$('studioStatus').textContent='اخْتَرْ مَلَفَّ صُورَةٍ صَحِيحًا.';return;}
-  if(file.size>8*1024*1024){$('studioStatus').textContent='حَجْمُ الصُّورَةِ أَكْبَرُ مِنْ 8 مِيغَابَايْت؛ اخْتَرْ صُورَةً أَصْغَرَ.';return;}
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type)){$('studioStatus').textContent='اخْتَرْ صُورَةً مِنْ نَوْعِ JPG أَوْ PNG أَوْ WEBP.';ev.target.value='';studioSelectedFile=null;$('studioSaveBtn').disabled=true;updateStudioGenerationUI();return;}
+  if(file.size>8*1024*1024){$('studioStatus').textContent='حَجْمُ الصُّورَةِ أَكْبَرُ مِنْ 8 مِيغَابَايْت؛ اخْتَرْ صُورَةً أَصْغَرَ.';ev.target.value='';studioSelectedFile=null;$('studioSaveBtn').disabled=true;updateStudioGenerationUI();return;}
   studioSelectedFile=file;
   if(studioPreviewUrl)URL.revokeObjectURL(studioPreviewUrl);
   studioPreviewUrl=URL.createObjectURL(file);
@@ -2231,17 +2269,162 @@ function previewStudioImage(ev){
   $('studioSaveBtn').disabled=false;
   $('studioStatus').textContent='جَاهِزٌ لِلْمُعَايَنَةِ وَالْحِفْظِ عَلَى الْجِهَازِ.';
   updateStudioPreviewStyle();
+  updateStudioGenerationUI();
 }
 function updateStudioPreviewStyle(){
   const style=$('studioAssetStyle')?.value||'clay';
   const card=$('studioPreviewCard');
   if(card)card.dataset.style=style;
 }
+function studioModeLabel(mode){
+  return mode==='3d'?'صُورَةٌ كَرْتُونِيَّةٌ 3D':'تَصَوُّرٌ خَيَالِيٌّ بَعْدَ '+mode+' سَنَةً';
+}
+function updateStudioGenerationUI(){
+  const ready=!!studioSelectedFile&&$('studioPrivacyConsent')?.checked&&$('studioGuardianConsent')?.checked;
+  document.querySelectorAll('[data-studio-generate]').forEach(btn=>{btn.disabled=!ready||btn.dataset.busy==='yes';});
+}
+async function studioBlobHash(blob){
+  try{
+    if(!window.crypto?.subtle||!blob?.arrayBuffer)return null;
+    const bytes=await blob.arrayBuffer();
+    const digest=await crypto.subtle.digest('SHA-256',bytes);
+    return Array.from(new Uint8Array(digest)).map(x=>x.toString(16).padStart(2,'0')).join('');
+  }catch(error){return null;}
+}
+async function findStudioDuplicate(blob){
+  const hash=await studioBlobHash(blob);if(!hash)return {hash:null,asset:null};
+  const assets=await studioRequest('readonly','getAll');
+  for(const asset of assets){
+    if(!asset.blob)continue;
+    const actual=await studioBlobHash(asset.blob);
+    if(actual===hash){asset.sha256=actual;await studioRequest('readwrite','put',asset);return {hash,asset};}
+  }
+  return {hash,asset:null};
+}
+async function cleanupStudioDuplicates(){
+  const btn=$('studioCleanupBtn');btn.disabled=true;
+  const status=$('studioDuplicateStatus');
+  try{
+    const assets=await studioRequest('readonly','getAll');
+    const groups=new Map();
+    for(const asset of assets){
+      const hash=asset.blob&&await studioBlobHash(asset.blob);
+      if(!hash)continue;
+      asset.sha256=hash;
+      if(!groups.has(hash))groups.set(hash,[]);
+      groups.get(hash).push(asset);
+    }
+    const logoId=localStorage.getItem('qissati-studio-logo-id');
+    const duplicates=[];
+    for(const group of groups.values()){
+      if(group.length<2)continue;
+      group.sort((a,b)=>String(a.createdAt||'').localeCompare(String(b.createdAt||'')));
+      const keep=group.find(x=>x.id===logoId)||group[0];
+      for(const item of group)if(item.id!==keep.id)duplicates.push(item);
+    }
+    if(!duplicates.length){
+      status.textContent='لَمْ أَجِدْ نُسَخًا مُطَابِقَةً بِصْمَةً لِلْمِلَفِّ. لَمْ يُحْذَفْ شَيْءٌ.';
+      return;
+    }
+    const message='وُجِدَتْ '+duplicates.length+' نُسْخَةٌ مُطَابِقَةٌ تَمَامًا. سَيُحَافَظُ عَلَى أَصْلٍ وَاحِدٍ (وَيُفَضَّلُ شِعَارُ التَّطْبِيقِ إِنْ وُجِدَ). هَلْ تُوَافِقُ عَلَى حَذْفِ النُّسَخِ الزَّائِدَةِ؟';
+    if(!confirm(message)){status.textContent='أُلْغِيَ التَّنْظِيفُ؛ لَمْ يُحْذَفْ شَيْءٌ.';return;}
+    for(const item of duplicates)await studioRequest('readwrite','delete',item.id);
+    status.textContent='حُذِفَتْ '+duplicates.length+' نُسْخَةٌ مُطَابِقَةٌ، وَبَقِيَ أَصْلٌ وَاحِدٌ مِنْ كُلِّ صُورَةٍ.';
+    await renderStudioAssets();
+  }catch(error){status.textContent='تَعَذَّرَ فَحْصُ الْمُكَرَّرَاتِ فِي التَّخْزِينِ الْمَحَلِّيِّ.';}
+  finally{btn.disabled=false;}
+}
+async function prepareStudioImage(file){
+  if(typeof createImageBitmap!=='function')return file;
+  let bitmap;
+  try{bitmap=await createImageBitmap(file);}catch(error){return file;}
+  const longest=Math.max(bitmap.width,bitmap.height);
+  const scale=Math.min(1,1536/longest);
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.max(1,Math.round(bitmap.width*scale));
+  canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+  canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);
+  bitmap.close?.();
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.88));
+  if(!blob)return file;
+  return new File([blob],'qissati-portrait.jpg',{type:'image/jpeg'});
+}
+function showStudioImage(mode,blob,profession){
+  const root=$('studioAiResults');
+  const old=root.querySelector('[data-mode="'+mode+'"]');
+  if(old)old.remove();
+  const previous=studioGeneratedAssets[mode];
+  if(previous?.url){URL.revokeObjectURL(previous.url);studioGeneratedUrls=studioGeneratedUrls.filter(x=>x!==previous.url);}
+  const url=URL.createObjectURL(blob);studioGeneratedUrls.push(url);
+  const result={blob,url,profession,mode,label:studioModeLabel(mode),createdAt:new Date().toISOString()};
+  studioGeneratedAssets[mode]=result;
+  const card=document.createElement('article');card.className='studio-ai-result';card.dataset.mode=mode;
+  const title=document.createElement('h4');title.textContent=result.label;
+  const stage=document.createElement('div');stage.className='studio-ai-stage';
+  const img=document.createElement('img');img.src=url;img.alt=result.label+' — صورة مولّدة تخيّلية';
+  stage.appendChild(img);
+  const note=document.createElement('p');note.className='studio-note';note.textContent=mode==='3d'?'صورة مولّدة بأسلوب رسوم ثلاثية الأبعاد.':'تصوّر خيالي وليس تنبؤًا حقيقيًا.';
+  const actions=document.createElement('div');actions.className='asset-actions';
+  const save=document.createElement('button');save.className='btn-secondary';save.textContent='حفظ في مكتبتي';
+  save.onclick=()=>saveGeneratedStudioAsset(mode);
+  const download=document.createElement('button');download.className='btn-secondary';download.textContent='تنزيل الصورة';
+  download.onclick=()=>{const a=document.createElement('a');a.href=url;a.download='qissati-'+mode+'-'+Date.now()+'.png';a.click();};
+  actions.append(save,download);card.append(title,stage,note,actions);root.prepend(card);
+}
+async function generateStudioImage(mode){
+  if(!['3d','10','20','30'].includes(mode))return;
+  if(!studioSelectedFile){$('studioGenStatus').textContent='اخْتَرْ صُورَةً أَوَّلًا.';return;}
+  if(!$('studioPrivacyConsent').checked||!$('studioGuardianConsent').checked){$('studioGenStatus').textContent='يَلْزَمُ إِقْرَارُ الطَّالِبِ وَمُوَافَقَةُ وَلِيِّ الْأَمْرِ قَبْلَ إِرْسَالِ الصُّورَةِ.';return;}
+  const buttons=Array.from(document.querySelectorAll('[data-studio-generate]'));
+  buttons.forEach(btn=>{btn.disabled=true;btn.dataset.busy='yes';});
+  const status=$('studioGenStatus');status.classList.remove('error');status.textContent='جَارٍ إِنْشَاءُ '+studioModeLabel(mode)+'… قَدْ يَسْتَغْرِقُ ذَلِكَ بَعْضَ الْوَقْتِ.';
+  try{
+    const image=await prepareStudioImage(studioSelectedFile);
+    if(image.size>6*1024*1024)throw new Error('image_too_large');
+    const form=new FormData();
+    form.append('image',image,image.name||'qissati-portrait.jpg');
+    form.append('mode',mode);
+    form.append('profession',$('studioProfession').value);
+    form.append('style',$('studioAssetStyle').value);
+    form.append('guardianConsent','yes');
+    form.append('privacyNotice','yes');
+    const response=await fetch(STUDIO_AI_ENDPOINT,{method:'POST',body:form});
+    const payload=await response.json().catch(()=>({}));
+    if(!response.ok){
+      const messages={service_not_configured:'خِدْمَةُ التَّوْلِيدِ غَيْرُ مُهَيَّأَةٍ عَلَى الْخَادِمِ.',image_model_permission:'حِسَابُ الْخَادِمِ لَا يَمْلِكُ صَلَاحِيَّةَ تَوْلِيدِ الصُّوَرِ بَعْدُ.',image_model_unavailable:'نَمُوذَجُ الصُّوَرِ غَيْرُ مُتَاحٍ لِهَذَا الْخَادِمِ.',api_usage_limit:'اِنْتَهَى الرَّصِيدُ أَوْ بَلَغَتِ الْخِدْمَةُ حَدَّ الِاسْتِخْدَامِ.',studio_rate_limited:'أَنْشِئْ صُوَرًا أَقَلَّ وَحَاوِلْ بَعْدَ قَلِيلٍ.',image_too_large:'حَجْمُ الصُّورَةِ بَعْدَ التَّصْغِيرِ أَكْبَرُ مِنَ الْمَسْمُوحِ.',guardian_consent_required:'يَلْزَمُ إِقْرَارُ وَلِيِّ الْأَمْرِ.'};
+      throw new Error(messages[payload.code]||'تَعَذَّرَ إِنْشَاءُ الصُّورَةِ. تَحَقَّقْ مِنَ الْخَادِمِ وَحَاوِلْ لَاحِقًا.');
+    }
+    const binary=atob(payload.image_base64||'');
+    if(!binary)throw new Error('لَمْ يَصِلْ مِلَفُّ الصُّورَةِ مِنَ الْخَادِمِ.');
+    const bytes=new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+    const blob=new Blob([bytes],{type:payload.mime_type||'image/png'});
+    showStudioImage(mode,blob,$('studioProfession').value);
+    status.textContent='اِكْتَمَلَتِ الصُّورَةُ. اِحْفَظْهَا فِي الْمَكْتَبَةِ أَوْ نَزِّلْهَا.';
+  }catch(error){
+    status.classList.add('error');
+    status.textContent=error.message==='Failed to fetch'?'تَعَذَّرَ الِاتِّصَالُ بِخَادِمِ الصُّوَرِ. تَحَقَّقْ مِنْ نَشْرِهِ وَاتِّصَالِ الْإِنْتَرْنِتِ.':error.message||'حَدَثَ خَطَأٌ أَثْنَاءَ تَوْلِيدِ الصُّورَةِ.';
+  }finally{
+    buttons.forEach(btn=>{delete btn.dataset.busy;btn.disabled=!(studioSelectedFile&&$('studioPrivacyConsent').checked&&$('studioGuardianConsent').checked);});
+  }
+}
+async function saveGeneratedStudioAsset(mode){
+  const generated=studioGeneratedAssets[mode];if(!generated)return;
+  try{
+    const found=await findStudioDuplicate(generated.blob);
+    if(found.asset){$('studioGenStatus').textContent='هَذِهِ الصُّورَةُ مَوْجُودَةٌ مُسْبَقًا فِي الْمَكْتَبَةِ؛ لَمْ تُضَفْ نُسْخَةٌ مُكَرَّرَةٌ.';return;}
+    await studioRequest('readwrite','put',{id:'ai-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name:studioModeLabel(mode)+' · '+$('studioProfession').selectedOptions[0].textContent,style:'cinematic',blob:generated.blob,type:generated.blob.type,sha256:found.hash,createdAt:generated.createdAt,source:'ai',profession:generated.profession,mode:mode});
+    $('studioGenStatus').textContent='حُفِظَتِ الصُّورَةُ الْمُوَلَّدَةُ فِي مَكْتَبَةِ هَذَا الْجِهَازِ.';
+    await renderStudioAssets();
+  }catch(error){$('studioGenStatus').textContent='تَعَذَّرَ حِفْظُ الصُّورَةِ فِي الْمَكْتَبَةِ الْمَحَلِّيَّةِ.';}
+}
 async function saveStudioAsset(){
   if(!studioSelectedFile){$('studioStatus').textContent='اخْتَرْ صُورَةً أَوَّلًا.';return;}
   const btn=$('studioSaveBtn');btn.disabled=true;
   try{
-    const asset={id:'asset-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name:$('studioAssetName').value.trim()||'عُنْصُرٌ جَدِيدٌ',style:$('studioAssetStyle').value,blob:studioSelectedFile,type:studioSelectedFile.type,createdAt:new Date().toISOString()};
+    const found=await findStudioDuplicate(studioSelectedFile);
+    if(found.asset){$('studioStatus').textContent='هَذِهِ الصُّورَةُ مُوْجُودَةٌ مُسْبَقًا؛ لَمْ أُضِفْ نُسْخَةً مُكَرَّرَةً.';return;}
+    const asset={id:'asset-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name:$('studioAssetName').value.trim()||'عُنْصُرٌ جَدِيدٌ',style:$('studioAssetStyle').value,blob:studioSelectedFile,type:studioSelectedFile.type,sha256:found.hash,createdAt:new Date().toISOString(),source:'upload'};
     await studioRequest('readwrite','put',asset);
     $('studioStatus').textContent='حُفِظَ الْعُنْصُرُ عَلَى هَذَا الْجِهَازِ بِنَجَاحٍ.';
     $('studioImageInput').value='';studioSelectedFile=null;btn.disabled=true;
@@ -2296,6 +2479,9 @@ async function deleteStudioAsset(id){
 /* Boot */
 $('appLogoImg').src = IMAGES.ICON;
 $('studioAssetStyle').addEventListener('change',updateStudioPreviewStyle);
+$('studioPrivacyConsent').addEventListener('change',updateStudioGenerationUI);
+$('studioGuardianConsent').addEventListener('change',updateStudioGenerationUI);
+document.querySelectorAll('[data-studio-generate]').forEach(btn=>btn.addEventListener('click',()=>generateStudioImage(btn.dataset.studioGenerate)));
 $('heroBannerImg').src = IMAGES.HERO;
 $('catalogEndpoint').value = catalogUrl();
 loadState();
