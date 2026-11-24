@@ -38,12 +38,9 @@ http.createServer(async (req,res)=>{
     const mode=String(form.get('mode')||'');
     const profession=String(form.get('profession')||'');
     const style=String(form.get('style')||'cinematic');
-    const guardian=form.get('guardianConsent')==='yes';
-    const privacy=form.get('privacyNotice')==='yes';
     const jobs={doctor:'طبيب',engineer:'مهندس',teacher:'معلم',programmer:'مبرمج',scientist:'عالِم',astronaut:'رائد فضاء',pilot:'طيار',artist:'فنان',architect:'مهندس معماري',nurse:'ممرض',farmer:'مزارع',chef:'طاهٍ',robotics:'متخصص روبوتات',athlete:'رياضي',vet:'طبيب بيطري'};
     const styles={cinematic:'أسلوب فيلم رسوم متحركة ثلاثي الأبعاد، ألوان سينمائية دافئة وتفاصيل لطيفة',clay:'شخصية ثلاثية الأبعاد من الطين اللامع',storybook:'رسوم قصصية ثلاثية الأبعاد ناعمة ومضيئة'};
     if(!image||typeof image.arrayBuffer!=='function'||image.size<1||image.size>6*1024*1024||!['image/jpeg','image/png','image/webp'].includes(image.type))return send(res,400,{code:'invalid_image'});
-    if(!guardian||!privacy)return send(res,400,{code:'guardian_consent_required'});
     if(!Object.prototype.hasOwnProperty.call(jobs,profession)||!Object.prototype.hasOwnProperty.call(styles,style)||!['3d','10','20','30'].includes(mode))return send(res,400,{code:'invalid_studio_options'});
     let prompt;
     if(mode==='3d'){
