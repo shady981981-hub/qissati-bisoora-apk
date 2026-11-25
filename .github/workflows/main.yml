@@ -31,7 +31,7 @@ jobs:
       - name: Stage app web assets and launcher icon
         run: |
           mkdir -p src/main/assets src/main/res/drawable-nodpi
-          for asset in icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg qissati_icon.jpg scene_world.jpg scene_bird.jpg scene_friends.jpg scene_ocean.jpg scene_rainbow.jpg scene_reading.jpg; do
+          for asset in icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg qissati_icon.jpg scene_world.jpg scene_bird.jpg scene_friends.jpg scene_ocean.jpg scene_rainbow.jpg scene_reading.jpg qissati-start.jpg icon-192.png; do
             test -s "$asset" || { echo "Missing required image: $asset"; exit 1; }
             cp "$asset" src/main/assets/
           done
@@ -44,7 +44,7 @@ jobs:
           test -n "$APK" || { echo 'APK not found'; exit 1; }
           unzip -Z1 "$APK" > /tmp/qissati-apk-files.txt
           grep -Eq '^res/drawable-nodpi(-v4)?/qissati_launcher.jpg$' /tmp/qissati-apk-files.txt || { echo 'Launcher icon missing'; exit 1; }
-          for asset in index.html icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg qissati_icon.jpg scene_world.jpg scene_bird.jpg scene_friends.jpg scene_ocean.jpg scene_rainbow.jpg scene_reading.jpg; do
+          for asset in index.html icon.jpg hero.jpg garden.jpg magic.jpg sea.jpg forest.jpg space.jpg city.jpg qissati_icon.jpg scene_world.jpg scene_bird.jpg scene_friends.jpg scene_ocean.jpg scene_rainbow.jpg scene_reading.jpg qissati-start.jpg icon-192.png; do
             grep -Fx "assets/$asset" /tmp/qissati-apk-files.txt || { echo "Missing assets/$asset"; exit 1; }
           done
       - name: Upload APK

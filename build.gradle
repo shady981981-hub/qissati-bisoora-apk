@@ -19,8 +19,8 @@ android {
         applicationId "ps.khanyounis.qissati"
         minSdk 24
         targetSdk 34
-        versionCode 7
-        versionName "7.0-Animated-Storybook"
+        versionCode 8
+        versionName "8.0-Offline-Android"
     }
 
     buildTypes {

@@ -54,6 +54,20 @@ button:active{transform:scale(.97)}
 }
 .hud-pill.gold{background:linear-gradient(135deg,#ffe07d,#f5b000);color:#362100;border-color:#fff0b3}
 
+.institution-banner{
+  max-width:1100px;margin:16px auto 0;padding:15px 18px 16px;border-radius:22px;
+  color:#251640;background:linear-gradient(125deg,#fffdf7,#fff4ce 52%,#f6edff);
+  border:2px solid #ffe18a;box-shadow:0 7px 0 rgba(44,18,91,.24),0 12px 24px rgba(19,8,48,.2);
+}
+.institution-title{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 12px;text-align:center;color:#3f1c7d;font-size:clamp(18px,2.5vw,24px);font-weight:1000;line-height:1.4;letter-spacing:.1px}
+.institution-title-mark{display:inline-grid;place-items:center;width:31px;height:31px;flex:none;border-radius:50%;background:linear-gradient(140deg,#ffe28a,#f4b728);color:#4b247d;font-size:18px;box-shadow:0 2px 0 #bd8720}
+.institution-credits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.institution-credit.school-credit{grid-column:1/-1;background:linear-gradient(100deg,#fff,#fff9e6);border-color:#e9d08d}
+.institution-credit{min-width:0;padding:9px 11px;border-radius:14px;background:#fff;border:1px solid #eadcf6;text-align:center;box-shadow:0 2px 5px rgba(54,28,96,.07)}
+.institution-credit-label{display:block;margin-bottom:3px;color:#66527d;font-size:12.5px;font-weight:800;line-height:1.5}
+.institution-credit-name{display:block;color:#261448;font-size:15px;font-weight:900;line-height:1.55;overflow-wrap:anywhere}
+@media(max-width:680px){.institution-banner{margin:12px 1px 0;padding:12px 11px 13px;border-radius:19px}.institution-title{font-size:18px;margin-bottom:9px}.institution-credits{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.institution-credit{padding:8px 6px}.institution-credit-label{font-size:12px}.institution-credit-name{font-size:14.5px}}
+
 .hero{
   max-width:1100px;margin:18px auto 0;display:grid;
   grid-template-columns:1.12fr 0.88fr;gap:20px;align-items:center;
@@ -345,6 +359,24 @@ body{background:radial-gradient(ellipse at 50% 0,#fff 0,#f2f5ff 56%,#f8f1ff 100%
 main.wrap{padding-bottom:100px}
 @keyframes kidButtonFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 @media(max-width:840px){.app-header{padding:9px 10px 18px}.top-bar{padding:8px}.brand-sub{display:none}.hero{grid-template-columns:1fr;text-align:center}.hero-frame{order:-1;aspect-ratio:16/10}.hero-actions{margin:0 auto}.hero h1{font-size:26px}.hud-pill{font-size:10px;padding:6px 8px}.app-icon-img{width:52px;height:52px}.nav-tabs{display:none}#featuredGrid .story-card{min-width:68vw;max-width:68vw}}
+
+/* Student progress foundation (offline-first, local preview until secure sync is configured). */
+.progress-callout{border:2px solid #efcf69;background:linear-gradient(135deg,#fff9df,#fff);border-radius:18px;padding:14px 16px;line-height:1.8;color:#47315f}
+.student-identity{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end}
+.student-identity .wide{grid-column:1/-1}
+.progress-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:12px 0}
+.progress-stat{padding:14px;border:1px solid var(--border);border-radius:16px;background:#faf7ff;text-align:center}
+.progress-stat strong{display:block;color:var(--primary-dark);font-size:22px}
+.progress-table-wrap{overflow:auto}
+.progress-table{width:100%;border-collapse:collapse;min-width:560px}
+.progress-table th,.progress-table td{padding:10px;border-bottom:1px solid var(--border);text-align:right}
+.progress-table th{color:var(--primary-dark);background:#f7f2ff}
+.student-entry{position:fixed;inset:0;z-index:10000;background:#190d36dd;display:grid;place-items:center;padding:18px}
+.student-entry-card{width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border:3px solid #f4d46d;border-radius:26px;padding:22px;box-shadow:0 22px 65px #0b041c77}
+.student-entry-card h2{margin:0 0 8px;color:var(--primary-dark)}
+.student-entry-card .student-entry-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.student-entry-status{min-height:24px;color:#a33;font-weight:800}
+@media(max-width:560px){.student-identity{grid-template-columns:1fr}.student-identity .wide{grid-column:auto}.student-entry-card{padding:18px}}
 @media(max-width:390px){.brand-title{font-size:21px}.hud-pills{gap:4px}.hero-actions{gap:8px}.btn-kid{font-size:12px;min-height:64px;padding:7px}.kid-icon{width:27px;height:27px}.dock-btn{font-size:8px}.dock-icon{width:24px;height:24px}}
 @media(min-width:721px){.mobile-dock{display:none}}
 
@@ -386,8 +418,8 @@ main.wrap{padding-bottom:100px}
 .studio-asset-card .asset-actions{display:grid;gap:6px}
 .studio-asset-card button{padding:7px 8px;border-radius:10px;font-weight:800;font-size:12px}
 .studio-empty{padding:20px;border:1px dashed #6c4890;border-radius:16px;color:#c5b1dd;text-align:center;line-height:1.7}
-.network-on{background:rgba(0,128,95,.28);border-color:#68dfbd}
-.network-off{background:rgba(177,55,67,.25);border-color:#ff9aa4}
+.studio-career-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.studio-career-controls label{margin:4px 0 0}
 .studio-gen-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
 .studio-gen-actions button{min-height:46px}
 .studio-gen-actions button:first-child{grid-column:1/-1;background:linear-gradient(120deg,#ffd45a,#ff8b5c);color:#2d1644}
@@ -405,7 +437,57 @@ main.wrap{padding-bottom:100px}
 @keyframes studioGentleFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.015)}}
 @keyframes studioTurn{0%,100%{transform:perspective(700px) rotateY(-4deg) translateY(0)}50%{transform:perspective(700px) rotateY(4deg) translateY(-5px)}}
 @media(max-width:560px){.studio-career-controls{grid-template-columns:1fr}.studio-gen-actions{grid-template-columns:1fr 1fr}}
+/* Simplified navigation, parent tools, learning dictionary and print book */
+.nav-tabs{display:flex!important;position:sticky;top:0;z-index:850;justify-content:center;gap:6px;padding:8px;margin:0 auto 12px;background:rgba(250,247,255,.96);backdrop-filter:blur(12px);border-radius:0 0 18px 18px;box-shadow:0 4px 12px rgba(48,25,93,.1)}
+.nav-tab{font-size:13px;padding:8px 13px}
+.mobile-dock{display:none!important}
+.app-header{position:relative;padding-top:22px}
+.parent-corner-btn{position:absolute;top:8px;left:10px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#ffffff20;border:1px solid #ffffff60;color:#fff;font-size:17px;opacity:.76;z-index:3}
+.parent-corner-btn:hover,.parent-corner-btn:focus-visible{opacity:1;background:#ffffff35}
+.home-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-width:550px}
+.profile-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.profile-stat{padding:14px 16px;border-radius:17px;background:linear-gradient(135deg,#f6efff,#fff);border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.profile-stat span{color:var(--muted);font-weight:800}.profile-stat strong{font-size:20px;color:var(--primary-dark)}
+.profile-actions{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
+.vocab-entry{padding:10px 12px;border:1px solid var(--border);border-radius:13px;background:#fff;margin:7px 0;line-height:1.7}
+.vocab-entry strong{color:var(--primary-dark)}
+.vocab-question{padding:14px;border:1px solid var(--border);border-radius:15px;background:#fff;margin:9px 0}
+.vocab-options{display:grid;gap:7px;margin-top:9px}
+.vocab-options button{text-align:right;background:#f5f0ff;color:var(--ink);border:1px solid var(--border);padding:10px 12px;border-radius:11px}
+.vocab-options button.correct{background:#d7f7eb;border-color:#3ca67f}.vocab-options button.wrong{background:#ffe5e6;border-color:#e27d85}.vocab-feedback{padding:8px 10px;border-radius:10px;background:#f3efff;color:var(--primary-dark);font-weight:800}
+.parent-settings{border-top:1px solid var(--border);margin-top:16px;padding-top:16px}
+.parent-settings details{margin:10px 0;padding:12px;border:1px solid var(--border);border-radius:14px;background:#fff}
+.parent-settings summary{cursor:pointer;font-weight:900;color:var(--primary-dark)}
+.pdf-author-field{display:flex;align-items:center;gap:6px;color:var(--muted);font-weight:800}
+.pdf-author-field input{width:min(190px,44vw);padding:8px 10px;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--ink)}
+#pdfPrintBook{display:none}
+#pdfPrintBook .pdf-cover{min-height:255mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20mm;border:5px double #d6aa43;border-radius:20px;background:linear-gradient(145deg,#fff9df,#f5edff);page-break-after:always}
+#pdfPrintBook .pdf-cover img{width:78%;max-height:125mm;object-fit:cover;border-radius:16px;border:5px solid #fff;box-shadow:0 8px 25px #28144833}
+#pdfPrintBook .pdf-cover h1{margin:16px 0 7px;color:#452280;font-size:32px}
+#pdfPrintBook .pdf-cover p{color:#55456d;font-size:20px}
+#pdfPrintBook .pdf-page{min-height:255mm;page-break-after:always;padding:4mm 0}
+#pdfPrintBook .pdf-page img{display:block;width:100%;max-height:125mm;object-fit:contain;border-radius:14px}
+#pdfPrintBook .pdf-page h2{color:#452280;font-size:19px}
+#pdfPrintBook .pdf-page p{font-size:22px;line-height:2.05;white-space:pre-wrap}
+#pdfPrintBook .pdf-vocab{padding:10px 14px;background:#f4efff;border-radius:12px;font-size:16px}
+@media(max-width:840px){.nav-tabs{justify-content:flex-start;gap:4px;padding:6px;overflow-x:auto;white-space:nowrap}.nav-tab{padding:7px 10px;font-size:11px;flex:none}.home-shortcuts{gap:8px}.parent-corner-btn{top:5px;left:6px}}
+@media(max-width:420px){.nav-tabs{gap:2px;padding:5px 3px}.nav-tab{padding:7px 8px;font-size:10.5px}.profile-summary{gap:7px}.profile-stat{padding:11px 12px}}
+@media print{body.pdf-export-mode>*:not(#pdfPrintBook){display:none!important}body.pdf-export-mode #pdfPrintBook{display:block!important;color:#171327;font-family:Tahoma,Arial,sans-serif;direction:rtl}body.pdf-export-mode #pdfPrintBook .pdf-cover,body.pdf-export-mode #pdfPrintBook .pdf-page{break-after:page;page-break-after:always}@page{size:A4;margin:14mm}}
+.hero-frame{aspect-ratio:1/1!important;max-width:520px;justify-self:center;background:#fff}.hero-frame img{object-fit:contain;animation:none!important}.hero-frame .hero-badge,.hero-frame .scene-motion{display:none!important}
+.app-header.compact{padding:7px 12px 9px;border-radius:0 0 16px 16px}.app-header.compact .institution-banner,.app-header.compact .hero{display:none!important}.app-header.compact .top-bar{flex-wrap:nowrap}.app-header.compact .hud-pills{display:none}
+.parent-corner-btn{position:static;width:auto;height:38px;padding:0 12px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;background:#fff4c9;border:2px solid #ffe18a;color:#3f1c7d;font-size:13px;font-weight:900;opacity:1;box-shadow:0 3px 0 #bd8720;flex:none}
+.institution-credit.school-credit{padding:14px 11px;background:linear-gradient(135deg,#fffdf5,#fff1bf 52%,#fff9e5);border-color:#e5bd51;box-shadow:0 4px 0 #bd8d32,0 8px 15px rgba(76,43,108,.16)}
+.institution-credit.school-credit .institution-credit-name{font-size:clamp(22px,3.2vw,29px);font-weight:1000;color:#452080;line-height:1.5;text-shadow:0 1px 0 #fff,0 2px 0 #edcf72,0 4px 0 #9b6a2c,0 6px 7px rgba(47,20,77,.28);letter-spacing:.15px}
+@media(max-width:680px){.institution-credit.school-credit{padding:12px 7px}.institution-credit.school-credit .institution-credit-name{font-size:clamp(21px,6vw,25px)}}
+.network-on{background:rgba(0,128,95,.28);border-color:#68dfbd}
+.network-off{background:rgba(177,55,67,.25);border-color:#ff9aa4}
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#130b2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="قصتي بصورة">
+<link rel="apple-touch-icon" href="icon-192.png">
 </head>
 <body>
 
@@ -432,94 +514,106 @@ main.wrap{padding-bottom:100px}
       <img id="appLogoImg" class="app-icon-img" alt="أيقونة قصتي بصورة" onclick="openLightbox(IMAGES.ICON, 'أيقونة قصتي بصورة')">
       <div>
         <div class="brand-title">قصتي بصورة</div>
-        <div class="brand-sub">أَحْكِي • أَقْرَأُ • أُبْدِعُ • أَسْتَمِعُ</div>
+        <div class="brand-sub">أحكي • أقرأ • أبدع • أستمع</div>
       </div>
     </div>
     <div class="hud-pills">
-      <div class="hud-pill gold"><svg class="nav-icon"><use href="#i-star"/></svg><span id="hudStars">0</span> نَجْمَةٌ</div>
-      <div class="hud-pill"><svg class="nav-icon"><use href="#i-level"/></svg><span id="hudLevel">مُسْتَكْشِفٌ صَغِيرٌ</span></div>
-      <button class="hud-pill" id="sfxToggleBtn" onclick="toggleSfx()">🔔 الصَّوْتُ</button>
-      <button class="hud-pill network-on" id="networkModeBtn" onclick="toggleOnlineMode()" title="يُشَغِّلُ أَوْ يُوقِفُ اتِّصَالَ التَّطْبِيقِ بِخِدْمَاتِ الذَّكَاءِ الِاصْطِنَاعِيِّ">🌐 الاتِّصَالُ: مُفَعَّلٌ</button>
+      <div class="hud-pill gold"><svg class="nav-icon"><use href="#i-star"/></svg><span id="hudStars">0</span> نجمة</div>
+      <div class="hud-pill"><svg class="nav-icon"><use href="#i-level"/></svg><span id="hudLevel">مستكشف صغير</span></div>
+      <button class="hud-pill" id="sfxToggleBtn" onclick="toggleSfx()">🔔 الصوت</button>
     </div>
+    <button class="parent-corner-btn" aria-label="ركن المعلم وولي الأمر" title="ركن المعلم وولي الأمر" onclick="navigateSection('teacher')">⚙ <span>ركن المعلم</span></button>
   </div>
+
+  <section class="institution-banner" aria-label="بيانات المنطقة التعليمية والمدرسة وفريق الإعداد">
+    <h2 class="institution-title"><span class="institution-title-mark" aria-hidden="true">✦</span>منطقة غرب خان يونس التعليمية</h2>
+    <div class="institution-credits">
+      <div class="institution-credit school-credit"><strong class="institution-credit-name">مدرسة الشروق والأمل ٢</strong></div>
+      <div class="institution-credit"><span class="institution-credit-label">مدير المنطقة التعليمية</span><strong class="institution-credit-name">عيسى أبو سلمية</strong></div>
+      <div class="institution-credit"><span class="institution-credit-label">مديرة المدرسة</span><strong class="institution-credit-name">نورة على أبو زايد</strong></div>
+      <div class="institution-credit"><span class="institution-credit-label">إعداد</span><strong class="institution-credit-name">فريق اللغة العربية</strong></div>
+      <div class="institution-credit"><span class="institution-credit-label">تصميم</span><strong class="institution-credit-name">د. شادي</strong></div>
+    </div>
+  </section>
 
   <div class="hero">
     <div>
       <div class="age-band-bar" role="group" aria-label="الفئة العمرية">
-        <button class="age-chip active" data-age="all" onclick="setAgeBand('all')">الْكُلُّ (8–14 سَنَةً)</button>
-        <button class="age-chip" data-age="8-10" onclick="setAgeBand('8-10')">الصِّغَارُ (8–10 سَنَوَاتٍ)</button>
-        <button class="age-chip" data-age="11-14" onclick="setAgeBand('11-14')">الْيَافِعُونَ (11–14 سَنَةً)</button>
+        <button class="age-chip active" data-age="all" onclick="setAgeBand('all')">الكل (8–14 سنة)</button>
+        <button class="age-chip" data-age="8-10" onclick="setAgeBand('8-10')">الصغار (8–10 سنوات)</button>
+        <button class="age-chip" data-age="11-14" onclick="setAgeBand('11-14')">اليافعون (11–14 سنة)</button>
       </div>
-      <h1>أَحْكِي • أَقْرَأُ • أُبْدِعُ</h1>
-      <p id="heroDesc">اِخْتَرْ بَابَكَ وَانْطَلِقْ إِلَى عَالَمِ الْحِكَايَاتِ!</p>
+      <h1>أحكي • أقرأ • أبدع</h1>
+      <p id="heroDesc">اختر بابك وانطلق إلى عالم الحكايات!</p>
       <div class="hero-actions">
-        <button class="btn-kid orange" onclick="go('voice')"><svg class="kid-icon"><use href="#i-mic"/></svg><span>أَحْكِي قِصَّتِي<br>بِصَوْتِي</span></button>
-        <button class="btn-kid purple" onclick="openAiStoryChat()"><svg class="kid-icon"><use href="#i-book"/></svg><span>أَتَحَدَّثُ مَعَ<br>صَدِيقِي الذَّكِيِّ</span></button>
-        <button class="btn-kid purple" onclick="go('catalog')"><svg class="kid-icon"><use href="#i-book"/></svg><span>أَقْرَأُ قِصَّةً<br>جَمِيلَةً</span></button>
-        <button class="btn-kid green" onclick="startWizard('creative')"><svg class="kid-icon"><use href="#i-movie"/></svg><span>قِصَّةٌ<br>مُتَحَرِّكَةٌ</span></button>
-        <button class="btn-kid blue" onclick="startWizard('creative')"><svg class="kid-icon"><use href="#i-palette"/></svg><span>أَصْنَعُ قِصَّتِي<br>بِالصُّوَرِ</span></button>
-        <button class="btn-kid purple" onclick="go('studio')"><svg class="kid-icon"><use href="#i-palette"/></svg><span>أَسْتُودْيُو 3D<br>صُورَةُ مُسْتَقْبَلِي</span></button>
+        <button class="btn-kid orange" onclick="navigateSection('voice')"><svg class="kid-icon"><use href="#i-mic"/></svg><span>أحكي قصتي<br>وأتحدث مع صديقي</span></button>
+        <button class="btn-kid purple" onclick="navigateSection('catalog')"><svg class="kid-icon"><use href="#i-book"/></svg><span>أقرأ قصة<br>جميلة</span></button>
+        <button class="btn-kid green" onclick="startWizard('creative')"><svg class="kid-icon"><use href="#i-movie"/></svg><span>أصنع قصتي<br>المصورة</span></button>
+        <button class="btn-kid blue" onclick="navigateSection('studio')"><svg class="kid-icon"><use href="#i-palette"/></svg><span>أستوديو 3D<br>صورة مستقبلي</span></button>
       </div>
     </div>
-    <div class="hero-frame" onclick="openLightbox(IMAGES.HERO, 'المشهد الافتتاحي لعالم قصتي بصورة')">
+    <div class="hero-frame" onclick="openLightbox(IMAGES.START, 'صورة بداية موقع قصتي بصورة')">
       <img id="heroBannerImg" alt="مشهد عالم قصتي بصورة">
       <div class="scene-motion" aria-hidden="true"><i class="spark"></i><i class="spark"></i><i class="spark"></i><i class="spark"></i><i class="firefly" style="--x:18%;--y:72%;--delay:.6s"></i><i class="firefly" style="--x:66%;--y:81%;--delay:2.1s"></i><i class="flying-bird"></i></div>
-      <div class="hero-badge">🔍 عَرْضُ الصُّورَةِ بِالدِّقَّةِ الْكَامِلَةِ</div>
+      <div class="hero-badge">🔍 عرض الصورة بالدقة الكاملة</div>
     </div>
   </div>
 </header>
 
 <main class="wrap">
   <nav class="nav-tabs" aria-label="التنقل الرئيسي">
-    <button class="nav-tab" data-nav="library" onclick="go('library')"><svg class="nav-icon"><use href="#i-trophy"/></svg>إِنْجَازَاتِي</button>
-    <button class="nav-tab" onclick="openChallenge()"><svg class="nav-icon"><use href="#i-star"/></svg>تَحَدِّيَاتٌ</button>
-    <button class="nav-tab" onclick="go('library')"><svg class="nav-icon"><use href="#i-level"/></svg>مُسْتَوَايَ</button>
-    <button class="nav-tab active" data-nav="home" onclick="go('home')"><svg class="nav-icon"><use href="#i-home"/></svg>الرَّئِيسِيَّةُ</button>
-    <button class="nav-tab" onclick="go('catalog')"><svg class="nav-icon"><use href="#i-book"/></svg>قِصَصِي</button>
-    <button class="nav-tab" data-nav="voice" onclick="go('voice')"><svg class="nav-icon"><use href="#i-mic"/></svg>قِصَّتِي بِصَوْتِي</button>
-    <button class="nav-tab" data-nav="studio" onclick="go('studio')">🎨 اسْتُودْيُو 3D</button>
-    <button class="nav-tab" onclick="openSurprise()"><svg class="nav-icon"><use href="#i-gift"/></svg>مُفَاجَأَةُ الْيَوْمِ</button>
+    <button class="nav-tab active" data-nav="home" onclick="navigateSection('home')"><svg class="nav-icon"><use href="#i-home"/></svg>الرئيسية</button>
+    <button class="nav-tab" data-nav="catalog" onclick="navigateSection('catalog')"><svg class="nav-icon"><use href="#i-book"/></svg>قصصي</button>
+    <button class="nav-tab" data-nav="voice" onclick="navigateSection('voice')"><svg class="nav-icon"><use href="#i-mic"/></svg>قصتي بصوتي</button>
+    <button class="nav-tab" data-nav="studio" onclick="navigateSection('studio')"><svg class="nav-icon"><use href="#i-palette"/></svg>استوديو 3D</button>
+    <button class="nav-tab" data-nav="library" onclick="navigateSection('library')"><svg class="nav-icon"><use href="#i-trophy"/></svg>ملفي وإنجازاتي</button>
   </nav>
 
   <!-- HOME -->
   <section id="home">
+    <div class="panel" id="studentProgressSummary">
+      <div class="section-head" style="margin-top:0"><h2 class="section-title">ملف الطالب وتقدّمه</h2><button class="btn-secondary" onclick="openStudentEntry(true)">تبديل الطالب</button></div>
+      <div id="studentSummaryText" class="progress-callout">يُرجى اختيار ملف الطالب لبدء تسجيل التقدّم على هذا الجهاز.</div>
+      <div class="progress-grid" id="studentSummaryStats"></div>
+      <p id="studentSyncNotice" role="status" style="margin:8px 0 0;color:#7b4c00;font-weight:800"></p>
+    </div>
     <div class="panel" id="studentQuickGuide">
       <div class="section-head" style="margin-top:0">
-        <h2 class="section-title" style="font-size:19px">📘 دَلِيلُ الطَّالِبِ السَّرِيعُ (فِي دَقِيقَتَيْنِ)</h2>
-        <button class="btn-secondary" style="padding:7px 12px;font-size:12.5px" onclick="toggleQuickGuide()">إِخْفَاءُ الدَّلِيلِ</button>
+        <h2 class="section-title" style="font-size:19px">📘 دليل الطالب السريع (في دقيقتين)</h2>
+        <button class="btn-secondary" style="padding:7px 12px;font-size:12.5px" onclick="toggleQuickGuide()">إخفاء الدليل</button>
       </div>
       <div class="guide-grid">
         <div class="guide-step">
           <div class="guide-num">١</div>
-          <h4>اخْتَرْ مَرْحَلَتَكَ وَقِصَّتَكَ</h4>
-          <p>حَدِّدِ الْفِئَةَ الْعُمْرِيَّةَ (8–10 أَو 11–14 سَنَةً)، ثُمَّ اقْرَأِ الْقِصَّةَ وَاسْتَمِعْ إِلَيْهَا بِالْفُصْحَى مَعَ تَظْلِيلِ الْكَلِمَاتِ.</p>
+          <h4>اختر مرحلتك وقصتك</h4>
+          <p>حدد الفئة العمرية (8–10 أو 11–14 سنة)، ثم اقرأ القصة واستمع إليها بالفصحى مع تظليل الكلمات.</p>
         </div>
         <div class="guide-step">
           <div class="guide-num">٢</div>
-          <h4>تَأَمَّلِ الْمُفْرَدَةَ وَالسُّؤَالَ</h4>
-          <p>تَعَرَّفْ مَعْنَى الْمُفْرَدَةِ الْجَدِيدَةِ فِي كُلِّ صَفْحَةٍ، وَأَجِبْ عَنْ سُؤَالِ التَّفْكِيرِ وَالِاخْتِبَارِ لِجَمْعِ النُّجُومِ ⭐.</p>
+          <h4>تأمل المفردة والسؤال</h4>
+          <p>تعرف معنى المفردة الجديدة في كل صفحة، وأجب عن سؤال التفكير والاختبار لجمع النجوم ⭐.</p>
         </div>
         <div class="guide-step">
           <div class="guide-num">٣</div>
-          <h4>أَلِّفْ قِصَّتَكَ بِالصُّوَرِ أَوِ الصَّوْتِ</h4>
-          <p>اصْنَعْ قِصَّةً جَدِيدَةً خُطْوَةً بِخُطْوَةٍ، أَوِ احْكِهَا بِصَوْتِكَ فِي اسْتُودْيُو الْفُصْحَى لِتَتَحَوَّلَ إِلَى صَفَحَاتٍ مُصَوَّرَةٍ.</p>
+          <h4>ألف قصتك بالصور أو الصوت</h4>
+          <p>اصنع قصة جديدة خطوة بخطوة، أو احكها بصوتك في استوديو الفصحى لتتحول إلى صفحات مصورة.</p>
         </div>
         <div class="guide-step">
           <div class="guide-num">٤</div>
-          <h4>احْفَظْ إِنْجَازَكَ وَاطْبَعْهُ</h4>
-          <p>تُحْفَظُ قِصَصُكَ وَأَوْسِمَتُكَ عَلَى جِهَازِكَ، وَيُمْكِنُكَ طِبَاعَةُ الْقِصَّةِ أَوْ تَصْدِيرُ نُسْخَةٍ احْتِيَاطِيَّةٍ بِصِيغَةِ JSON.</p>
+          <h4>احفظ إنجازك واطبعه</h4>
+          <p>تحفظ قصصك وإنجازاتك على هذا الجهاز. اقرأ قصتك واطبعها أو احفظها كتابا مصورا.</p>
         </div>
       </div>
     </div>
 
     <div class="section-head">
-      <h2 class="section-title"><svg class="nav-icon"><use href="#i-book"/></svg> مَكْتَبَتِي الْقِصَصِيَّةُ</h2>
-      <button class="btn-secondary" onclick="go('catalog')">عَرْضُ جَمِيعِ الْقِصَصِ ←</button>
+      <h2 class="section-title"><svg class="nav-icon"><use href="#i-book"/></svg> مكتبتي القصصية</h2>
+      <button class="btn-secondary" onclick="navigateSection('catalog')">عرض جميع القصص ←</button>
     </div>
     <div id="featuredGrid" class="grid-cards"></div>
 
     <div class="section-head" style="margin-top:26px">
-      <h2 class="section-title">🎨 مَعْرِضُ الْمَشَاهِدِ الْفَنِّيَّةِ عَالِيَةِ الدِّقَّةِ (HD)</h2>
+      <h2 class="section-title">🎨 معرض المشاهد الفنية عالية الدقة (HD)</h2>
       <span style="font-size:13px;color:var(--muted);font-weight:700">دقة أصلية كاملة لجميع الصور</span>
     </div>
     <div id="hdGalleryGrid" class="hd-gallery"></div>
@@ -533,27 +627,27 @@ main.wrap{padding-bottom:100px}
       <p id="wizSub" style="margin:0 0 12px;color:var(--muted);font-weight:600"></p>
       <div id="wizBody"></div>
       <div style="display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap">
-        <button class="btn-secondary" id="wizPrevBtn" onclick="wizMove(-1)">→ السَّابِقُ</button>
+        <button class="btn-secondary" id="wizPrevBtn" onclick="wizMove(-1)">→ السابق</button>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn-amber" onclick="openCustomPageComposer()">✍️ تَحْرِيرُ الصَّفَحَاتِ يَدَوِيًّا</button>
-          <button class="btn-primary" id="wizNextBtn" onclick="wizMove(1)">التَّالِي ←</button>
+          <button class="btn-amber" onclick="openCustomPageComposer()">✍️ تحرير الصفحات يدويا</button>
+          <button class="btn-primary" id="wizNextBtn" onclick="wizMove(1)">التالي ←</button>
         </div>
       </div>
     </div>
 
     <div id="customComposerPanel" class="panel hidden">
       <div class="section-head" style="margin-top:0">
-        <h3 class="section-title" style="font-size:19px">✍️ مُحَرِّرُ الصَّفَحَاتِ وَالْمَشَاهِدِ الْمُخَصَّصَةِ</h3>
-        <button class="btn-teal" onclick="addComposerPage()">+ إِضَافَةُ صَفْحَةٍ جَدِيدَةٍ</button>
+        <h3 class="section-title" style="font-size:19px">✍️ محرر الصفحات والمشاهد المخصصة</h3>
+        <button class="btn-teal" onclick="addComposerPage()">+ إضافة صفحة جديدة</button>
       </div>
       <div style="margin-bottom:10px">
-        <label style="font-weight:800">عُنْوَانُ الْقِصَّةِ:</label>
-        <input id="compTitle" class="field-input" placeholder="اُكْتُبْ عُنْوَانَ قِصَّتِكَ هُنَا...">
+        <label style="font-weight:800">عنوان القصة:</label>
+        <input id="compTitle" class="field-input" placeholder="اكتب عنوان قصتك هنا...">
       </div>
       <div id="composerPagesList"></div>
       <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn-primary" onclick="saveComposedStory()">💾 حِفْظُ الْقِصَّةِ وَبَدْءُ الْقِرَاءَةِ</button>
-        <button class="btn-secondary" onclick="$('customComposerPanel').classList.add('hidden')">إِخْفَاءُ الْمُحَرِّرِ</button>
+        <button class="btn-primary" onclick="saveComposedStory()">💾 حفظ القصة وبدء القراءة</button>
+        <button class="btn-secondary" onclick="$('customComposerPanel').classList.add('hidden')">إخفاء المحرر</button>
       </div>
     </div>
   </section>
@@ -561,14 +655,14 @@ main.wrap{padding-bottom:100px}
   <!-- VOICE STUDIO -->
   <section id="voice" class="hidden">
     <div class="panel">
-      <h2 class="section-title">🎙️ اسْتُودْيُو الْحِكَايَةِ الصَّوْتِيَّةِ (بِالْفُصْحَى)</h2>
+      <h2 class="section-title">🎙️ استوديو الحكاية الصوتية (بالفصحى)</h2>
       <p style="color:var(--muted);line-height:1.8;margin-top:6px">
-        سَيُفَرِّغُ الْجِهَازُ كَلَامَكَ إِلَى نَصٍّ أَوَّلِيٍّ، وَقَدْ يَكُونُ عَامِّيًّا وَبِلَا تَشْكِيلٍ. اسْتَخْدِمْ خِدْمَةَ التَّحْوِيلِ الْخَادِمِيَّةَ وَرَاجِعِ النَّصَّ قَبْلَ إِنْشَاءِ الْقِصَّةِ.
+        سيفرغ الجهاز كلامك إلى نص أولي، وقد يكون عاميا وبلا تشكيل. استخدم خدمة التحويل الخادمية وراجع النص قبل إنشاء القصة.
       </p>
 
       <div style="margin-bottom:12px">
-        <label style="font-weight:800;font-size:14px">عُنْوَانُ الْقِصَّةِ:</label>
-        <input id="voiceTitle" class="field-input" placeholder="مِثَالٌ: مُغَامَرَةُ سَلِيمٍ وَالْعُصْفُورِ الصَّغِيرِ">
+        <label style="font-weight:800;font-size:14px">عنوان القصة:</label>
+        <input id="voiceTitle" class="field-input" placeholder="مثال: مغامرة سليم والعصفور الصغير">
       </div>
 
       <div class="voice-wave" id="voiceWave">
@@ -576,50 +670,50 @@ main.wrap{padding-bottom:100px}
       </div>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0">
-        <button class="btn-primary" id="voiceStartBtn" onclick="startVoice()">🎤 ابْدَأِ التَّسْجِيلَ الصَّوْتِيَّ</button>
-        <button class="btn-danger" id="voiceStopBtn" onclick="stopVoice()">⏹ إِيقَافُ التَّسْجِيلِ</button>
-        <button class="btn-secondary" id="fushaConvertBtn" onclick="convertRecordedTextToFusha()">✨ حَوِّلْ إِلَى الْفُصْحَى الْمَشْكُولَةِ</button>
-        <button class="btn-secondary" onclick="insertSampleVoice()">📝 إدْرَاجُ نَمُوذَجٍ تَجْرِيبِيٍّ</button>
+        <button class="btn-primary" id="voiceStartBtn" onclick="startVoice()">🎤 ابدأ التسجيل الصوتي</button>
+        <button class="btn-danger" id="voiceStopBtn" onclick="stopVoice()">⏹ إيقاف التسجيل</button>
+        <button class="btn-secondary" id="fushaConvertBtn" onclick="convertRecordedTextToFusha()">✨ حول إلى الفصحى المشكولة</button>
+        <button class="btn-secondary" onclick="insertSampleVoice()">📝 إدراج نموذج تجريبي</button>
       </div>
 
       <div id="voiceStatus" style="font-size:13.5px;font-weight:800;color:var(--primary-dark);margin-bottom:8px">
-        جَاهِزٌ لِلِاسْتِمَاعِ إِلَى حِكَايَتِكَ بِالْعَرَبِيَّةِ الْفُصْحَى.
+        جاهز للاستماع إلى حكايتك بالعربية الفصحى.
       </div>
 
-      <textarea id="voiceText" rows="5" class="field-input" placeholder="تَحَدَّثْ أَوِ اكْتُبْ هُنَا..."></textarea>
-      <div style="margin-top:8px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#fff9e9;color:#68501d;font-size:13px;line-height:1.8">التفريغ الصوتي الأولي لا يضمن الفصحى أو التشكيل. عند الضغط على زر التحويل، يُرسل النص الظاهر في هذا المربع فقط إلى خادم التحويل؛ لا يرسل هذا الزر ملف التسجيل. راجع وليّ الأمر سياسة الخدمة قبل استخدامها، وتجنّب إدخال أسماء أو معلومات شخصية.</div>
-      <label style="display:flex;gap:9px;align-items:flex-start;margin-top:10px;font-size:13px;line-height:1.7"><input id="guardianFushaConsent" type="checkbox" style="margin-top:5px;accent-color:var(--primary)"><span>أؤكد أن وليّ الأمر راجع إشعار الخصوصية ووافق على إرسال نص القصة للتحويل.</span></label>
+      <textarea id="voiceText" rows="5" class="field-input" placeholder="تحدث أو اكتب هنا..."></textarea>
+      <div style="margin-top:8px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#fff9e9;color:#68501d;font-size:13px;line-height:1.8">التفريغ الصوتي الأولي لا يضمن الفصحى أو التشكيل. عند الضغط على زر التحويل، يرسل النص الظاهر في هذا المربع فقط إلى خادم التحويل؛ لا يرسل هذا الزر ملف التسجيل. راجع ولي الأمر سياسة الخدمة قبل استخدامها، وتجنب إدخال أسماء أو معلومات شخصية.</div>
+      <label style="display:flex;gap:9px;align-items:flex-start;margin-top:10px;font-size:13px;line-height:1.7"><input id="guardianFushaConsent" type="checkbox" style="margin-top:5px;accent-color:var(--primary)"><span>أؤكد أن ولي الأمر راجع إشعار الخصوصية ووافق على إرسال نص القصة للتحويل.</span></label>
       <div id="fushaReview" class="hidden" style="margin-top:10px;padding:12px;border:1px solid var(--border);border-radius:14px">
-        <strong>مُرَاجَعَةُ النَّصِّ الْفَصِيحِ الْمُشَكَّلِ</strong>
+        <strong>مراجعة النص الفصيح المشكل</strong>
         <textarea id="fushaProposed" rows="5" class="field-input" style="margin-top:8px" aria-label="النص المقترح بالفصحى"></textarea>
         <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-          <button class="btn-teal" onclick="acceptFushaProposal()">✓ اعْتَمِدِ النَّصَّ بَعْدَ مُرَاجَعَتِهِ</button>
-          <button class="btn-secondary" onclick="$('fushaReview').classList.add('hidden')">إِلْغَاءٌ</button>
+          <button class="btn-teal" onclick="acceptFushaProposal()">✓ اعتمد النص بعد مراجعته</button>
+          <button class="btn-secondary" onclick="$('fushaReview').classList.add('hidden')">إلغاء</button>
         </div>
       </div>
 
       <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn-teal" onclick="makeVoiceStory()">📖 حَوِّلْ كَلَامِي إِلَى قِصَّةٍ مُصَوَّرَةٍ</button>
-        <button class="btn-secondary" onclick="previewVoiceRead()">🔊 اسْتَمِعْ إِلَى النَّصِّ قَبْلَ الْحِفْظِ</button>
+        <button class="btn-teal" onclick="makeVoiceStory()">📖 حول كلامي إلى قصة مصورة</button>
+        <button class="btn-secondary" onclick="previewVoiceRead()">🔊 استمع إلى النص قبل الحفظ</button>
       </div>
     </div>
     <div class="panel" id="aiStoryChatPanel" style="margin-top:18px">
       <div class="section-head" style="margin-top:0">
-        <h2 class="section-title" style="font-size:20px">💬 صَدِيقُ الْقِصَّةِ الذَّكِيُّ</h2>
-        <button class="btn-secondary" style="padding:7px 12px" onclick="clearAiChat()">مَحْوُ الْمُحَادَثَةِ</button>
+        <h2 class="section-title" style="font-size:20px">💬 صديق القصة الذكي</h2>
+        <button class="btn-secondary" style="padding:7px 12px" onclick="clearAiChat()">محو المحادثة</button>
       </div>
-      <p style="margin:0 0 12px;color:var(--muted);line-height:1.8">اكتب سؤالك أو اضغط زر الميكروفون وتحدّث. سيردّ عليك صديقك بالفصحى المشكولة، ويمكنك الاستماع إلى رده.</p>
-      <div class="ai-chat-note">تُرسل الرسالة وآخر الرسائل اللازمة للرد إلى خادم الذكاء الاصطناعي؛ لا تُحفظ المحادثة في مكتبة التطبيق. لا تكتب اسمك الحقيقي أو عنوانك أو مدرستك. الإملاء الصوتي قد يعالج الصوت وفق إعدادات خدمة التعرّف المثبّتة على الجهاز.</div>
-      <label style="display:flex;gap:9px;align-items:flex-start;margin:12px 0;font-size:13.5px;line-height:1.8"><input id="chatGuardianConsent" type="checkbox" style="margin-top:5px;accent-color:var(--primary)"><span>أؤكد بصفتي وليّ الأمر أنني راجعت طريقة استخدام المحادثة ووافقت عليها.</span></label>
+      <p style="margin:0 0 12px;color:var(--muted);line-height:1.8">اكتب سؤالك أو اضغط زر الميكروفون وتحدث. سيرد عليك صديقك بالفصحى المشكولة، ويمكنك الاستماع إلى رده.</p>
+      <div class="ai-chat-note">ترسل الرسالة وآخر الرسائل اللازمة للرد إلى خادم الذكاء الاصطناعي؛ لا تحفظ المحادثة في مكتبة التطبيق. لا تكتب اسمك الحقيقي أو عنوانك أو مدرستك. الإملاء الصوتي قد يعالج الصوت وفق إعدادات خدمة التعرف المثبتة على الجهاز.</div>
+      <label style="display:flex;gap:9px;align-items:flex-start;margin:12px 0;font-size:13.5px;line-height:1.8"><input id="chatGuardianConsent" type="checkbox" style="margin-top:5px;accent-color:var(--primary)"><span>أؤكد بصفتي ولي الأمر أنني راجعت طريقة استخدام المحادثة ووافقت عليها.</span></label>
       <div id="aiChatLog" class="ai-chat-log" role="log" aria-live="polite" aria-label="محادثة صديق القصة">
-        <div class="ai-chat-bubble assistant">مَرْحَبًا! أَنَا صَدِيقُ قِصَّتِكَ. مَا الْمَغَامَرَةُ الَّتِي تُحِبُّ أَنْ نَتَحَدَّثَ عَنْهَا؟</div>
+        <div class="ai-chat-bubble assistant">مرحبا! أنا صديق قصتك. ما المغامرة التي تحب أن نتحدث عنها؟</div>
       </div>
-      <div id="aiChatStatus" role="status" aria-live="polite" style="margin-top:8px;color:var(--primary-dark);font-weight:800;font-size:13.5px">اكتب رسالة قصيرة لِنَبْدَأَ.</div>
+      <div id="aiChatStatus" role="status" aria-live="polite" style="margin-top:8px;color:var(--primary-dark);font-weight:800;font-size:13.5px">اكتب رسالة قصيرة لنبدأ.</div>
       <textarea id="aiChatInput" class="field-input" rows="2" maxlength="700" placeholder="اكتب سؤالك هنا..." aria-label="رسالتك إلى صديق القصة"></textarea>
       <div class="ai-chat-controls">
-        <button class="btn-primary" id="aiChatSendBtn" onclick="sendAiChatMessage()">إِرْسَالُ الرِّسَالَةِ</button>
-        <button class="btn-secondary" id="aiChatMicBtn" onclick="startAiChatVoice()">🎤 تَحَدَّثْ</button>
-        <button class="btn-secondary" id="aiChatSpeakBtn" onclick="speakLatestAiReply()">🔊 اسْتَمِعْ</button>
+        <button class="btn-primary" id="aiChatSendBtn" onclick="sendAiChatMessage()">إرسال الرسالة</button>
+        <button class="btn-secondary" id="aiChatMicBtn" onclick="startAiChatVoice()">🎤 تحدث</button>
+        <button class="btn-secondary" id="aiChatSpeakBtn" onclick="speakLatestAiReply()">🔊 استمع</button>
       </div>
     </div>
   </section>
@@ -627,74 +721,59 @@ main.wrap{padding-bottom:100px}
   <!-- CATALOG -->
   <section id="catalog" class="hidden">
     <div class="section-head">
-      <h2 class="section-title">🌈 مَكْتَبَةُ الْقِصَصِ التَّعْلِيمِيَّةِ الْمَشْكُولَةِ</h2>
+      <h2 class="section-title">🌈 مكتبة القصص التعليمية المشكولة</h2>
     </div>
     <div id="catalogGrid" class="grid-cards"></div>
 
-    <div class="panel" style="margin-top:22px">
-      <h3 style="margin:0 0 8px;font-size:17px">🌐 رَبْطُ الْمَكْتَبَةِ السَّحَابِيَّةِ (GitHub JSON Catalog)</h3>
-      <p style="margin:0 0 10px;font-size:13.5px;color:var(--muted)">أَضِفْ رَابِطَ مَلَفِّ الْقِصَصِ عَلَى GitHub (HTTPS) لِتَحْمِيلِ قِصَصٍ إِضَافِيَّةٍ تِلْقَائِيًّا:</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <input id="catalogEndpoint" class="field-input" style="flex:1;min-width:220px;margin:0" placeholder="https://raw.githubusercontent.com/...">
-        <button class="btn-primary" onclick="saveCatalogEndpoint()">حِفْظٌ وَتَحَقُّقٌ</button>
-        <button class="btn-secondary" onclick="checkCatalog()">↻ تَحْدِيثٌ</button>
-      </div>
-      <div id="catalogStatus" style="margin-top:8px;font-size:13px;font-weight:700;color:var(--secondary)"></div>
-    </div>
   </section>
 
   <!-- 3D AND CAREER STUDIO -->
   <section id="studio" class="hidden">
     <div class="studio-banner">
-      <span class="studio-kicker">🎨 اسْتُودْيُو الْإِبْدَاعِ</span>
-      <h2>مِهْنَتُكَ الْمُسْتَقْبَلِيَّةُ فِي صُورَةٍ ثُلَاثِيَّةِ الْأَبْعَادِ</h2>
-      <p>اخْتَرْ صُورَةً وَمِهْنَةً، وَأَنْشِئْ صُورَةً أُسْلُوبُهَا رُسُومٌ مُتَحَرِّكَةٌ ثُلَاثِيَّةُ الْأَبْعَادِ، أَوْ تَصَوُّرًا خَيَالِيًّا بَعْدَ ١٠ أَوْ ٢٠ أَوْ ٣٠ سَنَةً. كُلُّ صُورَةٍ تُنْشَأُ بِطَلَبٍ مُنْفَصِلٍ.</p>
+      <span class="studio-kicker">🎨 استوديو الإبداع</span>
+      <h2>استوديو 3D بالذكاء الاصطناعي</h2>
+      <p>أنشئ صورة كرتونية، وتخيل مستقبلك في المهنة التي تختارها بعد ١٠ أو ٢٠ أو ٣٠ سنة. يلزم الاتصال بالإنترنت.</p>
     </div>
     <div class="studio-grid">
       <div class="studio-panel">
-        <h3>🪄 صَمِّمْ صُورَةَ الْمِهْنَةِ وَالْمُسْتَقْبَلِ</h3>
-        <p>اخْتَرْ صُورَةً مِنْ جِهَازِكَ. تَبْقَى عَلَى جِهَازِكَ حَتَّى تَضْغَطَ أَحَدَ أَزْرَارِ الْإِنْشَاءِ؛ عِنْدَئِذٍ تُرْسَلُ نُسْخَةٌ مُصَغَّرَةٌ إِلَى خَادِمِ التَّوْلِيدِ وَمُزَوِّدِ خِدْمَةِ الصُّوَرِ لِلْمُعَالَجَةِ.</p>
-        <label for="studioAssetStyle">النَّمَطُ الْفَنِّيُّ</label>
+        <h3>🪄 صمم صورة المهنة والمستقبل</h3>
+        <p>اختر صورة من جهازك ومهنة تحبها. صمم نسخة كرتونية وتخيل مستقبلك في هذه المهنة.</p><p class="studio-note">سترسل الصورة إلى خدمة التصميم عبر الإنترنت لإنشاء الصور المطلوبة.</p>
+        <label for="studioAssetStyle">النمط الفني</label>
         <select id="studioAssetStyle" class="field-input">
-          <option value="cinematic">رُسُومٌ سِينَمَائِيَّةٌ ثُلَاثِيَّةُ الْأَبْعَادِ</option>
-          <option value="clay">شَخْصِيَّةٌ طِينِيَّةٌ لَامِعَةٌ</option>
-          <option value="storybook">حِكَايَةٌ مُصَوَّرَةٌ نَاعِمَةٌ</option>
+          <option value="cinematic">رسوم سينمائية ثلاثية الأبعاد</option>
+          <option value="clay">شخصية طينية لامعة</option>
+          <option value="storybook">حكاية مصورة ناعمة</option>
         </select>
-        <label for="studioProfession">الْمِهْنَةُ الَّتِي يَخْتَارُهَا الطَّالِبُ</label>
+        <label for="studioProfession">المهنة التي يختارها الطالب</label>
         <select id="studioProfession" class="field-input">
-          <option value="doctor">طَبِيبٌ</option><option value="engineer">مُهَنْدِسٌ</option><option value="teacher">مُعَلِّمٌ</option><option value="programmer">مُبَرْمِجٌ</option><option value="scientist">عَالِمٌ</option><option value="astronaut">رَائِدُ فَضَاءٍ</option><option value="pilot">طَيَّارٌ</option><option value="artist">فَنَّانٌ</option><option value="architect">مُهَنْدِسٌ مِعْمَارِيٌّ</option><option value="nurse">مُمَرِّضٌ</option><option value="farmer">مُزَارِعٌ</option><option value="chef">طَاهٍ</option><option value="robotics">مُتَخَصِّصٌ فِي الرُّوبُوتَاتِ</option><option value="athlete">رِيَاضِيٌّ</option><option value="vet">طَبِيبٌ بَيْطَرِيٌّ</option>
+          <option value="doctor">طبيب</option><option value="engineer">مهندس</option><option value="teacher">معلم</option><option value="programmer">مبرمج</option><option value="scientist">عالم</option><option value="astronaut">رائد فضاء</option><option value="pilot">طيار</option><option value="artist">فنان</option><option value="architect">مهندس معماري</option><option value="nurse">ممرض</option><option value="farmer">مزارع</option><option value="chef">طاه</option><option value="robotics">متخصص في الروبوتات</option><option value="athlete">رياضي</option><option value="vet">طبيب بيطري</option>
         </select>
         <input id="studioImageInput" type="file" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewStudioImage(event)">
-        <button class="studio-upload" onclick="document.getElementById('studioImageInput').click()">🖼️ اضْغَطْ لِاخْتِيَارِ صُورَةٍ مِنْ جِهَازِكَ</button>
+        <button class="studio-upload" onclick="document.getElementById('studioImageInput').click()">🖼️ اضغط لاختيار صورة من جهازك</button>
         <div id="studioPreviewWrap" class="studio-preview-wrap hidden">
-          <div id="studioPreviewCard" class="studio-preview-card"><img id="studioPreviewImg" alt="مُعَايَنَةُ الْعُنْصُرِ"></div>
-          <p>مُعَايَنَةٌ بِتَأْثِيرٍ ثُلَاثِيِّ الْأَبْعَادِ</p>
+          <div id="studioPreviewCard" class="studio-preview-card"><img id="studioPreviewImg" alt="معاينة العنصر"></div>
+          <p>معاينة صورة الطالب</p>
         </div>
-        <div class="studio-consent">
-          <label><input type="checkbox" id="studioPrivacyConsent"><span>أَفْهَمُ أَنَّ الصُّورَةَ سَتُرْسَلُ إِلَى خِدْمَةِ الذَّكَاءِ الِاصْطِنَاعِيِّ لِتَوْلِيدِ صُورَةٍ، وَأَلَّا أَضَعَ اسْمًا حَقِيقِيًّا أَوْ مَعْلُومَاتٍ شَخْصِيَّةً.</span></label>
-          <label><input type="checkbox" id="studioGuardianConsent"><span>أُؤَكِّدُ أَنَّ وَلِيَّ الْأَمْرِ اطَّلَعَ عَلَى ذَلِكَ وَوَافَقَ عَلَى إِرْسَالِ صُورَةِ الطَّالِبِ.</span></label>
-        </div>
+        <p class="studio-note">ترسل الصورة المصغرة إلى خدمة الذكاء الاصطناعي لإنشاء التصميم، ضمن النشاط التعليمي وبإشراف المدرسة.</p>
         <div class="studio-gen-actions">
-          <button class="btn-primary" data-studio-generate="3d" disabled>🎬 صُورَةٌ كَرْتُونِيَّةٌ 3D</button>
-          <button class="btn-secondary" data-studio-generate="10" disabled>بَعْدَ ١٠ سَنَوَاتٍ</button>
-          <button class="btn-secondary" data-studio-generate="20" disabled>بَعْدَ ٢٠ سَنَةً</button>
-          <button class="btn-secondary" data-studio-generate="30" disabled>بَعْدَ ٣٠ سَنَةً</button>
+          <button class="btn-primary" data-studio-generate="3d" disabled>🎬 صورة مولدة بأسلوب 3D</button>
+          <button class="btn-secondary" data-studio-generate="10" disabled>تصور خيالي بعد ١٠ سنوات</button>
+          <button class="btn-secondary" data-studio-generate="20" disabled>تصور خيالي بعد ٢٠ سنة</button>
+          <button class="btn-secondary" data-studio-generate="30" disabled>تصور خيالي بعد ٣٠ سنة</button>
         </div>
-        <div id="studioGenStatus" class="studio-gen-status" role="status" aria-live="polite">اخْتَرْ صُورَةً وَوَافِقْ أَنْتَ وَوَلِيُّ الْأَمْرِ لِتَفْعِيلِ الْإِنْشَاءِ.</div>
+        <div id="studioGenStatus" class="studio-gen-status" role="status" aria-live="polite">اختر صورة لتمكين طلب التصميم بالذكاء الاصطناعي.</div>
         <div id="studioAiResults" class="studio-ai-results"></div>
-        <label for="studioAssetName">اسْمُ النَّسْخَةِ الْمَحَلِّيَّةِ</label>
-        <input id="studioAssetName" class="field-input" maxlength="48" placeholder="مِثَالٌ: صُورَتِي مُهَنْدِسًا">
-        <button class="btn-secondary" id="studioSaveBtn" onclick="saveStudioAsset()" disabled>💾 حِفْظُ الصُّورَةِ الْأَصْلِيَّةِ مَحَلِّيًّا</button>
-        <div id="studioStatus" class="studio-status" role="status">لَمْ تُحْفَظْ صُورَةٌ بَعْدُ.</div>
-        <p class="studio-note">تَصَوُّرَاتُ الْعُمْرِ الْمُسْتَقْبَلِيِّ خَيَالِيَّةٌ وَلَيْسَتْ تَنَبُّؤًا بِالشَّكْلِ الْحَقِيقِيِّ. لَا يَحْفَظُ خَادِمُ التَّطْبِيقِ الصُّوَرَ بَعْدَ إِعَادَةِ النَّتِيجَةِ؛ وَيَخْضَعُ التَّعَامُلُ أَثْنَاءَ التَّوْلِيدِ لِسِيَاسَةِ مُزَوِّدِ خِدْمَةِ الصُّوَرِ. كُلُّ صُورَةٍ تُنْشَأُ بِطَلَبٍ مُنْفَصِلٍ وَقَدْ تَسْتَهْلِكُ رَصِيدَ الْخِدْمَةِ.</p>
+        <label for="studioAssetName">اسم النسخة في المكتبة</label>
+        <input id="studioAssetName" class="field-input" maxlength="48" placeholder="مثال: صورتي مهندسا">
+        <button class="btn-secondary" id="studioSaveBtn" onclick="saveStudioAsset()" disabled>💾 حفظ الصورة الأصلية في مكتبة الجهاز</button>
+        <div id="studioStatus" class="studio-status" role="status">لم تحفظ صورة بعد.</div>
+        <p class="studio-note">التصوير المستقبلي خيالي للتعلم والتخيل، وليس تنبؤا بشكل الطالب فعلا.</p>
       </div>
       <div class="studio-panel studio-library-panel">
         <div class="section-head" style="margin-top:0">
-          <h3 style="margin:0">🧊 عَنَاصِرِي الْمَحْفُوظَةُ</h3>
-          <button class="btn-secondary" onclick="renderStudioAssets()">↻ تَحْدِيثٌ</button>
+          <h3 style="margin:0">🧊 عناصري المحفوظة</h3>
+          <button class="btn-secondary" onclick="renderStudioAssets()">↻ تحديث</button>
         </div>
-        <button class="btn-secondary" id="studioCleanupBtn" onclick="cleanupStudioDuplicates()">🧹 تَنْظِيفُ النُّسَخِ الْمُكَرَّرَةِ الْمُتَطَابِقَةِ</button>
-        <div id="studioDuplicateStatus" class="studio-duplicate-status" role="status">يَحْذِفُ التَّنْظِيفُ النُّسَخَ الْمُطَابِقَةَ فَقَطْ، وَيُبْقِي نُسْخَةً وَاحِدَةً. احْذِفْ بِيَدِكَ مَا لَا تَحْتَاجُهُ مِنَ الْعَنَاصِرِ الْأُخْرَى.</div>
         <div id="studioAssetGrid" class="studio-assets-grid"></div>
       </div>
     </div>
@@ -703,21 +782,93 @@ main.wrap{padding-bottom:100px}
   <!-- LIBRARY -->
   <section id="library" class="hidden">
     <div class="panel">
-      <h2 class="section-title" style="margin-bottom:12px">🏆 أَوْسِمَتِي وَإِنْجَازَاتِي</h2>
+      <h2 class="section-title" style="margin-bottom:12px">ملفي وإنجازاتي</h2>
+      <div class="profile-summary">
+        <div class="profile-stat"><span>نجومي</span><strong id="profileStars">٠</strong></div>
+        <div class="profile-stat"><span>مستواي</span><strong id="profileLevel">مستكشف صغير</strong></div>
+      </div>
       <div id="badgesGrid" class="badges-grid"></div>
     </div>
 
+    <div class="panel">
+      <div class="section-head" style="margin-top:0"><h3 class="section-title">تحدي اليوم</h3></div>
+      <p>أجب عن سؤال قصة واربح نجوما جديدة.</p>
+      <button class="btn-primary" onclick="openChallenge()">ابدأ تحديا قصصيا</button>
+    </div>
+
+    <div class="panel" id="vocabularyPanel">
+      <div class="section-head" style="margin-top:0"><h3 class="section-title">قاموسي الصغير</h3></div>
+      <p>المفردات التي تتعلمها أثناء قراءة القصص تحفظ هنا.</p>
+      <div id="vocabularyList"></div>
+      <p id="vocabularyHint" role="status"></p>
+      <div id="vocabularyQuizArea"></div>
+      <button class="btn-primary" id="startVocabularyQuizBtn" onclick="startVocabularyQuiz()" disabled>اختبار من ٣ أسئلة</button>
+    </div>
+
     <div class="section-head">
-      <h2 class="section-title">📚 قِصَصِي الْمَحْفُوظَةُ</h2>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-secondary" onclick="backupStories()">⬇ تَصْدِيرُ نُسْخَةٍ احْتِيَاطِيَّةٍ</button>
-        <label class="btn-secondary" style="cursor:pointer">
-          ⬆ اسْتِعَادَةُ الْقِصَصِ
-          <input type="file" accept=".json" style="display:none" onchange="restoreStories(event)">
-        </label>
-      </div>
+      <h2 class="section-title">📚 قصصي المحفوظة</h2>
     </div>
     <div id="savedGrid" class="grid-cards"></div>
+  </section>
+
+  <section id="teacher" class="hidden">
+    <div class="section-head">
+      <h2 class="section-title">ركن المعلم وولي الأمر</h2>
+      <button class="btn-secondary" onclick="navigateSection('home')">العودة إلى واجهة الطالب</button>
+    </div>
+    <div class="panel">
+      <h3>إعداد الاتصال</h3>
+      <p>تشغيل الاتصال يتيح خدمات المحادثة وتحويل النص وإنشاء الصور.</p>
+      <button class="hud-pill network-on" id="networkModeBtn" onclick="toggleOnlineMode()">حالة الاتصال</button>
+    </div>
+    <div class="panel" id="studentProgressTeacherPanel">
+      <div class="section-head" style="margin-top:0"><h3 class="section-title">متابعة تعلّم الطلاب</h3><span class="tag amber">المزامنة مرتبطة — بانتظار تجربة</span></div>
+      <div class="progress-callout">تُحفظ السجلات على هذا الجهاز وتُرسل إلى ورقة المديرة عند توفر الإنترنت. لم نتحقق بعد من وصول أول سجل؛ جرّب ببيانات اختبار أولًا.</div>
+      <div class="student-identity" style="margin-top:14px">
+        <label>الصف<select id="reportGrade" class="field-input" onchange="renderLocalProgressReport()"><option value="">كل الصفوف</option></select></label>
+        <label>الشعبة<select id="reportSection" class="field-input" onchange="renderLocalProgressReport()"><option value="">كل الشعب</option></select></label>
+      </div>
+      <div class="progress-grid" id="teacherProgressStats"></div>
+      <div class="progress-table-wrap" id="teacherProgressTable"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        <button class="btn-secondary" onclick="exportLocalProgressCsv()">تصدير السجلات المحفوظة على هذا الجهاز (CSV)</button>
+        <button class="btn-secondary" onclick="openStudentEntry(true)">إضافة ملف طالب</button>
+      </div>
+    </div>
+    <div class="panel parent-settings">
+      <details>
+        <summary>إدارة مكتبة القصص الإضافية</summary>
+        <p>أضف رابط ملف قصص موثوقا على GitHub بصيغة JSON. يجب أن يبدأ الرابط بـ HTTPS.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="catalogEndpoint" class="field-input" style="flex:1;min-width:220px;margin:0" placeholder="https://raw.githubusercontent.com/...">
+          <button class="btn-primary" onclick="saveCatalogEndpoint()">حفظ والتحقق</button>
+          <button class="btn-secondary" onclick="checkCatalog()">تحديث المكتبة</button>
+        </div>
+        <div id="catalogStatus" style="margin-top:8px;font-size:13px;font-weight:700;color:var(--secondary)"></div>
+      </details>
+      <details>
+        <summary>نسخة احتياطية لقصص الجهاز (JSON)</summary>
+        <p>هذه النسخة للاحتفاظ بها أو نقلها إلى جهاز آخر. لا يحتاج الطالب إلى فتحها.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-secondary" onclick="backupStories()">تصدير النسخة الاحتياطية</button>
+          <label class="btn-secondary" style="cursor:pointer">استعادة القصص من ملف
+            <input type="file" accept=".json" style="display:none" onchange="restoreStories(event)">
+          </label>
+        </div>
+      </details>
+      <details>
+        <summary>تنظيف الصور المكررة</summary>
+        <p>يفحص الملفات المتطابقة ويبقي نسخة واحدة من كل صورة.</p>
+        <button class="btn-secondary" id="studioCleanupBtn" onclick="cleanupStudioDuplicates()">فحص وحذف النسخ المطابقة</button>
+        <div id="studioDuplicateStatus" class="studio-duplicate-status" role="status">لا يبدأ الحذف إلا بعد موافقتك.</div>
+      </details>
+      <details>
+        <summary>معلومات الربط التقنية</summary>
+        <p>توليد الصور: Cloudflare Workers AI.</p>
+        <p>المحادثة وتحويل النص: خدمة Railway. روابط التكامل تستخدم HTTPS.</p>
+        <p>مكتبة القصص الإضافية: GitHub JSON Catalog.</p>
+      </details>
+    </div>
   </section>
 
   <!-- READER -->
@@ -729,10 +880,13 @@ main.wrap{padding-bottom:100px}
           <div id="readMeta" style="font-size:13px;color:var(--muted);font-weight:700;margin-top:3px"></div>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn-secondary" onclick="openPictureBook()">📘 كِتَابِي الْمُصَوَّرُ</button>
-          <button class="btn-secondary" id="fontSizeBtn" onclick="toggleReadingSize()">🔠 تَكْبِيرُ الْخَطِّ</button>
-          <button class="btn-secondary" onclick="printStory()">🖨 طِبَاعَةٌ</button>
-          <button class="btn-secondary" onclick="leaveReader()">↩ الْعَوْدَةُ</button>
+          <button class="btn-secondary" onclick="openPictureBook()">📘 كتابي المصور</button>
+          <button class="btn-secondary" id="fontSizeBtn" onclick="toggleReadingSize()">🔠 تكبير الخط</button>
+          <label class="pdf-author-field">اسم المؤلف
+            <input id="pdfAuthorName" maxlength="32" placeholder="اسم مستعار" aria-label="اسم المؤلف على غلاف الكتاب">
+          </label>
+          <button class="btn-primary" onclick="exportActiveStoryPdf()">📘 تصدير قصتي ككتاب PDF مصور</button>
+          <button class="btn-secondary" onclick="leaveReader()">↩ العودة</button>
         </div>
       </div>
 
@@ -740,18 +894,14 @@ main.wrap{padding-bottom:100px}
         <img id="readImage" alt="مشهد القصة">
         <div class="scene-motion" aria-hidden="true"><i class="spark"></i><i class="spark"></i><i class="spark"></i><i class="spark"></i><i class="firefly" style="--x:17%;--y:77%;--delay:.4s"></i><i class="firefly" style="--x:74%;--y:80%;--delay:1.9s"></i><i class="flying-bird"></i></div>
         <div class="page-pill" id="pageIndicator">1 / 4</div>
-        <button class="zoom-hd-btn" id="zoomSceneBtn" onclick="zoomCurrentScene()">🔍 عَرْضُ الصُّورَةِ بِالدِّقَّةِ الْكَامِلَةِ</button>
+        <button class="zoom-hd-btn" id="zoomSceneBtn" onclick="zoomCurrentScene()">🔍 عرض الصورة بالدقة الكاملة</button>
       </div>
 
       <div class="audio-controls">
-        <button class="btn-primary" id="playAudioBtn" onclick="readAloud()">🔊 اسْتَمِعْ بِالْفُصْحَى</button>
-        <button class="btn-teal" id="cinemaBtn" onclick="toggleCinemaMode()">🎬 سِينَمَا تِلْقَائِيَّةٌ</button>
-        <button class="btn-danger" onclick="stopSpeech()">⏹ إِيقَافٌ</button>
-        <select id="speechRateSelect" class="speed-select" aria-label="سرعة القراءة">
-          <option value="0.72">🐢 بَطِيءٌ (لِلتَّعَلُّمِ)</option>
-          <option value="0.80" selected>🚶 مُتَوَسِّطٌ (فُصْحَى وَاضِحَةٌ)</option>
-          <option value="1.05">🐇 سَرِيعٌ</option>
-        </select>
+        <button class="btn-primary" id="playAudioBtn" onclick="readAloud()">🔊 استمع بالفصحى</button>
+        <button class="btn-teal" id="cinemaBtn" onclick="toggleCinemaMode()">🎬 سينما تلقائية</button>
+        <button class="btn-danger" onclick="stopSpeech()">⏹ إيقاف</button>
+        <span class="speed-select" aria-label="إعداد الصوت">صوت «قصتي بصوتي»</span>
         <span id="ttsStatus" style="font-size:12.5px;font-weight:800;color:var(--primary-dark)"></span>
       </div>
 
@@ -759,18 +909,18 @@ main.wrap{padding-bottom:100px}
 
       <div class="pedagogy-strip" id="pedagogyStrip">
         <div class="ped-card">
-          <h4>💡 مُفْرَدَةٌ وَمَعْنًى</h4>
+          <h4>💡 مفردة ومعنى</h4>
           <p id="vocabBox"></p>
         </div>
         <div class="ped-card">
-          <h4>🤔 سُؤَالٌ لِلتَّفْكِيرِ</h4>
+          <h4>🤔 سؤال للتفكير</h4>
           <p id="thinkBox"></p>
         </div>
       </div>
 
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-        <button class="btn-secondary" id="prevPageBtn" onclick="turnPage(-1)">→ الصَّفْحَةُ السَّابِقَةُ</button>
-        <button class="btn-primary" id="nextPageBtn" onclick="turnPage(1)">الصَّفْحَةُ التَّالِيَةُ ←</button>
+        <button class="btn-secondary" id="prevPageBtn" onclick="turnPage(-1)">→ الصفحة السابقة</button>
+        <button class="btn-primary" id="nextPageBtn" onclick="turnPage(1)">الصفحة التالية ←</button>
       </div>
 
       <div id="quizContainer" class="quiz-box hidden"></div>
@@ -778,23 +928,36 @@ main.wrap{padding-bottom:100px}
   </section>
 </main>
 
-<div class="mobile-dock" aria-label="التنقل الرئيسي">
-  <button class="dock-btn" data-nav="studio" onclick="go('studio')"><svg class="dock-icon"><use href="#i-palette"/></svg>اسْتُودْيُو 3D</button>
-  <button class="dock-btn" onclick="openChallenge()"><svg class="dock-icon"><use href="#i-star"/></svg>التَّحَدِّيَاتُ</button>
-  <button class="dock-btn" onclick="go('library')"><svg class="dock-icon"><use href="#i-level"/></svg>مُسْتَوَايَ</button>
-  <button class="dock-btn active" data-nav="home" onclick="go('home')"><svg class="dock-icon"><use href="#i-home"/></svg>الرَّئِيسِيَّةُ</button>
-  <button class="dock-btn" onclick="go('catalog')"><svg class="dock-icon"><use href="#i-book"/></svg>قِصَصِي</button>
-  
-  <button class="dock-btn" data-nav="voice" onclick="go('voice')"><svg class="dock-icon"><use href="#i-mic"/></svg>قِصَّتِي بِصَوْتِي</button>
-  <button class="dock-btn" onclick="openSurprise()"><svg class="dock-icon"><use href="#i-gift"/></svg>مُفَاجَأَةُ الْيَوْمِ</button>
+<div id="studentEntryModal" class="student-entry hidden" role="dialog" aria-modal="true" aria-labelledby="studentEntryTitle">
+  <div class="student-entry-card">
+    <h2 id="studentEntryTitle">ملف الطالب</h2>
+    <p>أدخل الاسم الرباعي والصف والشعبة لبدء سجل التعلّم على هذا الجهاز. لا نطلب رقم هوية.</p>
+    <div id="existingStudentPicker" class="hidden">
+      <label>اختر ملفك المحفوظ
+        <select id="studentProfileSelect" class="field-input"></select>
+      </label>
+      <div class="student-entry-actions"><button class="btn-primary" onclick="selectSavedStudent()">متابعة بهذا الملف</button><button class="btn-secondary" onclick="showNewStudentForm()">إضافة طالب</button></div>
+      <hr style="border:0;border-top:1px solid var(--border);margin:16px 0">
+    </div>
+    <div id="newStudentForm" class="student-identity">
+      <label class="wide">الاسم الرباعي<input id="studentFullName" class="field-input" maxlength="100" autocomplete="name" placeholder="الاسم الأول واسم الأب والجد والعائلة"></label>
+      <label>الصف<select id="studentGrade" class="field-input"></select></label>
+      <label>الشعبة<select id="studentSection" class="field-input"></select></label>
+      <label class="wide" style="display:flex;align-items:flex-start;gap:8px;font-weight:700"><input id="localDataAck" type="checkbox" style="margin-top:5px">أفهم أن الاسم والصف والشعبة وسجلات التقدم ستُرسل إلى ورقة المديرة عند توفر الإنترنت، وتُحفظ أيضًا على هذا الجهاز.</label>
+      <div class="wide student-entry-status" id="studentEntryStatus" role="alert"></div>
+      <div class="wide student-entry-actions"><button class="btn-primary" onclick="registerLocalStudent()">حفظ الملف والمتابعة</button></div>
+    </div>
+  </div>
 </div>
+
+<div id="pdfPrintBook" aria-hidden="true"></div>
 
 <div id="lightboxModal" class="lightbox hidden" onclick="closeLightbox(event)">
   <img id="lightboxImg" alt="معاينة الصورة بالدقة الكاملة">
   <div class="lightbox-bar">
     <span id="lightboxCaption"></span>
-    <a id="lightboxDownload" download="qissati-scene-hd.jpg" class="btn-amber" style="text-decoration:none;padding:8px 14px;font-size:13px">⬇ تَحْمِيلُ الصُّورَةِ (HD)</a>
-    <button class="btn-secondary" style="padding:8px 14px;font-size:13px" onclick="document.getElementById('lightboxModal').classList.add('hidden')">✕ إِغْلَاقٌ</button>
+    <a id="lightboxDownload" download="qissati-scene-hd.jpg" class="btn-amber" style="text-decoration:none;padding:8px 14px;font-size:13px">⬇ تحميل الصورة (HD)</a>
+    <button class="btn-secondary" style="padding:8px 14px;font-size:13px" onclick="document.getElementById('lightboxModal').classList.add('hidden')">✕ إغلاق</button>
   </div>
 </div>
 
@@ -802,8 +965,8 @@ main.wrap{padding-bottom:100px}
 const FUSHA_CONVERSION_ENDPOINT = 'https://fusha-api-production.up.railway.app/convert';
 const AI_CHAT_ENDPOINT = 'https://fusha-api-production.up.railway.app/chat';
 const STUDIO_AI_ENDPOINT = FUSHA_CONVERSION_ENDPOINT.replace(/\/convert$/, '/studio/generate');
-const IMAGES = {"ICON": "qissati_icon.jpg", "HERO": "scene_world.jpg", "GARDEN": "garden.jpg", "MAGIC": "magic.jpg", "SEA": "sea.jpg", "FOREST": "forest.jpg", "SPACE": "space.jpg", "CITY": "city.jpg", "BIRD": "scene_bird.jpg", "FRIENDS": "scene_friends.jpg", "OCEAN_STORY": "scene_ocean.jpg", "RAINBOW": "scene_rainbow.jpg", "MAGIC_STORY": "scene_reading.jpg"};
-const IMAGE_META = {"ICON": {"file": "qissati_icon.jpg", "width": 1536, "height": 1536, "format": "JPEG", "bytes": 244816}, "HERO": {"file": "scene_world.jpg", "width": 1536, "height": 857, "format": "JPEG", "bytes": 155513}, "GARDEN": {"file": "input_file_4.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 788273}, "MAGIC": {"file": "input_file_6.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 770510}, "SEA": {"file": "input_file_7.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 854276}, "FOREST": {"file": "input_file_8.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 796242}, "SPACE": {"file": "input_file_9.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 765739}, "CITY": {"file": "input_file_11.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 944961}, "BIRD": {"file": "scene_bird.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 188393}, "FRIENDS": {"file": "scene_friends.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 186720}, "OCEAN_STORY": {"file": "scene_ocean.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 204674}, "RAINBOW": {"file": "scene_rainbow.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 249759}, "MAGIC_STORY": {"file": "scene_reading.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 165607}};
+const IMAGES = {"ICON": "qissati_icon.jpg", "HERO": "scene_world.jpg", "GARDEN": "garden.jpg", "MAGIC": "magic.jpg", "SEA": "sea.jpg", "FOREST": "forest.jpg", "SPACE": "space.jpg", "CITY": "city.jpg", "BIRD": "scene_bird.jpg", "FRIENDS": "scene_friends.jpg", "OCEAN_STORY": "scene_ocean.jpg", "RAINBOW": "scene_rainbow.jpg", "MAGIC_STORY": "scene_reading.jpg", "START": "qissati-start.jpg"};
+const IMAGE_META = {"ICON": {"file": "qissati_icon.jpg", "width": 1536, "height": 1536, "format": "JPEG", "bytes": 244816}, "HERO": {"file": "scene_world.jpg", "width": 1536, "height": 857, "format": "JPEG", "bytes": 155513}, "GARDEN": {"file": "input_file_4.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 788273}, "MAGIC": {"file": "input_file_6.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 770510}, "SEA": {"file": "input_file_7.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 854276}, "FOREST": {"file": "input_file_8.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 796242}, "SPACE": {"file": "input_file_9.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 765739}, "CITY": {"file": "input_file_11.png", "width": 1200, "height": 896, "format": "JPEG", "bytes": 944961}, "BIRD": {"file": "scene_bird.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 188393}, "FRIENDS": {"file": "scene_friends.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 186720}, "OCEAN_STORY": {"file": "scene_ocean.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 204674}, "RAINBOW": {"file": "scene_rainbow.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 249759}, "MAGIC_STORY": {"file": "scene_reading.jpg", "width": 1536, "height": 1147, "format": "JPEG", "bytes": 165607}, "START": {"file": "qissati-start.jpg", "width": 1536, "height": 1511, "format": "JPEG", "bytes": 262102}};
 
 const SCENE_CATALOG = [
   { key:'BIRD', title:'سَلِيمٌ وَعُصْفُورُ الْحَدِيقَةِ', res:'1536×1147', keywords:['عصفور','حديقة','شجرة','زهرة','طائر','صباح','سليم','بذرة','نبتة'] },
@@ -935,6 +1098,138 @@ let wordTimer = null;
 
 const $ = id => document.getElementById(id);
 
+/* Student progress is kept locally and queued for Google Sheets sync when online. */
+const PROGRESS_STUDENTS_KEY='qissati-progress-students-v1';
+const PROGRESS_EVENTS_KEY='qissati-progress-events-v1';
+const PROGRESS_ACTIVE_KEY='qissati-progress-active-student-v1';
+let progressStudents=[];
+let progressEvents=[];
+let activeStudentId='';
+const PROGRESS_SYNC_ENDPOINT='https://script.google.com/macros/s/AKfycbw9X4-RWa8438kV3YqQsGP225t2XHNrP97zOfy0YB6bO1q4MoYoMLjuWyeBPCXRyS1a/exec';
+let progressSyncBusy=false;
+let progressSyncTimer=0;
+function progressRead(key,fallback){try{const value=JSON.parse(localStorage.getItem(key)||'null');return value===null?fallback:value;}catch(error){return fallback;}}
+function progressWrite(){
+  try{localStorage.setItem(PROGRESS_STUDENTS_KEY,JSON.stringify(progressStudents));localStorage.setItem(PROGRESS_EVENTS_KEY,JSON.stringify(progressEvents));localStorage.setItem(PROGRESS_ACTIVE_KEY,activeStudentId);}catch(error){console.warn('تعذر حفظ سجل التقدم محليًا.');}
+}
+function selectedProgressStudent(){return progressStudents.find(student=>student.id===activeStudentId)||null;}
+function recordStudentEvent(type,detail={}){
+  const student=selectedProgressStudent();if(!student)return;
+  progressEvents.push({id:(crypto.randomUUID?crypto.randomUUID():'evt-'+Date.now()+'-'+Math.random().toString(36).slice(2)),studentId:student.id,type,at:new Date().toISOString(),detail});
+  if(progressEvents.length>5000)progressEvents=progressEvents.slice(-5000);
+  progressWrite();renderStudentProgressSummary();renderLocalProgressReport();scheduleProgressSync(12000);
+}
+function fillProgressSelects(){
+  const gradeOptions='<option value="">اختر الصف</option>'+[4,5,6].map(grade=>`<option value="${grade}">الصف ${grade}</option>`).join('');
+  const sectionOptions='<option value="">اختر الشعبة</option>'+[1,2].map(section=>`<option value="${section}">الشعبة ${section}</option>`).join('');
+  $('studentGrade').innerHTML=gradeOptions;$('studentSection').innerHTML=sectionOptions;
+  $('reportGrade').innerHTML='<option value="">كل الصفوف</option>'+[4,5,6].map(grade=>`<option value="${grade}">الصف ${grade}</option>`).join('');
+  $('reportSection').innerHTML='<option value="">كل الشعب</option>'+[1,2].map(section=>`<option value="${section}">الشعبة ${section}</option>`).join('');
+}
+function openStudentEntry(force=false){
+  const modal=$('studentEntryModal');if(!modal)return;
+  const valid=progressStudents.filter(student=>student&&student.id&&student.name);
+  $('existingStudentPicker').classList.toggle('hidden',!valid.length);
+  $('newStudentForm').classList.toggle('hidden',valid.length>0);
+  $('studentEntryStatus').textContent='';
+  if(valid.length){$('studentProfileSelect').innerHTML=valid.map(student=>`<option value="${bookSafe(student.id)}">${bookSafe(student.name)} — الصف ${student.grade}، الشعبة ${student.section}</option>`).join('');}
+  modal.classList.remove('hidden');
+}
+function showNewStudentForm(){$('newStudentForm').classList.remove('hidden');$('studentEntryStatus').textContent='';}
+function finishStudentSelection(id){
+  activeStudentId=id;progressWrite();$('studentEntryModal').classList.add('hidden');renderStudentProgressSummary();renderLocalProgressReport();scheduleProgressSync(2500);
+}
+function selectSavedStudent(){const id=$('studentProfileSelect').value;if(progressStudents.some(student=>student.id===id))finishStudentSelection(id);}
+function registerLocalStudent(){
+  const name=$('studentFullName').value.trim().replace(/\s+/g,' ');
+  const parts=name.split(' ').filter(Boolean);
+  const grade=Number($('studentGrade').value),section=Number($('studentSection').value);
+  if(parts.length<4){$('studentEntryStatus').textContent='أدخل الاسم الرباعي كاملًا.';return;}
+  if(![4,5,6].includes(grade)||![1,2].includes(section)){$('studentEntryStatus').textContent='اختر الصف الرابع أو الخامس أو السادس، والشعبة الأولى أو الثانية.';return;}
+  if(!$('localDataAck').checked){$('studentEntryStatus').textContent='أكّد فهمك لمكان حفظ وإرسال بيانات الطالب قبل المتابعة.';return;}
+  const id=crypto.randomUUID?crypto.randomUUID():'student-'+Date.now()+'-'+Math.random().toString(36).slice(2);
+  progressStudents.push({id,name,grade,section,createdAt:new Date().toISOString()});
+  $('studentFullName').value='';$('studentGrade').value='';$('studentSection').value='';$('localDataAck').checked=false;
+  finishStudentSelection(id);
+}
+function progressCounts(studentId){
+  const events=progressEvents.filter(event=>event.studentId===studentId);
+  return {reads:events.filter(event=>event.type==='story_open').length,correct:events.filter(event=>event.type==='quiz_correct').length,wrong:events.filter(event=>event.type==='quiz_wrong').length,created:events.filter(event=>event.type==='story_created').length,last:events.reduce((latest,event)=>event.at>latest?event.at:latest,'')};
+}
+function renderStudentProgressSummary(){
+  const student=selectedProgressStudent(),summary=$('studentSummaryText'),stats=$('studentSummaryStats'),notice=$('studentSyncNotice');if(!summary)return;
+  if(!student){summary.textContent='لم يتم اختيار ملف طالب.';stats.replaceChildren();notice.textContent='اختر ملف طالب لعرض سجله؛ تُحفظ البيانات محليًا وتُرسل إلى ورقة المديرة عند الاتصال.';return;}
+  const counts=progressCounts(student.id);
+  summary.textContent=`${student.name} — الصف ${student.grade}، الشعبة ${student.section}`;
+  stats.innerHTML=`<div class="progress-stat"><strong>${counts.reads}</strong>مرات فتح القصص</div><div class="progress-stat"><strong>${counts.correct}</strong>إجابات صحيحة</div><div class="progress-stat"><strong>${counts.wrong}</strong>إجابات تحتاج مراجعة</div><div class="progress-stat"><strong>${counts.created}</strong>قصص أنشأها</div>`;
+  notice.textContent=PROGRESS_SYNC_ENDPOINT?(navigator.onLine?'ستتم محاولة المزامنة عند الاتصال؛ وتبقى نسخة على هذا الجهاز.':'غير متصل الآن؛ سيُعاد إرسال السجل عند عودة الإنترنت.'):'محفوظ على هذا الجهاز فقط · لم يُربط Google Sheets بعد.';
+}
+function scheduleProgressSync(delay=5000){
+  if(!PROGRESS_SYNC_ENDPOINT||!navigator.onLine||progressSyncBusy)return;
+  clearTimeout(progressSyncTimer);progressSyncTimer=setTimeout(()=>{void syncProgressToGoogle();},delay);
+}
+async function syncProgressToGoogle(){
+  if(!PROGRESS_SYNC_ENDPOINT||!navigator.onLine||progressSyncBusy)return;
+  const now=Date.now(),retryAfter=24*60*60*1000;
+  const roster=progressStudents.filter(student=>student&&student.name);
+  const dueStudents=roster.filter(student=>!student.lastSyncAttemptAt||now-Number(student.lastSyncAttemptAt)>=retryAfter);
+  const dueEvents=progressEvents.filter(event=>!event.lastSyncAttemptAt||now-Number(event.lastSyncAttemptAt)>=retryAfter);
+  if(!dueStudents.length&&!dueEvents.length)return;
+  let batchStudents=dueStudents.slice(0,10);
+  if(!batchStudents.length){
+    const ids=new Set(dueEvents.slice(0,100).map(event=>event.studentId));
+    batchStudents=roster.filter(student=>ids.has(student.id)).slice(0,10);
+  }
+  const studentIds=new Set(batchStudents.map(student=>student.id));
+  const batchEvents=dueEvents.filter(event=>studentIds.has(event.studentId)).slice(0,100);
+  if(!batchStudents.length)return;
+  const payload={students:batchStudents.map(({id,name,grade,section})=>({id,name,grade,section})),events:batchEvents.map(event=>{
+    const student=progressStudents.find(item=>item.id===event.studentId);
+    return {id:event.id,type:event.type,at:event.at,detail:event.detail||{},name:student?.name||'',grade:student?.grade||0,section:student?.section||0};
+  })};
+  progressSyncBusy=true;
+  const notice=$('studentSyncNotice');if(notice)notice.textContent='جارٍ إرسال دفعة التقدم إلى ورقة المديرة…';
+  try{
+    await fetch(PROGRESS_SYNC_ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(payload)});
+    const attemptedAt=Date.now();
+    batchStudents.forEach(student=>student.lastSyncAttemptAt=attemptedAt);
+    const eventIds=new Set(batchEvents.map(event=>event.id));
+    progressEvents.forEach(event=>{if(eventIds.has(event.id))event.lastSyncAttemptAt=attemptedAt;});
+    progressWrite();
+    if(notice)notice.textContent='أُرسلت محاولة المزامنة؛ تبقى نسخة محلية وسيُعاد إرسال الأنشطة بأمان لمنع فقدها.';
+  }catch(error){
+    if(notice)notice.textContent='تعذرت المزامنة الآن؛ بقيت البيانات محفوظة على الجهاز وستُحاول مجددًا.';
+  }finally{
+    progressSyncBusy=false;
+    const hasDueStudents=progressStudents.some(student=>!student.lastSyncAttemptAt||Date.now()-Number(student.lastSyncAttemptAt)>=retryAfter);
+    const hasDueEvents=progressEvents.some(event=>!event.lastSyncAttemptAt||Date.now()-Number(event.lastSyncAttemptAt)>=retryAfter);
+    if(hasDueStudents||hasDueEvents)scheduleProgressSync(1500);
+  }
+}
+function renderLocalProgressReport(){
+  const table=$('teacherProgressTable'),stats=$('teacherProgressStats');if(!table)return;
+  const grade=$('reportGrade').value,section=$('reportSection').value;
+  const roster=progressStudents.filter(student=>(!grade||String(student.grade)===grade)&&(!section||String(student.section)===section));
+  const totals=roster.reduce((sum,student)=>{const c=progressCounts(student.id);sum.reads+=c.reads;sum.correct+=c.correct;sum.created+=c.created;return sum;},{reads:0,correct:0,created:0});
+  stats.innerHTML=`<div class="progress-stat"><strong>${roster.length}</strong>ملفات على هذا الجهاز</div><div class="progress-stat"><strong>${totals.reads}</strong>مرات فتح القصص</div><div class="progress-stat"><strong>${totals.correct}</strong>إجابات صحيحة</div><div class="progress-stat"><strong>${totals.created}</strong>قصص منشأة</div>`;
+  if(!roster.length){table.innerHTML='<p>لا توجد ملفات مطابقة على هذا الجهاز.</p>';return;}
+  const rows=roster.map(student=>{const c=progressCounts(student.id);return `<tr><td>${bookSafe(student.name)}</td><td>الصف ${student.grade} / الشعبة ${student.section}</td><td>${c.reads}</td><td>${c.correct}</td><td>${c.wrong}</td><td>${c.created}</td></tr>`;}).join('');
+  table.innerHTML=`<table class="progress-table"><thead><tr><th>اسم الطالب</th><th>الصف والشعبة</th><th>قراءة</th><th>إجابات صحيحة</th><th>تحتاج مراجعة</th><th>قصص منشأة</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function exportLocalProgressCsv(){
+  const grade=$('reportGrade').value,section=$('reportSection').value;
+  const roster=progressStudents.filter(student=>(!grade||String(student.grade)===grade)&&(!section||String(student.section)===section));
+  const quote=value=>'"'+String(value??'').replace(/[\r\n]+/g,' ').replace(/"/g,'""')+'"';
+  const lines=[['اسم الطالب','الصف','الشعبة','مرات فتح القصص','إجابات صحيحة','إجابات خاطئة','قصص منشأة','آخر نشاط'].map(quote).join(',')];
+  roster.forEach(student=>{const c=progressCounts(student.id);lines.push([student.name,student.grade,student.section,c.reads,c.correct,c.wrong,c.created,c.last].map(quote).join(','));});
+  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='qissati-local-progress.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function initLocalProgress(){
+  progressStudents=progressRead(PROGRESS_STUDENTS_KEY,[]);if(!Array.isArray(progressStudents))progressStudents=[];
+  progressEvents=progressRead(PROGRESS_EVENTS_KEY,[]);if(!Array.isArray(progressEvents))progressEvents=[];
+  activeStudentId=progressRead(PROGRESS_ACTIVE_KEY,'');fillProgressSelects();openStudentEntry();renderStudentProgressSummary();renderLocalProgressReport();scheduleProgressSync(5000);
+}
+
 function loadState(){
   try{
     const saved = JSON.parse(localStorage.getItem('qissati_v6_state') || '{}');
@@ -1005,6 +1300,7 @@ function updateHud(){
   else if(state.stars >= 10) lvl = 'قَارِئٌ مُتَمَيِّزٌ 🌟';
   $('hudLevel').textContent = lvl;
   $('sfxToggleBtn').textContent = state.sfx ? '🔔 الْأَصْوَاتُ: مفعّلة' : '🔕 الْأَصْوَاتُ: صامت';
+  localizeVisibleDigits($('hudStars'));
 }
 
 function toggleSfx(){
@@ -1049,7 +1345,10 @@ function playTone(freq, dur=0.14, type='sine'){
 function addStars(n, badgeId){
   state.stars += n;
   if(badgeId && !state.badges.includes(badgeId)) state.badges.push(badgeId);
+  if(badgeId==='story_maker'||badgeId==='voice_star') recordStudentEvent('story_created',{mode:badgeId});
   saveState();
+  if($('profileStars')) $('profileStars').textContent=String(state.stars);
+  localizeVisibleDigits($('profileStars'));
   playTone(659.25, 0.12);
   setTimeout(()=>playTone(783.99, 0.18), 110);
 }
@@ -1095,13 +1394,16 @@ function zoomCurrentScene(){
   openLightbox(getSceneImage(key), `${activeStory.title} — الدقة الأصلية (${meta.width}×${meta.height} px)`);
 }
 
-function go(tab){
+function navigateSection(tab){
+  const sectionIds=['home','wizard','voice','catalog','studio','library','teacher','reader'];
+  if(!sectionIds.includes(tab)) return;
   stopSpeech();
   cinemaMode = false;
   updateCinemaBtn();
-  ['home','wizard','voice','catalog','studio','library','reader'].forEach(id=>{
+  sectionIds.forEach(id=>{
     $(id).classList.toggle('hidden', id !== tab);
   });
+  document.querySelector('.app-header').classList.toggle('compact', tab !== 'home');
   document.querySelectorAll('[data-nav]').forEach(btn=>{
     btn.classList.toggle('active', btn.dataset.nav === tab);
   });
@@ -1110,23 +1412,25 @@ function go(tab){
   if(tab === 'studio') renderStudioAssets();
   if(tab === 'library') renderLibrary();
   if(tab === 'wizard') renderWizard();
-  window.scrollTo({ top:0, behavior:'smooth' });
+  if(tab === 'teacher') renderLocalProgressReport();
+  localizeVisibleDigits($(tab));
+  window.scrollTo({ top:0, behavior:'auto' });
 }
 
 function openChallenge(){
   const options = PRESET_STORIES.filter(story => Array.isArray(story.quiz) && story.quiz.length);
   if(!options.length){
-    go('catalog');
+    navigateSection('catalog');
     return;
   }
   const story = options[Math.floor(Math.random() * options.length)];
-  openStory(story, 'catalog');
+  openStory(story, 'library');
 }
 
 function openSurprise(){
   const options = PRESET_STORIES.filter(story => Array.isArray(story.pages) && story.pages.length);
   if(!options.length){
-    go('catalog');
+    navigateSection('catalog');
     return;
   }
   const story = options[Math.floor(Math.random() * options.length)];
@@ -1189,6 +1493,7 @@ function buildStoryCard(story, isCustom){
 
 function openStory(story, fromTab){
   activeStory = story;
+  recordStudentEvent('story_open',{storyId:String(story.id||'').slice(0,100)});
   pageIndex = 0;
   try{
     const pos = JSON.parse(localStorage.getItem('qissati_reading_position') || 'null');
@@ -1197,22 +1502,25 @@ function openStory(story, fromTab){
   returnTab = fromTab || 'home';
   cinemaMode = false;
   updateCinemaBtn();
-  ['home','wizard','voice','catalog','library','reader'].forEach(id=>{
+  ['home','wizard','voice','catalog','studio','library','teacher','reader'].forEach(id=>{
     $(id).classList.toggle('hidden', id !== 'reader');
   });
-  const activeNav = fromTab === 'catalog' ? 'catalog' : 'home';
+  document.querySelector('.app-header').classList.add('compact');
+  const activeNav = fromTab === 'catalog' ? 'catalog' : (fromTab === 'library' ? 'library' : 'home');
   document.querySelectorAll('[data-nav]').forEach(btn=>btn.classList.toggle('active', btn.dataset.nav === activeNav));
   $('readTitle').textContent = story.title;
   $('readMeta').textContent = `${story.category || 'حِكَايَةٌ تَرْبَوِيَّةٌ'} • ${story.pages.length} صَفَحَاتٍ مُصَوَّرَةٍ بِالْعَرَبِيَّةِ الْفُصْحَى`;
+  $('pdfAuthorName').value = String(story.author || localStorage.getItem('qissati-book-author') || '');
   renderReaderPage();
+  localizeVisibleDigits($('reader'));
   addStars(2, 'first_read');
-  window.scrollTo({ top:0, behavior:'smooth' });
+  window.scrollTo({ top:0, behavior:'auto' });
 }
 
 function leaveReader(){
   stopSpeech();
   cinemaMode = false;
-  go(returnTab);
+  navigateSection(returnTab);
 }
 
 function renderReaderPage(){
@@ -1244,6 +1552,7 @@ function renderReaderPage(){
   const thinkTxt = p.think || 'مَا الْفِكْرَةُ الرَّئِيسِيَّةُ الَّتِي خَرَجْتَ بِهَا مِنْ هَذِهِ الصَّفْحَةِ؟';
   $('vocabBox').textContent = vocabTxt;
   $('thinkBox').textContent = thinkTxt;
+  rememberLearnedVocabulary(p.vocab, activeStory.title);
 
   $('prevPageBtn').disabled = (pageIndex === 0);
   $('nextPageBtn').disabled = (pageIndex === activeStory.pages.length - 1);
@@ -1262,6 +1571,7 @@ function renderReaderPage(){
     qBox.classList.add('hidden');
     qBox.innerHTML = '';
   }
+  localizeVisibleDigits($('reader'));
 }
 
 function answerQuiz(btn, qi, oi, correctIdx){
@@ -1273,8 +1583,8 @@ function answerQuiz(btn, qi, oi, correctIdx){
     if(idx === correctIdx) b.classList.add('correct');
     else if(idx === oi) b.classList.add('wrong');
   });
-  if(oi === correctIdx) addStars(5, 'quiz_master');
-  else playTone(220, 0.2, 'sawtooth');
+  if(oi === correctIdx){recordStudentEvent('quiz_correct',{storyId:String(activeStory?.id||'').slice(0,100)});addStars(5, 'quiz_master');}
+  else{recordStudentEvent('quiz_wrong',{storyId:String(activeStory?.id||'').slice(0,100)});playTone(220, 0.2, 'sawtooth');}
 }
 
 function turnPage(delta){
@@ -1346,6 +1656,32 @@ function renderPictureBook(){
   document.getElementById('bookCount').textContent = bookPage === -1 ? 'الغلاف' : 'صَفْحَةُ '+(bookPage+1)+' مِنْ '+count;
   document.getElementById('bookPrev').disabled = bookPage === -1;
   document.getElementById('bookNext').disabled = bookPage === count-1;
+  localizeVisibleDigits(document.getElementById('pictureBookOverlay'));
+}
+function exportActiveStoryPdf(){
+  if(!activeStory||!Array.isArray(activeStory.pages)||!activeStory.pages.length)return;
+  const author=$('pdfAuthorName').value.trim()||'الكاتب الصغير';
+  $('pdfAuthorName').value=author;
+  try{localStorage.setItem('qissati-book-author',author);}catch(e){}
+  activeStory.author=author;
+  const printRoot=$('pdfPrintBook');
+  const coverKey=activeStory.pages[0].img||activeStory.theme||'GARDEN';
+  const coverUrl=new URL(getSceneImage(coverKey),location.href).href;
+  const pageMarkup=activeStory.pages.map((page,index)=>{
+    const imageKey=page.img||detectSceneKey(page.text,activeStory.theme||'GARDEN');
+    const imageUrl=new URL(getSceneImage(imageKey),location.href).href;
+    const vocab=page.vocab?`<div class="pdf-vocab">مفردة ومعنى: ${bookSafe(page.vocab)}</div>`:'';
+    return `<section class="pdf-page"><h2>صفحة ${index+1}</h2><img src="${bookSafe(imageUrl)}" alt="رسم الصفحة ${index+1}"><p>${bookSafe(page.text||'')}</p>${vocab}</section>`;
+  }).join('');
+  printRoot.innerHTML=`<section class="pdf-cover"><img src="${bookSafe(coverUrl)}" alt="غلاف القصة"><h1>${bookSafe(activeStory.title)}</h1><p>تأليف: ${bookSafe(author)}</p><p>كتاب قصصي مصوّر</p></section>${pageMarkup}`;
+  localizeVisibleDigits(printRoot);
+  document.title=`${activeStory.title} - كتاب قصتي بصورة`;
+  document.body.classList.add('pdf-export-mode');
+  const cleanup=()=>{document.body.classList.remove('pdf-export-mode');printRoot.replaceChildren();document.title='قصتي بصورة | المنصة التفاعلية التربوية للطلاب (8–14 سنة)';};
+  window.addEventListener('afterprint',cleanup,{once:true});
+  setTimeout(cleanup,60000);
+  const images=Array.from(printRoot.querySelectorAll('img'));
+  Promise.all(images.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;}))).then(()=>setTimeout(()=>printStory(),200));
 }
 function printStory(){
   if(window.QissatiAndroid && typeof window.QissatiAndroid.printStory === 'function'){
@@ -1385,6 +1721,16 @@ function getBestArabicVoice(){
   return voices.find(v => v.lang && v.lang.toLowerCase().includes('ar')) || null;
 }
 
+function createQissatiArabicUtterance(raw){
+  const utterance = new SpeechSynthesisUtterance(cleanArabicForTTS(raw));
+  const voice = getBestArabicVoice();
+  utterance.lang = 'ar-SA';
+  if(voice) utterance.voice = voice;
+  utterance.rate = 0.80;
+  utterance.pitch = 1.0;
+  return utterance;
+}
+
 if('speechSynthesis' in window){
   window.speechSynthesis.onvoiceschanged = () => { getBestArabicVoice(); };
 }
@@ -1416,7 +1762,7 @@ function readAloud(){
   stopSpeech();
   const p = activeStory.pages[pageIndex];
   const cleanText = cleanArabicForTTS(p.text);
-  const rate = parseFloat($('speechRateSelect').value || '0.88');
+  const rate = 0.80;
   const words = p.text.split(/\s+/).filter(Boolean);
   const audit = arabicReadingAudit(cleanText);
   const needsVowels = audit.total && audit.ratio < 0.8;
@@ -1434,16 +1780,7 @@ function readAloud(){
     return;
   }
 
-  const arVoice = getBestArabicVoice();
-  if(!arVoice){
-    $('ttsStatus').textContent = '⚠️ لَا يَتَوَفَّرُ صَوْتٌ عَرَبِيٌّ عَلَى هَذَا الْجِهَازِ. لَنْ نَسْتَخْدِمَ صَوْتًا أَجْنَبِيًّا.';
-    return;
-  }
-  const utter = new SpeechSynthesisUtterance(cleanText);
-  utter.lang = arVoice.lang;
-  utter.voice = arVoice;
-  utter.rate = rate;
-  utter.pitch = 1.0;
+  const utter = createQissatiArabicUtterance(cleanText);
 
   let usedBoundary = false;
   utter.onboundary = (ev) => {
@@ -1615,14 +1952,10 @@ function speakLatestAiReply(){
     window.QissatiAndroid.speakArabic(latestAiReply);
     return;
   }
-  if(window.speechSynthesis){
-    window.speechSynthesis.cancel();
-    const utterance=new SpeechSynthesisUtterance(latestAiReply);
-    utterance.lang='ar-SA';utterance.rate=0.82;
-    window.speechSynthesis.speak(utterance);
-  }else{
-    $('aiChatStatus').textContent='الصَّوْتُ غَيْرُ مُتَاحٍ فِي هَذَا الْمُتَصَفِّحِ.';
-  }
+  if(!('speechSynthesis' in window)){$('aiChatStatus').textContent='الصَّوْتُ غَيْرُ مُتَاحٍ فِي هَذَا الْمُتَصَفِّحِ.';return;}
+  window.speechSynthesis.cancel();
+  const utterance=createQissatiArabicUtterance(latestAiReply);
+  window.speechSynthesis.speak(utterance);
 }
 function startAiChatVoice(){
   if(!checkAiChatConsent())return;
@@ -1661,7 +1994,7 @@ function clearAiChat(){
   $('aiChatInput').value='';
 }
 function openAiStoryChat(){
-  go('voice');
+  navigateSection('voice');
   setTimeout(()=>$('aiStoryChatPanel').scrollIntoView({behavior:'smooth',block:'start'}),120);
 }
 
@@ -1846,19 +2179,13 @@ function previewVoiceRead(){
     $('voiceStatus').textContent = 'اُكْتُبْ أَوْ سَجِّلْ نَصًّا أَوَّلًا، ثُمَّ اطْلُبِ الِاسْتِمَاعَ.';
     return;
   }
-  const audit=arabicReadingAudit(txt);
-  if(audit.total&&audit.ratio<0.8){$('voiceStatus').textContent='⚠️ حَوِّلِ النَّصَّ وَرَاجِعِ التَّشْكِيلَ قَبْلَ الِاسْتِمَاعِ.';return;}
   if(window.QissatiAndroid && typeof window.QissatiAndroid.speakArabic === 'function'){
     window.QissatiAndroid.speakArabic(txt);
     return;
   }
   if('speechSynthesis' in window){
     window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(txt);
-    u.lang = 'ar-SA';
-    const v = getBestArabicVoice();
-    if(v) u.voice = v;
-    u.rate = 0.80;
+    const u = createQissatiArabicUtterance(txt);
     window.speechSynthesis.speak(u);
   }else{
     $('voiceStatus').textContent = '⚠️ الْقِرَاءَةُ الصَّوْتِيَّةُ غَيْرُ مُتَاحَةٍ فِي هَذَا الْمُتَصَفِّحِ.';
@@ -1904,7 +2231,7 @@ function makeVoiceStory(){
 function startWizard(mode){
   draft = { mode: mode || 'creative', hero:'سَلِيمٌ', theme:'GARDEN', title:'' };
   wizStep = 0;
-  go('wizard');
+  navigateSection('wizard');
 }
 
 function renderWizard(){
@@ -2143,6 +2470,14 @@ function renderLibrary(){
     </div>`;
   }).join('');
 
+  if($('profileStars')) $('profileStars').textContent=String(state.stars);
+  let level='مستكشف صغير';
+  if(state.stars>=60) level='أمير الحكايات 👑';
+  else if(state.stars>=30) level='حكواتي مبدع ✨';
+  else if(state.stars>=10) level='قارئ متميز 🌟';
+  if($('profileLevel')) $('profileLevel').textContent=level;
+  renderVocabulary();
+
   const sGrid = $('savedGrid');
   const saved = getSavedStories();
   sGrid.innerHTML = '';
@@ -2153,6 +2488,89 @@ function renderLibrary(){
     return;
   }
   saved.forEach(s => sGrid.appendChild(buildStoryCard(s, true)));
+}
+
+const VOCABULARY_KEY='qissati-learned-vocabulary';
+let vocabularyQuizSession=null;
+function removeArabicMarks(value){return String(value||'').replace(/[\u064B-\u065F\u0670\u0640]/g,'').replace(/\s+/g,' ').trim();}
+function parseVocabularyEntry(raw){
+  const value=String(raw||'').trim();
+  const split=value.search(/[:：]/);
+  if(split<1)return null;
+  const word=value.slice(0,split).trim().replace(/[.،؛]+$/,'');
+  const meaning=value.slice(split+1).trim();
+  if(!word||!meaning)return null;
+  return {word,meaning,key:removeArabicMarks(word).toLocaleLowerCase('ar')};
+}
+function getLearnedVocabulary(){
+  try{const data=JSON.parse(localStorage.getItem(VOCABULARY_KEY)||'[]');return Array.isArray(data)?data:[];}catch(e){return [];}
+}
+function rememberLearnedVocabulary(raw,storyTitle){
+  const entry=parseVocabularyEntry(raw);if(!entry)return;
+  const entries=getLearnedVocabulary();
+  if(entries.some(item=>item.key===entry.key))return;
+  entries.unshift({word:entry.word,meaning:entry.meaning,key:entry.key,storyTitle:String(storyTitle||''),learnedAt:Date.now()});
+  try{localStorage.setItem(VOCABULARY_KEY,JSON.stringify(entries));}catch(e){}
+}
+function renderVocabulary(){
+  const list=$('vocabularyList');if(!list)return;
+  const entries=getLearnedVocabulary();
+  list.innerHTML=entries.length?entries.map(item=>`<div class="vocab-entry"><strong>${bookSafe(item.word)}</strong> — ${bookSafe(item.meaning)}<small style="display:block;color:var(--muted)">${bookSafe(item.storyTitle||'من قصصك')}</small></div>`).join(''):'<div class="vocab-entry">اقرأ قصة وتعرّف إلى مفرداتها؛ ستُضاف هنا تلقائيًا.</div>';
+  const btn=$('startVocabularyQuizBtn');
+  if(btn)btn.disabled=entries.length<3;
+  const hint=$('vocabularyHint');
+  if(hint)hint.textContent=entries.length<3?`تعرّف إلى ${3-entries.length} مفردات أخرى لفتح الاختبار.`:'لديك مفردات كافية لتجربة الاختبار.';
+  const area=$('vocabularyQuizArea');
+  if(area&&!vocabularyQuizSession)area.innerHTML='';
+}
+function startVocabularyQuiz(){
+  const entries=getLearnedVocabulary();if(entries.length<3)return;
+  const shuffled=entries.slice().sort(()=>Math.random()-.5).slice(0,3);
+  vocabularyQuizSession=shuffled.map(answer=>{
+    const otherMeanings=[...new Set(entries.filter(item=>item.key!==answer.key).map(item=>item.meaning))];
+    const distractors=otherMeanings.sort(()=>Math.random()-.5).slice(0,2);
+    const choices=distractors.concat(answer.meaning).sort(()=>Math.random()-.5);
+    return {word:answer.word,answer:answer.meaning,choices,index:0,answered:false};
+  });
+  renderVocabularyQuizQuestion(0,0);
+}
+function renderVocabularyQuizQuestion(index,score){
+  const area=$('vocabularyQuizArea');
+  if(index>=vocabularyQuizSession.length){
+    const rewardKey='qissati-vocabulary-reward-'+new Date().toISOString().slice(0,10);
+    let reward=0;
+    if(!localStorage.getItem(rewardKey)){reward=score;if(reward)localStorage.setItem(rewardKey,'1');}
+    if(reward)addStars(reward);
+    area.innerHTML=`<div class="vocab-question"><strong>انتهى الاختبار: ${score} من ٣ صحيحة.</strong><p>${reward?`ربحت ${reward} نجوم!`:'أكمل القراءة وحاول مرة أخرى غدًا لربح النجوم.'}</p><button class="btn-secondary" onclick="resetVocabularyQuiz()">إنهاء</button></div>`;
+    localizeVisibleDigits(area);
+    return;
+  }
+  const question=vocabularyQuizSession[index];
+  area.innerHTML=`<div class="vocab-question"><strong>السؤال ${index+1} من ٣: ما معنى «${bookSafe(question.word)}»؟</strong><div class="vocab-options">${question.choices.map((choice,i)=>`<button onclick="answerVocabularyQuestion(${index},${i},${score})">${bookSafe(choice)}</button>`).join('')}</div></div>`;
+  localizeVisibleDigits(area);
+}
+function answerVocabularyQuestion(questionIndex,choiceIndex,score){
+  const question=vocabularyQuizSession&&vocabularyQuizSession[questionIndex];if(!question||question.answered)return;
+  question.answered=true;
+  const correct=question.choices[choiceIndex]===question.answer;
+  const buttons=$('vocabularyQuizArea').querySelectorAll('.vocab-options button');
+  buttons.forEach((button,i)=>{button.disabled=true;if(question.choices[i]===question.answer)button.classList.add('correct');else if(i===choiceIndex)button.classList.add('wrong');});
+  const feedback=document.createElement('p');feedback.className='vocab-feedback';feedback.setAttribute('role','status');feedback.textContent=correct?'إجابة صحيحة! أحسنت.':'ليست هذه الإجابة الصحيحة؛ راجع الكلمة ومعناها.';
+  $('vocabularyQuizArea').appendChild(feedback);
+  setTimeout(()=>renderVocabularyQuizQuestion(questionIndex+1,score+(correct?1:0)),650);
+}
+function resetVocabularyQuiz(){vocabularyQuizSession=null;$('vocabularyQuizArea').innerHTML='';}
+
+function localizeVisibleDigits(root=document.body){
+  if(!root)return;
+  const digits='٠١٢٣٤٥٦٧٨٩';
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(node){
+    const tag=node.parentElement&&node.parentElement.tagName;
+    if(['SCRIPT','STYLE','TEXTAREA','INPUT','CODE','PRE'].includes(tag))return NodeFilter.FILTER_REJECT;
+    return /[0-9]/.test(node.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP;
+  }});
+  const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+  nodes.forEach(node=>{node.nodeValue=node.nodeValue.replace(/[0-9]/g,d=>digits[Number(d)]);});
 }
 
 function backupStories(){
@@ -2279,10 +2697,10 @@ function updateStudioPreviewStyle(){
   if(card)card.dataset.style=style;
 }
 function studioModeLabel(mode){
-  return mode==='3d'?'صُورَةٌ كَرْتُونِيَّةٌ 3D':'تَصَوُّرٌ خَيَالِيٌّ بَعْدَ '+mode+' سَنَةً';
+  return mode==='3d'?'صُورَةٌ كَرْتُونِيَّةٌ ثُلَاثِيَّةُ الْأَبْعَادِ':'تَصَوُّرٌ خَيَالِيٌّ بَعْدَ '+mode+' سَنَةً';
 }
 function updateStudioGenerationUI(){
-  const ready=!!studioSelectedFile&&state.onlineMode&&$('studioPrivacyConsent')?.checked&&$('studioGuardianConsent')?.checked;
+  const ready=!!studioSelectedFile&&state.onlineMode;
   document.querySelectorAll('[data-studio-generate]').forEach(btn=>{btn.disabled=!ready||btn.dataset.busy==='yes';});
 }
 async function studioBlobHash(blob){
@@ -2341,7 +2759,7 @@ async function prepareStudioImage(file){
   let bitmap;
   try{bitmap=await createImageBitmap(file);}catch(error){return file;}
   const longest=Math.max(bitmap.width,bitmap.height);
-  const scale=Math.min(1,1536/longest);
+  const scale=Math.min(1,511/longest);
   const canvas=document.createElement('canvas');
   canvas.width=Math.max(1,Math.round(bitmap.width*scale));
   canvas.height=Math.max(1,Math.round(bitmap.height*scale));
@@ -2363,9 +2781,9 @@ function showStudioImage(mode,blob,profession){
   const card=document.createElement('article');card.className='studio-ai-result';card.dataset.mode=mode;
   const title=document.createElement('h4');title.textContent=result.label;
   const stage=document.createElement('div');stage.className='studio-ai-stage';
-  const img=document.createElement('img');img.src=url;img.alt=result.label+' — صورة مولّدة تخيّلية';
+  const img=document.createElement('img');img.src=url;img.alt=result.label+' — صورة مولدة بالذكاء الاصطناعي من الصورة المختارة';
   stage.appendChild(img);
-  const note=document.createElement('p');note.className='studio-note';note.textContent=mode==='3d'?'صورة مولّدة بأسلوب رسوم ثلاثية الأبعاد.':'تصوّر خيالي وليس تنبؤًا حقيقيًا.';
+  const note=document.createElement('p');note.className='studio-note';note.textContent=mode==='3d'?'صورة جديدة مولّدة بأسلوب رسوم متحركة ثلاثية الأبعاد للمهنة المختارة.':'تصوّر تخيلي للشخص بعد '+mode+' سنة في المهنة المختارة، وليس تنبؤًا بالمستقبل.';
   const actions=document.createElement('div');actions.className='asset-actions';
   const save=document.createElement('button');save.className='btn-secondary';save.textContent='حفظ في مكتبتي';
   save.onclick=()=>saveGeneratedStudioAsset(mode);
@@ -2375,49 +2793,40 @@ function showStudioImage(mode,blob,profession){
 }
 async function generateStudioImage(mode){
   if(!['3d','10','20','30'].includes(mode))return;
-  if(!state.onlineMode){$('studioGenStatus').textContent='الاتِّصَالُ مَوْقُوفٌ. شَغِّلْهُ لِتُرْسَلَ الصُّورَةُ لِلتَّوْلِيدِ.';return;}
   if(!studioSelectedFile){$('studioGenStatus').textContent='اخْتَرْ صُورَةً أَوَّلًا.';return;}
-  if(!$('studioPrivacyConsent').checked||!$('studioGuardianConsent').checked){$('studioGenStatus').textContent='يَلْزَمُ إِقْرَارُ الطَّالِبِ وَمُوَافَقَةُ وَلِيِّ الْأَمْرِ قَبْلَ إِرْسَالِ الصُّورَةِ.';return;}
+  if(!state.onlineMode){$('studioGenStatus').textContent='شَغِّلِ الاتِّصَالَ بِالْإِنْتَرْنِتِ لِاسْتِخْدَامِ الذَّكَاءِ الِاصْطِنَاعِيِّ.';return;}
   const buttons=Array.from(document.querySelectorAll('[data-studio-generate]'));
   buttons.forEach(btn=>{btn.disabled=true;btn.dataset.busy='yes';});
-  const status=$('studioGenStatus');status.classList.remove('error');status.textContent='جَارٍ إِنْشَاءُ '+studioModeLabel(mode)+'… قَدْ يَسْتَغْرِقُ ذَلِكَ بَعْضَ الْوَقْتِ.';
+  const status=$('studioGenStatus');status.classList.remove('error');status.textContent='يَجْرِي إِنْشَاءُ صُورَةٍ جَدِيدَةٍ بِالذَّكَاءِ الِاصْطِنَاعِيِّ…';
+  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),100000);
   try{
     const image=await prepareStudioImage(studioSelectedFile);
-    if(image.size>6*1024*1024)throw new Error('image_too_large');
     const form=new FormData();
-    form.append('image',image,image.name||'qissati-portrait.jpg');
+    form.append('image',image,image.name||'qissati-student.jpg');
     form.append('mode',mode);
     form.append('profession',$('studioProfession').value);
     form.append('style',$('studioAssetStyle').value);
-    form.append('guardianConsent','yes');
-    form.append('privacyNotice','yes');
-    const response=await fetch(STUDIO_AI_ENDPOINT,{method:'POST',body:form});
-    const payload=await response.json().catch(()=>({}));
+    const response=await fetch(STUDIO_AI_ENDPOINT,{method:'POST',body:form,signal:controller.signal});
+    const data=await response.json().catch(()=>({}));
     if(!response.ok){
-      const messages={service_not_configured:'خِدْمَةُ التَّوْلِيدِ غَيْرُ مُهَيَّأَةٍ عَلَى الْخَادِمِ.',image_model_permission:'حِسَابُ الْخَادِمِ لَا يَمْلِكُ صَلَاحِيَّةَ تَوْلِيدِ الصُّوَرِ بَعْدُ.',image_model_unavailable:'نَمُوذَجُ الصُّوَرِ غَيْرُ مُتَاحٍ لِهَذَا الْخَادِمِ.',api_usage_limit:'اِنْتَهَى الرَّصِيدُ أَوْ بَلَغَتِ الْخِدْمَةُ حَدَّ الِاسْتِخْدَامِ.',studio_rate_limited:'أَنْشِئْ صُوَرًا أَقَلَّ وَحَاوِلْ بَعْدَ قَلِيلٍ.',image_too_large:'حَجْمُ الصُّورَةِ بَعْدَ التَّصْغِيرِ أَكْبَرُ مِنَ الْمَسْمُوحِ.',guardian_consent_required:'يَلْزَمُ إِقْرَارُ وَلِيِّ الْأَمْرِ.'};
-      throw new Error(messages[payload.code]||'تَعَذَّرَ إِنْشَاءُ الصُّورَةِ. تَحَقَّقْ مِنَ الْخَادِمِ وَحَاوِلْ لَاحِقًا.');
+      const messages={ai_provider_not_configured:'خِدْمَةُ الذَّكَاءِ الِاصْطِنَاعِيِّ لَمْ تُرْبَطْ بِالْخَادِمِ بَعْدُ.',ai_provider_auth_error:'مِفْتَاحُ خِدْمَةِ الذَّكَاءِ الِاصْطِنَاعِيِّ غَيْرُ صَالِحٍ أَوْ لَا يَمْلِكُ الصَّلَاحِيَّةَ اللَّازِمَةَ.',ai_provider_rate_limited:'تَجَاوَزْنَا حِصَّةَ الِاسْتِخْدَامِ الْمَجَّانِيَّةَ الْحَالِيَّةَ؛ حَاوِلْ غَدًا.',ai_model_unavailable:'نَمُوذَجُ تَوْلِيدِ الصُّوَرِ غَيْرُ مُتَاحٍ حَالِيًّا.',image_timeout:'اِسْتَغْرَقَ إِنْشَاءُ الصُّورَةِ وَقْتًا طَوِيلًا؛ حَاوِلْ مَرَّةً أُخْرَى.',image_service_unreachable:'تَعَذَّرَ الاتِّصَالُ بِخِدْمَةِ الصُّوَرِ.',image_too_large:'الصُّورَةُ كَبِيرَةٌ؛ اخْتَرْ صُورَةً أَصْغَرَ.',image_generation_failed:'لَمْ تَنْجَحْ خِدْمَةُ الذَّكَاءِ الِاصْطِنَاعِيِّ فِي إِنْشَاءِ الصُّورَةِ.'};
+      throw new Error(messages[data.code]||'تَعَذَّرَ إِنْشَاءُ الصُّورَةِ. حَاوِلْ لَاحِقًا.');
     }
-    const binary=atob(payload.image_base64||'');
-    if(!binary)throw new Error('لَمْ يَصِلْ مِلَفُّ الصُّورَةِ مِنَ الْخَادِمِ.');
-    const bytes=new Uint8Array(binary.length);
-    for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
-    const blob=new Blob([bytes],{type:payload.mime_type||'image/png'});
+    if(typeof data.image_base64!=='string'||!data.image_base64)throw new Error('لَمْ تَعُدْ خِدْمَةُ الصُّورِ بِصُورَةٍ صَالِحَةٍ.');
+    const binary=atob(data.image_base64);const bytes=new Uint8Array(binary.length);for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+    const blob=new Blob([bytes],{type:data.mime_type||'image/png'});
     showStudioImage(mode,blob,$('studioProfession').value);
-    status.textContent='اِكْتَمَلَتِ الصُّورَةُ. اِحْفَظْهَا فِي الْمَكْتَبَةِ أَوْ نَزِّلْهَا.';
-  }catch(error){
-    status.classList.add('error');
-    status.textContent=error.message==='Failed to fetch'?'تَعَذَّرَ الِاتِّصَالُ بِخَادِمِ الصُّوَرِ. تَحَقَّقْ مِنْ نَشْرِهِ وَاتِّصَالِ الْإِنْتَرْنِتِ.':error.message||'حَدَثَ خَطَأٌ أَثْنَاءَ تَوْلِيدِ الصُّورَةِ.';
-  }finally{
-    buttons.forEach(btn=>{delete btn.dataset.busy;btn.disabled=!(studioSelectedFile&&state.onlineMode&&$('studioPrivacyConsent').checked&&$('studioGuardianConsent').checked);});
-  }
+    status.textContent='اِكْتَمَلَ إِنْشَاءُ الصُّورَةِ بِالذَّكَاءِ الِاصْطِنَاعِيِّ. هَذَا التَّصَوُّرُ الْمُسْتَقْبَلِيُّ خَيَالِيٌّ.';
+  }catch(error){status.classList.add('error');status.textContent=error?.name==='AbortError'?'تَأَخَّرَتِ اسْتِجَابَةُ الْخَادِمِ. حَاوِلْ مَرَّةً أُخْرَى.':(error.message||'تَعَذَّرَ إِنْشَاءُ الصُّورَةِ.');}
+  finally{clearTimeout(timer);buttons.forEach(btn=>{delete btn.dataset.busy;btn.disabled=!(studioSelectedFile&&state.onlineMode);});}
 }
 async function saveGeneratedStudioAsset(mode){
   const generated=studioGeneratedAssets[mode];if(!generated)return;
   try{
     const found=await findStudioDuplicate(generated.blob);
     if(found.asset){$('studioGenStatus').textContent='هَذِهِ الصُّورَةُ مَوْجُودَةٌ مُسْبَقًا فِي الْمَكْتَبَةِ؛ لَمْ تُضَفْ نُسْخَةٌ مُكَرَّرَةٌ.';return;}
-    await studioRequest('readwrite','put',{id:'ai-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name:studioModeLabel(mode)+' · '+$('studioProfession').selectedOptions[0].textContent,style:'cinematic',blob:generated.blob,type:generated.blob.type,sha256:found.hash,createdAt:generated.createdAt,source:'ai',profession:generated.profession,mode:mode});
-    $('studioGenStatus').textContent='حُفِظَتِ الصُّورَةُ الْمُوَلَّدَةُ فِي مَكْتَبَةِ هَذَا الْجِهَازِ.';
+    await studioRequest('readwrite','put',{id:'local-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name:studioModeLabel(mode)+' · '+$('studioProfession').selectedOptions[0].textContent,style:$('studioAssetStyle').value,blob:generated.blob,type:generated.blob.type,sha256:found.hash,createdAt:generated.createdAt,source:'cloudflare-ai',profession:generated.profession,mode:mode});
+    $('studioGenStatus').textContent='حُفِظَ التَّصْمِيمُ فِي مَكْتَبَةِ هَذَا الْجِهَازِ.';
     await renderStudioAssets();
   }catch(error){$('studioGenStatus').textContent='تَعَذَّرَ حِفْظُ الصُّورَةِ فِي الْمَكْتَبَةِ الْمَحَلِّيَّةِ.';}
 }
@@ -2482,18 +2891,25 @@ async function deleteStudioAsset(id){
 /* Boot */
 $('appLogoImg').src = IMAGES.ICON;
 $('studioAssetStyle').addEventListener('change',updateStudioPreviewStyle);
-$('studioPrivacyConsent').addEventListener('change',updateStudioGenerationUI);
-$('studioGuardianConsent').addEventListener('change',updateStudioGenerationUI);
+
 document.querySelectorAll('[data-studio-generate]').forEach(btn=>btn.addEventListener('click',()=>generateStudioImage(btn.dataset.studioGenerate)));
-$('heroBannerImg').src = IMAGES.HERO;
+$('heroBannerImg').src = IMAGES.START;
 $('catalogEndpoint').value = catalogUrl();
 loadState();
+initLocalProgress();
+window.addEventListener('online',()=>scheduleProgressSync(1200));
 updateOnlineModeUI();
 void renderStudioAssets();
 void applyStudioLogo();
 /* Keep the quick guide available below the illustrated home shelves. */
 $('home').appendChild($('studentQuickGuide'));
 renderHome();
+localizeVisibleDigits(document.body);
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
 </script>
 </body>
 </html>
